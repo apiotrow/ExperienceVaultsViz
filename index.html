@@ -15,16 +15,20 @@
 		<script type="text/javascript">
 		function thefunction() {
 			var urlFields;
+			
 			var drugOptionValues = {
 				mushrooms: 39,
 				LSD: 2
 			};
+			var drugName;
+			
 			var categoryOptionValues = {
 				badTrips: 6,
 				firstTimes: 2
 			};
-			var your_url;
-			var drugName;
+			var categoryName;
+			
+			var url = "";
 			
 			
 			myFunction();
@@ -50,17 +54,77 @@
 				for (var property in drugOptionValues) {
     				if (drugOptionValues.hasOwnProperty(property)) {
     					drugOne = drugOptionValues[property];
-      					drugName = property;
-      					
-      					setupURL(drugOne, drugTwo, drugThree, category, nonSubstance,
-					gender, context, doseMethod, title, authorSearch, erowidAuthor,
-					language, group, strength, intensityMin, intensityMax);
-				
-					openWindow();
-   					 }
-   					 
-   					
-				}
+    					drugName = property;
+    					
+    					for (var property in categoryOptionValues) {
+    						if (categoryOptionValues.hasOwnProperty(property)) {
+    							category = categoryOptionValues[property];
+    							categoryName = property;
+    							
+    							setupURL(drugOptionValues[property], 
+      							drugTwo, 
+      							drugThree, 
+      							categoryOptionValues[property], 
+      							nonSubstance,
+								gender, 
+								context, 
+								doseMethod, 
+								title, 
+								authorSearch, 
+								erowidAuthor,
+								language, 
+								group, 
+								strength, 
+								intensityMin, 
+								intensityMax);
+								
+								for (var property in urlFields) {
+    								if (urlFields.hasOwnProperty(property)) {
+      									url += urlFields[property];
+   					 				}
+								}
+
+								outputdata(url, drugName, categoryName);
+    						}
+    					}
+    				}
+    			}
+    			
+    			
+// 				
+				// for (var property in drugOptionValues) {
+    				// if (drugOptionValues.hasOwnProperty(property)) {
+    					// //drugOne = drugOptionValues[property];
+      					// drugName = property;
+//       					
+      					// setupURL(drugOptionValues[property], 
+      							// drugTwo, 
+      							// drugThree, 
+      							// category, 
+      							// nonSubstance,
+								// gender, 
+								// context, 
+								// doseMethod, 
+								// title, 
+								// authorSearch, 
+								// erowidAuthor,
+								// language, 
+								// group, 
+								// strength, 
+								// intensityMin, 
+								// intensityMax);
+// 				
+						// for (var property in urlFields) {
+    						// if (urlFields.hasOwnProperty(property)) {
+      							// url += urlFields[property];
+   					 		// }
+						// }
+// 
+						// outputdata(url, drugName);
+   					 // }
+//    					 
+//    					
+				// }
 				
 				
 				
@@ -158,7 +222,7 @@
 		
 
 			// jquery.xdomainajax.js  ------ from padolsey
-		function outputdata(your_url, drugName) {
+		function outputdata(your_url, drugName, categoryName) {
 
 			jQuery.ajax = (function(_ajax) {
 
@@ -230,7 +294,7 @@
 					//document.getElementById("demo").innerHTML = drugName + ", " + thenum;
 
 					//$("#demo").text(thenum);  
-					$("#demo").html( $("#demo").text() + "<br>" + drugName+ ": " + thenum);
+					$("#demo").html( $("#demo").text() + "<br>" + drugName+ ": " + categoryName + ": " + thenum);
 				}
 			});
 		}
