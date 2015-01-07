@@ -10,17 +10,27 @@
 			Try it
 		</button>
 
-		<script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script>
+		<script type="text/javascript">
 		function thefunction() {
 			var urlFields;
+			var drugOptionValues = {
+				mushrooms: 39,
+				LSD: 2
+			};
+			var categoryOptionValues = {
+				badTrips: 6,
+				firstTimes: 2
+			};
+			var your_url;
 			
 			myFunction();
 			
 			function myFunction() {
-				var drugOne = 53;
+				var drugOne = drugOptionValues.mushrooms;
 				var drugTwo = -1;
 				var drugThree = -1;
-				var category = -1; 
+				var category = categoryOptionValues.firstTimes; 
 				var nonSubstance = -1;
 				var gender = -1;
 				var context = -1;
@@ -51,7 +61,7 @@
 					// p=-1&Str=&Intensity=&I2="
 					drugTwo : "&S2=" + f2,
 				 	drugThree : "&S3=" + f3,
-				 	category :"&C1=-1" + f4,
+				 	category :"&C1=" + f4,
 				 	nonSubstance : "&S4=" + f5,
 				 	gender : "&GenderSelect=" + f6,
 				 	context : "&Context=" + f7,
@@ -68,7 +78,7 @@
 			}
 			
 			function openWindow(){
-				var url = "";
+				url = "";
 				
 				for (var property in urlFields) {
     				if (urlFields.hasOwnProperty(property)) {
@@ -77,7 +87,8 @@
 				}
 
 				//var url = urlFields.init + urlFields.drugOne + urlFields.rest;
-				var myWindow = window.open(url, "", "width=1000, height=700");
+				//var myWindow = window.open(url, "", "width=1000, height=700");
+				your_url = url;
 								/*
 				var init = "https://www.erowid.org/experiences/exp.cgi?A=Search"
 				var drugOne = "&S1=" + drug;
@@ -120,7 +131,79 @@
 				", "", "width=1000, height=700");
 				*/
 			}
-		}
+		
+		
+			
+
+		
+
+			// jquery.xdomainajax.js  ------ from padolsey
+
+			jQuery.ajax = (function(_ajax) {
+
+				var protocol = location.protocol, hostname = location.hostname, exRegex = RegExp(protocol + '//' + hostname), YQL = 'http' + (/^https/.test(protocol) ? 's' : '') + '://query.yahooapis.com/v1/public/yql?callback=?', query = 'select * from html where url="{URL}" and xpath="*"';
+
+				function isExternal(url) {
+					return !exRegex.test(url) && /:\/\//.test(url);
+				}
+
+				return function(o) {
+
+					var url = o.url;
+
+					if (/get/i.test(o.type) && !/json/i.test(o.dataType) && isExternal(url)) {
+
+						// Manipulate options so that JSONP-x request is made to YQL
+
+						o.url = YQL;
+						o.dataType = 'json';
+
+						o.data = {
+							q : query.replace('{URL}', url + (o.data ? (/\?/.test(url) ? '&' : '?') + jQuery.param(o.data) : '')),
+							format : 'xml'
+						};
+
+						// Since it's a JSONP request
+						// complete === success
+						if (!o.success && o.complete) {
+							o.success = o.complete;
+							delete o.complete;
+						}
+
+						o.success = (function(_success) {
+							return function(data) {
+
+								if (_success) {
+									// Fake XHR callback.
+									_success.call(this, {
+										responseText : data.results[0]
+										// YQL screws with <script>s
+										// Get rid of them
+										.replace(/<script[^>]+?\/>|<script(.|\s)*?\/script>/gi, '')
+									}, 'success');
+								}
+
+							};
+						})(o.success);
+
+					}
+
+					return _ajax.apply(this, arguments);
+
+				};
+
+			})(jQuery.ajax);
+
+			$.ajax({
+				url : your_url,
+				type : 'GET',
+				success : function(res) {
+					var text = res.responseText;
+					// then you can manipulate your text as you wish
+					alert(text);
+				}
+			});
+}
 		</script>
 
 	</body>
