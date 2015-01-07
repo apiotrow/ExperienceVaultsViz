@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<body>
+
+		<p>
+			Click the button to open an about:blank page in a new browser window that is 200px wide and 100px tall.
+		</p>
+
+		<button onclick="thefunction()">
+			Try it
+		</button>
+
+		<script>
+		function thefunction() {
+			var urlFields;
+			
+			myFunction();
+			
+			function myFunction() {
+				var drugOne = 53;
+				var drugTwo = -1;
+				var drugThree = -1;
+				var category = -1; 
+				var nonSubstance = -1;
+				var gender = -1;
+				var context = -1;
+				var doseMethod = -1;
+				var title = "";
+				var authorSearch = "";
+				var erowidAuthor = -1;
+				var language = 1;
+				var group = -1;
+				var strength = "";
+				var intensityMin ="";
+				var intensityMax = "";
+				
+				setupURL(drugOne, drugTwo, drugThree, category, nonSubstance,
+					gender, context, doseMethod, title, authorSearch, erowidAuthor,
+					language, group, strength, intensityMin, intensityMax);
+				
+				openWindow();
+			}
+			
+			function setupURL(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16){
+			
+				urlFields = {
+					init: "https://www.erowid.org/experiences/exp.cgi?A=Search",
+					drugOne: "&S1=" + f1,
+					// rest: "&S2=-1&S3=-1&C1=-1&S4=-1&GenderSelect=-1&Context=\
+					// -1&DoseMethodID=-1&Title=&AuthorSearch=&A1=-1&Lang=1&Grou\
+					// p=-1&Str=&Intensity=&I2="
+					drugTwo : "&S2=" + f2,
+				 	drugThree : "&S3=" + f3,
+				 	category :"&C1=-1" + f4,
+				 	nonSubstance : "&S4=" + f5,
+				 	gender : "&GenderSelect=" + f6,
+				 	context : "&Context=" + f7,
+				 	doseMethod : "&DoseMethodID=" + f8,
+				 	title : "&Title=" + f9,
+				 	authorSearch : "&AuthorSearch=" + f10,
+				 	erowidAuthor : "&A1=" + f11,
+					language : "&Lang=" + f12,
+					group : "&Group=" + f13,
+				 	strength : "&Str=" + f14,
+				 	intensityMin : "&Intensity=" + f15,
+				 	intensityMax : "&I2=" + f16
+				}
+			}
+			
+			function openWindow(){
+				var url = "";
+				
+				for (var property in urlFields) {
+    				if (urlFields.hasOwnProperty(property)) {
+      					url += urlFields[property];
+   					 }
+				}
+
+				//var url = urlFields.init + urlFields.drugOne + urlFields.rest;
+				var myWindow = window.open(url, "", "width=1000, height=700");
+								/*
+				var init = "https://www.erowid.org/experiences/exp.cgi?A=Search"
+				var drugOne = "&S1=" + drug;
+				var drugTwo = "&S2=-1";
+				var drugThree = "&S3=-1&";
+				var category = "C1=-1";
+				var nonSubstance = "&S4=-1";
+				var genderSelect = "&GenderSelect=-1";
+				var context = "&Context=-1";
+				var doseMethod = "&DoseMethodID=-1";
+				var title = "&Title=";
+				var authorSearch = "&AuthorSearch=";
+				var erowidAuthor = "&A1=-1";
+				var language = "&Lang=1";
+				var group = "&Group=-1";
+				var strength = "&Str=";
+				var intensityMin = "&Intensity=";
+				var intensityMax = "&I2=";
+				
+				var url = s1 + s2 + s3;
+				*/
+				/*
+				var myWindow = window.open("https://www.erowid.org/experiences/exp.cgi?A=Search\
+				&S1=drug\
+				&S2=-1\
+				&S3=-1\
+				&C1=-1\
+				&S4=-1\
+				&GenderSelect=-1\
+				&Context=-1\
+				&DoseMethodID=-1\
+				&Title=\
+				&AuthorSearch=\
+				&A1=-1\
+				&Lang=1\
+				&Group=-1\
+				&Str=\
+				&Intensity=\
+				&I2=\
+				", "", "width=1000, height=700");
+				*/
+			}
+		}
+		</script>
+
+	</body>
+</html>
