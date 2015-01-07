@@ -9,6 +9,7 @@
 		<button onclick="thefunction()">
 			Try it
 		</button>
+		
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script>
 		<script type="text/javascript">
@@ -23,11 +24,13 @@
 				firstTimes: 2
 			};
 			var your_url;
+			var drugName;
+			
 			
 			myFunction();
 			
 			function myFunction() {
-				var drugOne = drugOptionValues.mushrooms;
+				var drugOne;
 				var drugTwo = -1;
 				var drugThree = -1;
 				var category = categoryOptionValues.firstTimes; 
@@ -44,11 +47,25 @@
 				var intensityMin ="";
 				var intensityMax = "";
 				
-				setupURL(drugOne, drugTwo, drugThree, category, nonSubstance,
+				for (var property in drugOptionValues) {
+    				if (drugOptionValues.hasOwnProperty(property)) {
+    					drugOne = drugOptionValues[property];
+      					drugName = property;
+      					
+      					setupURL(drugOne, drugTwo, drugThree, category, nonSubstance,
 					gender, context, doseMethod, title, authorSearch, erowidAuthor,
 					language, group, strength, intensityMin, intensityMax);
 				
-				openWindow();
+					openWindow();
+   					 }
+   					 
+   					
+				}
+				
+				
+				
+				
+				
 			}
 			
 			function setupURL(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16){
@@ -83,12 +100,16 @@
 				for (var property in urlFields) {
     				if (urlFields.hasOwnProperty(property)) {
       					url += urlFields[property];
+      					// if (property == "drugOne"){
+      						// drugName = property;
+      					// }
    					 }
 				}
 
 				//var url = urlFields.init + urlFields.drugOne + urlFields.rest;
 				//var myWindow = window.open(url, "", "width=1000, height=700");
 				your_url = url;
+				outputdata(your_url, drugName);
 								/*
 				var init = "https://www.erowid.org/experiences/exp.cgi?A=Search"
 				var drugOne = "&S1=" + drug;
@@ -131,13 +152,13 @@
 				", "", "width=1000, height=700");
 				*/
 			}
+		}
 		
-		
-			
 
 		
 
 			// jquery.xdomainajax.js  ------ from padolsey
+		function outputdata(your_url, drugName) {
 
 			jQuery.ajax = (function(_ajax) {
 
@@ -200,11 +221,21 @@
 				success : function(res) {
 					var text = res.responseText;
 					// then you can manipulate your text as you wish
-					alert(text);
+					var n = text.search("Total");
+					var place = text.substring(n - 7, n).trim();
+					var s = place.search("\\(");
+					var thenum = place.substring(s + 1, n);
+					//alert(thenum);
+					//console.log(thenum);
+					//document.getElementById("demo").innerHTML = drugName + ", " + thenum;
+
+					//$("#demo").text(thenum);  
+					$("#demo").html( $("#demo").text() + "<br>" + drugName+ ": " + thenum);
 				}
 			});
-}
+		}
 		</script>
-
+		
+	<p id="demo"> </p>
 	</body>
 </html>
