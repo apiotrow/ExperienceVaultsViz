@@ -23,8 +23,10 @@
 			var drugName;
 			
 			var categoryOptionValues = {
+				mysticalExperiences: 9,
 				badTrips: 6,
 				firstTimes: 2
+				
 			};
 			var categoryName;
 			
@@ -56,15 +58,15 @@
     					drugOne = drugOptionValues[property];
     					drugName = property;
     					
-    					for (var property in categoryOptionValues) {
-    						if (categoryOptionValues.hasOwnProperty(property)) {
-    							category = categoryOptionValues[property];
-    							categoryName = property;
+    					for (var propertyt in categoryOptionValues) {
+    						if (categoryOptionValues.hasOwnProperty(propertyt)) {
+    							category = categoryOptionValues[propertyt];
+    							categoryName = propertyt;
     							
-    							setupURL(drugOptionValues[property], 
+    							setupURL(drugOne, 
       							drugTwo, 
       							drugThree, 
-      							categoryOptionValues[property], 
+      							category, 
       							nonSubstance,
 								gender, 
 								context, 
@@ -78,13 +80,18 @@
 								intensityMin, 
 								intensityMax);
 								
-								for (var property in urlFields) {
-    								if (urlFields.hasOwnProperty(property)) {
-      									url += urlFields[property];
+								url = "";
+								
+								for (var propertyu in urlFields) {
+    								if (urlFields.hasOwnProperty(propertyu)) {
+      									url += urlFields[propertyu];
    					 				}
 								}
-
+								
+								console.log(url);
+								//url += "&ShowViews=0&Start=0&Max=99999";
 								outputdata(url, drugName, categoryName);
+								//var myWindow = window.open(url, "", "width=500, height=300, scrollbars=yes");
     						}
     					}
     				}
