@@ -88,7 +88,7 @@
    					 				}
 								}
 								
-								console.log(url);
+								//console.log(url);
 								//url += "&ShowViews=0&Start=0&Max=99999";
 								outputdata(url, drugName, categoryName);
 								//var myWindow = window.open(url, "", "width=500, height=300, scrollbars=yes");
@@ -292,16 +292,34 @@
 				success : function(res) {
 					var text = res.responseText;
 					// then you can manipulate your text as you wish
-					var n = text.search("Total");
-					var place = text.substring(n - 7, n).trim();
-					var s = place.search("\\(");
-					var thenum = place.substring(s + 1, n);
+					//var n = text.search("Total");
+					//var place = text.substring(n - 7, n).trim();
+					//var s = place.search("\\(");
+					//var thenum = place.substring(s + 1, n);
 					//alert(thenum);
 					//console.log(thenum);
 					//document.getElementById("demo").innerHTML = drugName + ", " + thenum;
 
 					//$("#demo").text(thenum);  
-					$("#demo").html( $("#demo").text() + "<br>" + drugName+ ": " + categoryName + ": " + thenum);
+					//$("#demo").html($("#demo").text() + "<br>" + drugName + ": " + categoryName + ": " + thenum);
+					
+					
+					var result = [];
+					var pos = text.indexOf('exp.php?ID');
+					result.push(text.substring(pos, pos + 24).replace( /(^.+\D)(\d+)(\D.+$)/i,'$2'));
+					while (pos != -1) {
+					  pos = text.indexOf('exp.php?ID', pos + 1);
+					  result.push(text.substring(pos, pos + 24).replace( /(^.+\D)(\d+)(\D.+$)/i,'$2'));
+					  
+					}
+					      
+					//this pop gets rid of last entry which ends
+					//up being "<html><head><met" or something weird
+					result.pop(); 
+					
+					console.log(result);
+					
+					
 				}
 			});
 		}
