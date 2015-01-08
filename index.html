@@ -53,15 +53,15 @@
 				var intensityMin ="";
 				var intensityMax = "";
 				
-				for (var property in drugOptionValues) {
-    				if (drugOptionValues.hasOwnProperty(property)) {
-    					drugOne = drugOptionValues[property];
-    					drugName = property;
+				for (var drugOptionValues_index in drugOptionValues) {
+    				if (drugOptionValues.hasOwnProperty(drugOptionValues_index)) {
+    					drugOne = drugOptionValues[drugOptionValues_index];
+    					drugName = drugOptionValues_index;
     					
-    					for (var propertyt in categoryOptionValues) {
-    						if (categoryOptionValues.hasOwnProperty(propertyt)) {
-    							category = categoryOptionValues[propertyt];
-    							categoryName = propertyt;
+    					for (var categoryOptionValues_index in categoryOptionValues) {
+    						if (categoryOptionValues.hasOwnProperty(categoryOptionValues_index)) {
+    							category = categoryOptionValues[categoryOptionValues_index];
+    							categoryName = categoryOptionValues_index;
     							
     							setupURL(drugOne, 
       							drugTwo, 
@@ -82,14 +82,14 @@
 								
 								url = "";
 								
-								for (var propertyu in urlFields) {
-    								if (urlFields.hasOwnProperty(propertyu)) {
-      									url += urlFields[propertyu];
+								for (var urlFields_index in urlFields) {
+    								if (urlFields.hasOwnProperty(urlFields_index)) {
+      									url += urlFields[urlFields_index];
    					 				}
 								}
 								
 								//console.log(url);
-								//url += "&ShowViews=0&Start=0&Max=99999";
+								url += "&ShowViews=0&Start=0&Max=99999";
 								outputdata(url, drugName, categoryName);
 								//var myWindow = window.open(url, "", "width=500, height=300, scrollbars=yes");
     						}
