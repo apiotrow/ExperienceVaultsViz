@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <title>Fruits</title>
+    <style type="text/css">
+
+            #grapenumber, #grapekind {
+                font-size: 20px;
+                background-color: white;
+                color: red;
+            }
+             
+            #kiwinumber, #kiwikind{
+                font-size: 20px;
+                background-color: white;
+                color: #800000
+;
+             }
+             
+             #banananumber, #bananakind{
+                font-size: 20px;
+                background-color: black;
+                color: yellow;
+             }
+
+        </style>
+</head>
+    
+<body>
+    
+    <a id="grapenumber"></a> <a id="grapekind"></a><br>
+    <a id="kiwinumber"></a> <a id="kiwikind"></a><br>
+    <a id="banananumber"></a> <a id="bananakind"></a> 
+    
+    <script type="text/javascript">
+        var fruits = [
+            {
+                kind: "grape",
+                color: "red",
+                quantity: 12,
+                tasty: true
+            },
+            {
+                kind: "kiwi",
+                color: "brown",
+                quantity: 98,
+                tasty: true
+            },
+            {
+                kind: "banana",
+                color: "yellow",
+                quantity: 0,
+                tasty: true
+            }
+        ];
+
+        for(var i = 0; i < 3; i++){
+            document.getElementById(fruits[i].kind + "number").innerHTML = fruits[i].quantity;
+            document.getElementById(fruits[i].kind + "kind").innerHTML = fruits[i].kind;
+        }
+    </script>
+
+</body>
+
+</html>
