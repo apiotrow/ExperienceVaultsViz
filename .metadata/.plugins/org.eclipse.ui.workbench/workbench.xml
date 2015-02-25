@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="24" version="2.0">
+<workbench progressCount="49" version="2.0">
 <workbenchAdvisor/>
-<window height="940" width="1200" x="21" y="56">
+<window height="940" width="1200" x="224" y="104">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -33,9 +33,9 @@
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="com.aptana.editor.html" name="index.html" partName="index.html" title="index.html" tooltip="/Users/aaronpiotrowski/jstests/index.html" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/Users/aaronpiotrowski/jstests/index.html"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="220" selectionTopPixel="0"/>
+<editor activePart="true" focus="true" id="com.aptana.editor.html" name="index.html" partName="index.html | ExperienceVaultsViz" title="index.html | ExperienceVaultsViz" tooltip="/Users/aaronpiotrowski/ExperienceVaultsViz/index.html" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/Users/aaronpiotrowski/ExperienceVaultsViz/index.html"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="465" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -65,7 +65,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="com.aptana.editor.html" activePerspective="com.aptana.ui.WebPerspective">
+<perspectives activePart="org.eclipse.ui.navigator.ProjectExplorer" activePerspective="com.aptana.ui.WebPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="com.aptana.ui.internal.WebPerspectiveFactory" id="com.aptana.ui.WebPerspective" label="Web"/>
 <alwaysOnActionSet id="com.aptana.browser.actionSet"/>
@@ -169,9 +169,13 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.aptana.editor.html" uri="file:/Users/aaronpiotrowski/jstests/index.html"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.aptana.editor.html" uri="file:/Users/aaronpiotrowski/ExperienceVaultsViz/index.html"/>
 </editors>
-<item active="true" historyLabel="index.html" index="0">
+<item historyLabel="index.html | jstests" index="0">
 <position info="not_deleted" x="370" y="0"/>
+</item>
+<item active="true" historyLabel="index.html | ExperienceVaultsViz" index="1">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -190,6 +194,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.aptana.editor.html" name="index.html" tooltip="/Users/aaronpiotrowski/ExperienceVaultsViz/index.html">
+<persistable uri="file:/Users/aaronpiotrowski/ExperienceVaultsViz/index.html"/>
+</file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.aptana.editor.html" name="index.html" tooltip="/Users/aaronpiotrowski/jstests/index.html">
 <persistable uri="file:/Users/aaronpiotrowski/jstests/index.html"/>
 </file>
