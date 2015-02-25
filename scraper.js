@@ -1,11 +1,11 @@
 function collectTotals() {
-    
+
     var text = sourceCode;
-    
+
     //get start and end of drug list
     var startPos = text.indexOf('name="S1"  >');
     var endPos = text.indexOf('</select>');
-    
+
     //only want to search through this short interval
     text = text.substring(startPos, endPos);
 
@@ -14,32 +14,62 @@ function collectTotals() {
         drug: "",
         optionValue: "ff"
     };
-    
+
     //get us near location of first option value
-    var pos = text.indexOf('value="');
-    
-    //from that index until where number would end, but before drug name would begin,
-    //remove all characters besides numbers. this retrieves the option value
-    OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 12).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
-    
-    
+    var pos = text.indexOf('on value="');
+
+    //from that index until where number would end, 
+    //but before drug name would begin (pos + 13),
+    //remove all characters besides numbers. this retrieves the option value.
+    OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 13).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
+
+    //store text between > and < brackets, from the position we're at.
+    //this will be the drug name
+    var drugText = text.substring(pos);
+    drugText = drugText.substring(drugText.indexOf(">") + 1, drugText.indexOf("<"));
+
+    //store the drug name in the entry
+    OptionValues_Drugs_Entry.drug = drugText;
+
     //push the entry into the array
     OptionValues_Drugs.push(OptionValues_Drugs_Entry);
 
+    //    console.log(OptionValues_Drugs_Entry.optionValue + " " + OptionValues_Drugs_Entry.drug + ", array index #: " +    OptionValues_Drugs.length);
+
     //bring us to the next place
-    pos = text.indexOf('value="', pos + 1);
-    
-    
+    pos = text.indexOf('on value="', pos + 1);
+
     while (pos != -1) {
-        OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 12).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
+        //create a new entry varaible (otherwise it just overwrites every entry in the array)
+        var OptionValues_Drugs_Entry = {
+            drug: "",
+            optionValue: "ff"
+        };
+
+        OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 13).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
+
+        //store text between > and < brackets, from the position we're at.
+        //this will be the drug name
+        drugText = text.substring(pos);
+        drugText = drugText.substring(drugText.indexOf(">") + 1, drugText.indexOf("<"));
+
+        //store the drug name in the entry
+        OptionValues_Drugs_Entry.drug = drugText;
+
+        //push the entry into the array
         OptionValues_Drugs.push(OptionValues_Drugs_Entry);
-        
-        console.log(OptionValues_Drugs_Entry.optionValue + " "
-                   + OptionValues_Drugs_Entry.drug + ", array index #: " + OptionValues_Drugs.length);
-        
+
+        //        console.log(OptionValues_Drugs_Entry.optionValue + " " + OptionValues_Drugs_Entry.drug + ", array index #: " + OptionValues_Drugs.length);
+
         //find next location, but from the place we left off rather than the very beginning
         pos = text.indexOf('value="', pos + 1);
     }
+
+    //code above is janky, so i have to remove the first two indexes,
+    //which are junk
+    OptionValues_Drugs.splice(0, 2);
+    
+    console.log(OptionValues_Drugs[0].drug + ": " + OptionValues_Drugs[0].optionValue + ", array length: " + OptionValues_Drugs.length);
 }
 
 
