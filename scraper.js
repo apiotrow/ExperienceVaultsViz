@@ -1,44 +1,44 @@
 function collectTotals() {
-    //    var result = [];
-    //
-    //    var pos = text.indexOf('exp.php?ID');
-    //
-    //    result.push(text.substring(pos, pos + 24).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2'));
-    //
-    //    while (pos != -1) {
-    //        pos = text.indexOf('exp.php?ID', pos + 1);
-    //        result.push(text.substring(pos, pos + 24).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2'));
-    //
-    //    }
-    //
-    //    //            this pop gets rid of last entry which ends
-    //    //            up being "<html><head><met"
-    //    //            or something weird
-    //    result.pop();
-    //
-    //    console.log(result);
-
-
+    
     var text = sourceCode;
+    
+    //get start and end of drug list
+    var startPos = text.indexOf('name="S1"  >');
+    var endPos = text.indexOf('</select>');
+    
+    //only want to search through this short interval
+    text = text.substring(startPos, endPos);
 
+    //for adding entires into the list of option values
     var OptionValues_Drugs_Entry = {
         drug: "",
-        optionValue: ""
+        optionValue: "ff"
     };
-
-    var pos = text.indexOf('option value=');
-
-
-    OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 30).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
-//    console.log(pos);
+    
+    //get us near location of first option value
+    var pos = text.indexOf('value="');
+    
+    //from that index until where number would end, but before drug name would begin,
+    //remove all characters besides numbers. this retrieves the option value
+    OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 12).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
+    
+    
+    //push the entry into the array
     OptionValues_Drugs.push(OptionValues_Drugs_Entry);
 
+    //bring us to the next place
+    pos = text.indexOf('value="', pos + 1);
+    
+    
     while (pos != -1) {
-        pos = text.indexOf('option value="', pos + 1);
-
-
-        OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 30).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
-        console.log(OptionValues_Drugs_Entry.optionValue);
+        OptionValues_Drugs_Entry.optionValue = text.substring(pos, pos + 12).replace(/(^.+\D)(\d+)(\D.+$)/i, '$2');
+        OptionValues_Drugs.push(OptionValues_Drugs_Entry);
+        
+        console.log(OptionValues_Drugs_Entry.optionValue + " "
+                   + OptionValues_Drugs_Entry.drug + ", array index #: " + OptionValues_Drugs.length);
+        
+        //find next location, but from the place we left off rather than the very beginning
+        pos = text.indexOf('value="', pos + 1);
     }
 }
 

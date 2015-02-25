@@ -69,21 +69,11 @@ function getSource(your_url, callback) {
         url: your_url,
         type: 'GET',
         success: function (res) {
-
-
-            urlGotten = true;
             var text = res.responseText;
-//            console.log(text);
-//            return text;
+
             sourceCode = text;
             callback(sourceCode);
-//            console.log(sourceCode);
-
-
         }
     });
 
-
-
 }
-
