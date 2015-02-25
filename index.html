@@ -12,6 +12,10 @@
         Get all drug option values.
     </button>
 
+    <button onclick="exportToCSV()">
+        Export to CSV.
+    </button>
+
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="scraper.js"></script>
     <script type="text/javascript" src="dataHolder.js"></script>
@@ -22,10 +26,45 @@
     <script type="text/javascript">
         function getDrugOptionValues() {
             getSource("https://www.erowid.org/experiences/exp_search.cgi", function () {
-//                console.log(sourceCode);
+                //                console.log(sourceCode);
                 collectTotals();
             });
-            
+        }
+
+        function exportToCSV() {
+            var csvData = new Array();
+            csvData.push('"drug","amount"');
+
+            for (var j = 0; j < drugTotalsList.length; j++) {
+                //                console.log(drugTotalsList[j].drug + ": " + drugTotalsList[j].amount);
+                csvData.push('"' + drugTotalsList[j].drug + '","' + drugTotalsList[j].amount + '"');
+            }
+
+            var buffer = csvData.join("\n");
+            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
+            var fileName = "data.csv";
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                link.setAttribute("href", uri);
+                link.setAttribute("download", fileName);
+            } else if (navigator.msSaveBlob) { // IE 10+
+                link.addEventListener("click", function (event) {
+                    var blob = new Blob([buffer], {
+                        "type": "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, fileName);
+                }, false);
+            } else {
+                // it needs to implement server side export
+                link.setAttribute("href", "http://www.example.com/export");
+            }
+            link.innerHTML = "Download CSV";
+            document.body.appendChild(link);
+
+
+
+
         }
     </script>
 
