@@ -12,9 +12,6 @@
   <body>
     
     <h1 style = "text-align:center; color:steelblue"><bold> Popular Recreational Drugs </bold></h1>
-    <!-- Your D3.js code for making a Bar Graph -->
-    <button>All</button>
-    <script type="text/javascript" src="venn.js"></script>
     
     <!-- Submission Info -->
     <h4>Created by:
@@ -30,9 +27,9 @@
         <li>Suresh K. Lodha</li></h4>
       
       <h4> Files: 
-        <li>venn_index.html</li>
+        <li>venn.html</li>
         <li>venn.js</li>
-        <li>ven.css</li>
+        <li>venn.css</li>
         <li>drugamounts.csv</li>
       </h4>
       
@@ -51,6 +48,11 @@
       <li><a href="https://github.com/mbostock/d3/wiki/Gallery">Mike Bostock's Gallery</a></li>
       <li><a href="https://github.com/benfred/venn.js">D3 Venn Diagram Example</a></li>
     </ul>
+      
+          <!-- Your D3.js code for making a Bar Graph -->
+    <button id = "all">All</button>
+    <input id = "popular" type = "checkbox">Show only popular drugs (>300 reports)</input>  
+    <script type="text/javascript" src="venn.js"></script>
     
       
   </body>
