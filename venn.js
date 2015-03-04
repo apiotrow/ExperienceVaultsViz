@@ -17,6 +17,15 @@
         .attr("class", "tooltip")
         .style("opacity", 0);
 
+    var amountThreshold = 0;
+
+//I don't know how to select specific checkbox
+d3.select("input").on('change', function() {
+    console.log("checkbox");
+    if (amountThreshold == 0) amountThreshold = 300;//turn threshold on or off
+    else amountThreshold = 0;
+});
+
 d3.select('button').on('click', function() {
      //Define SVG
       d3.select("svg").remove();
@@ -31,9 +40,11 @@ d3.select('button').on('click', function() {
          //Define Color
         var colors = d3.scale.category20();
         colors.domain(d3.keys(data[0]).filter(function(key) { return key !== "drug"; }));
-        data.forEach(function(d) {           
+        data.forEach(function(d) {
             d.drug = d.drug;
-            d.amount = +d.amount;
+            if (d.amount > amountThreshold)  {d.amount = +d.amount;}//filter out less popular drugs if checkbox is selected
+            else {d.amount = +0;}
+                
         });
         
     //Draw Scatterplot
@@ -59,6 +70,7 @@ d3.select('button').on('click', function() {
                 .attr("cx", width/2)
                 .attr("cy", height/2)
                 .style("fill", "green")
+                .style("opacity", .6)
                 .on("mouseover", function(d) {
                     tooltip.transition()
                     .duration(200)
@@ -78,6 +90,7 @@ d3.select('button').on('click', function() {
                 .attr("cx", width/2 - 210)
                 .attr("cy", height/2 + 115)
                 .style("fill", "red")
+                .style("opacity", .6)
                 .on("mouseover", function(d) {
                     tooltip.transition()
                     .duration(200)
@@ -97,6 +110,7 @@ d3.select('button').on('click', function() {
                 .attr("cx", width/2 + 210)
                 .attr("cy", height/2 - 115)
                 .style("fill", "blue")
+                .style("opacity", .6)
                 .on("mouseover", function(d) {
                     tooltip.transition()
                     .duration(200)
