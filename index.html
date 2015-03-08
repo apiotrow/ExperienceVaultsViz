@@ -23,17 +23,34 @@
     <button onclick="sortCSV()">
         Sort CSV
     </button>
+    
+    <br>
+    <hr>
+    <br>
+    <button onclick="getRest()">
+        Scrape bad trips, mysical experiences, addiction, alone, small group, and large group.
+    </button>
 
 
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="scraper.js"></script>
     <script type="text/javascript" src="dataHolder.js"></script>
     <script type="text/javascript" src="sourceCodeGetter.js"></script>
+    <script type="text/javascript" src="restscraper.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
 
 
     <script type="text/javascript">
+        
+        function getRest() {
+            getSource("https://www.erowid.org/experiences/exp_search.cgi", function () {
+                collectRest();
+            });
+            
+        }
+        
+        
         function getDrugOptionValues() {
             getSource("https://www.erowid.org/experiences/exp_search.cgi", function () {
                 //                console.log(sourceCode);
