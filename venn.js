@@ -26,7 +26,7 @@ d3.select("input").on('change', function() {
     else amountThreshold = 0;
 });
 
-d3.select('button').on('click', function() {
+//d3.select('button').on('click', function() {
      //Define SVG
       d3.select("svg").remove();
       var svg = d3.select("body")
@@ -143,4 +143,4 @@ d3.select('button').on('click', function() {
                 .style("opacity", 0);
         });   
     });
-});
+//});
