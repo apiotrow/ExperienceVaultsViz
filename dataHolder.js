@@ -12,6 +12,8 @@ var sourceCode = "";
 //search
 var OptionValues_Drugs = [];
 
+var OptionValues_PopularDrugs = [];
+
 //for holding total amount of reports for each
 //drug
 var AmtOfReports_Drugs = [];

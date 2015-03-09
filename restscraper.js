@@ -71,6 +71,20 @@ function collectRest() {
 
     //        console.log(OptionValues_Drugs[34].drug + ": " + OptionValues_Drugs[34].optionValue + ", array length: " + OptionValues_Drugs.length);
 
+
+    
+
+    //for iterating through only most popular drugs
+    var OptionValues_PopularDrugs_Entry = {drug: "Mushrooms",optionValue: "39"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Cannabis",optionValue: "1"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+
+
+
+    
+    
+    
     var restOptionValues = {
         badtrip: 6,
         mystical: 9,
@@ -88,11 +102,19 @@ function collectRest() {
         var allURLS = []; //holds all the URLs we construct using the option values
         var badtripURLS = [];
         var mysticalURLS = [];
+        var addictionURLS = [];
+        var aloneURLS = [];
+        var smallgroupURLS = [];
+        var largegroupURLS = [];
         var result = []; //holds the IDs we get. we use the length to know amount of reports.
 
         //iterate through all the drugs
-        for (var i = 0; i < OptionValues_Drugs.length; i++) {
-            var drugOne = OptionValues_Drugs[i].optionValue;
+        //for (var i = 0; i < OptionValues_Drugs.length; i++) {
+
+        //iterate through most popular drugs
+        for (var i = 0; i < OptionValues_PopularDrugs.length; i++) {
+//            var drugOne = OptionValues_Drugs[i].optionValue;
+            var drugOne = OptionValues_PopularDrugs[i].optionValue;
             var drugTwo = -1;
             var drugThree = -1;
             var category = -1;
@@ -216,6 +238,78 @@ function collectRest() {
                 intensityMax);
             mysticalURLS.push(url);
 
+            setupURL(drugOne,
+                drugTwo,
+                drugThree,
+                restOptionValues.addiction,
+                nonSubstance,
+                gender,
+                context,
+                doseMethod,
+                title,
+                authorSearch,
+                erowidAuthor,
+                language,
+                group,
+                strength,
+                intensityMin,
+                intensityMax);
+            addictionURLS.push(url);
+
+            setupURL(drugOne,
+                drugTwo,
+                drugThree,
+                category,
+                nonSubstance,
+                gender,
+                restOptionValues.alone,
+                doseMethod,
+                title,
+                authorSearch,
+                erowidAuthor,
+                language,
+                group,
+                strength,
+                intensityMin,
+                intensityMax);
+            aloneURLS.push(url);
+
+            setupURL(drugOne,
+                drugTwo,
+                drugThree,
+                category,
+                nonSubstance,
+                gender,
+                restOptionValues.smallgroup,
+                doseMethod,
+                title,
+                authorSearch,
+                erowidAuthor,
+                language,
+                group,
+                strength,
+                intensityMin,
+                intensityMax);
+            smallgroupURLS.push(url);
+
+            setupURL(drugOne,
+                drugTwo,
+                drugThree,
+                category,
+                nonSubstance,
+                gender,
+                restOptionValues.largegroup,
+                doseMethod,
+                title,
+                authorSearch,
+                erowidAuthor,
+                language,
+                group,
+                strength,
+                intensityMin,
+                intensityMax);
+            largegroupURLS.push(url);
+
 
         } //end for loop
 
@@ -224,7 +318,7 @@ function collectRest() {
         //        console.log("mysticalURLS length: " + mysticalURLS.length);
 
 
-        
+
         //iterator for recursive loop
         var thing = 0;
         gettotals(thing);
@@ -255,7 +349,7 @@ function collectRest() {
 
         function gettotals(thang) {
             //if we've iterated over all of them, stop
-            if (thang > /*allURLS.length*/ 5) {
+            if (thang > allURLS.length) {
                 console.log("totals filled");
                 thing = 0;
                 getbadtrips(thing);
@@ -269,18 +363,19 @@ function collectRest() {
 
                 drugTotalsList[thang].amount = result.length;
 
-                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports");
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports");
+                console.log("allURLS: " + thing);
                 thing++;
                 gettotals(thing);
 
             });
-        } //end doody
+        } //end gettotals
 
 
 
         function getbadtrips(thang) {
             //if we've iterated over all of them, stop
-            if (thang > /*allURLS.length*/ 5) {
+            if (thang > badtripURLS.length) {
                 console.log("bad trips filled");
                 thing = 0;
                 getmystical(thing);
@@ -294,7 +389,8 @@ function collectRest() {
 
                 drugTotalsList[thang].badtrip = result.length;
 
-                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                console.log("badtripURLS: " + thing);
                 thing++;
                 getbadtrips(thing);
 
@@ -303,17 +399,13 @@ function collectRest() {
 
 
 
-        function hey() {
-
-
-        }
 
         function getmystical(thang) {
             //if we've iterated over all of them, stop
-            if (thang > /*allURLS.length*/ 5) {
+            if (thang > mysticalURLS.length) {
                 console.log("mystical filled");
-                //                thing = 0;
-                //                getmystical(thing);
+                thing = 0;
+                getaddiction(thing);
                 return;
             }
 
@@ -324,12 +416,117 @@ function collectRest() {
 
                 drugTotalsList[thang].mystical = result.length;
 
-                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                console.log("mysticalURLS: " + thing);
                 thing++;
                 getmystical(thing);
 
             });
         } //end getmystical
+
+
+
+
+
+        function getaddiction(thang) {
+            //if we've iterated over all of them, stop
+            if (thang > addictionURLS.length) {
+                console.log("addiction filled");
+                thing = 0;
+                getalone(thing);
+                return;
+            }
+
+            //get the source for the search, count the reports, and shove them
+            //with their appropriate drug in the drugTotalsList array
+            getSource(addictionURLS[thang], function () {
+                countReportsOfURL();
+
+                drugTotalsList[thang].addiction = result.length;
+
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                console.log("addictionURLS: " + thing);
+                thing++;
+                getaddiction(thing);
+
+            });
+        } //end getaddiction
+
+
+
+        function getalone(thang) {
+            //if we've iterated over all of them, stop
+            if (thang > aloneURLS.length) {
+                console.log("alone filled");
+                thing = 0;
+                getsmallgroup(thing);
+                return;
+            }
+
+            //get the source for the search, count the reports, and shove them
+            //with their appropriate drug in the drugTotalsList array
+            getSource(aloneURLS[thang], function () {
+                countReportsOfURL();
+
+                drugTotalsList[thang].alone = result.length;
+
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                console.log("aloneURLS: " + thing);
+                thing++;
+                getalone(thing);
+
+            });
+        } //end getalone
+
+
+        function getsmallgroup(thang) {
+            //if we've iterated over all of them, stop
+            if (thang > smallgroupURLS.length) {
+                console.log("small group filled");
+                thing = 0;
+                getlargegroup(thing);
+                return;
+            }
+
+            //get the source for the search, count the reports, and shove them
+            //with their appropriate drug in the drugTotalsList array
+            getSource(smallgroupURLS[thang], function () {
+                countReportsOfURL();
+
+                drugTotalsList[thang].smallgroup = result.length;
+
+                //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." /* + "source parse: " + thang + ". URL: " + allURLS[thang]*/ );
+                console.log("smallgroupURLS: " + thing);
+                thing++;
+                getsmallgroup(thing);
+
+            });
+        } //end getsmallgroup
+
+
+        function getlargegroup(thang) {
+            //if we've iterated over all of them, stop
+            if (thang > largegroupURLS.length) {
+                console.log("large group filled");
+                //                thing = 0;
+                //                getlargegroup(thing);
+                return;
+            }
+
+            //get the source for the search, count the reports, and shove them
+            //with their appropriate drug in the drugTotalsList array
+            getSource(largegroupURLS[thang], function () {
+                countReportsOfURL();
+
+                drugTotalsList[thang].largegroup = result.length;
+
+                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports, and " + drugTotalsList[thang].badtrip + " bad trip reports, and " + drugTotalsList[thang].mystical + " mystical experience reports." + drugTotalsList[thang].addiction + " addiction experience reports." + drugTotalsList[thang].alone + " alone experience reports." + drugTotalsList[thang].smallgroup + " small group experience reports." + drugTotalsList[thang].largegroup + " large group experience reports.");
+                console.log("largegroupURLS: " + thing);
+                thing++;
+                getlargegroup(thing);
+
+            });
+        } //end getlargegroup
 
     } //end fillUpTotals()
 
