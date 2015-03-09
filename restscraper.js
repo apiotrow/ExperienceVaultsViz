@@ -79,7 +79,185 @@ function collectRest() {
     OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
     var OptionValues_PopularDrugs_Entry = {drug: "Cannabis",optionValue: "1"};
     OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
-
+    var OptionValues_PopularDrugs_Entry = {drug: "Salvia divinorum",optionValue: "44"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "MDMA",optionValue: "3"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "LSD",optionValue: "2"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "DXM",optionValue: "22"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Opiates",optionValue: "207"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Opioids",optionValue: "407"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Alcohol",optionValue: "61"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Cocaine",optionValue: "13"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Morning Glory",optionValue: "38"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-I",optionValue: "172"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Harmala Alkaloids",optionValue: "76"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Amphetamines",optionValue: "6"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "DMT",optionValue: "18"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Methamphetamine",optionValue: "37"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Syrian Rue",optionValue: "45"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "H.B. Woodrose",optionValue: "26"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "5-MeO-DMT",optionValue: "58"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Ketamine",optionValue: "31"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-E",optionValue: "137"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "5-MeO-DiPT",optionValue: "57"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "SSRIs",optionValue: "396"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Cacti",optionValue: "10"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Nitrous Oxide",optionValue: "40"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "AMT",optionValue: "7"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "NBOMe Series",optionValue: "539"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Nutmeg",optionValue: "41"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Kratom",optionValue: "203"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-B",optionValue: "52"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Datura",optionValue: "15"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Diphenhydramine",optionValue: "109"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Oxycodone",optionValue: "176"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Benzodiazepines",optionValue: "434"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-T-7",optionValue: "54"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Tramadol",optionValue: "149"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Ayahuasca",optionValue: "8"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Amanitas",optionValue: "5"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Caffeine",optionValue: "11"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "DPT",optionValue: "21"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Dimenhydrinate",optionValue: "17"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Heroin",optionValue: "27"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Hydrocodone",optionValue: "111"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Kava",optionValue: "30"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-T-2",optionValue: "53"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Inhalants",optionValue: "29"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "GHB",optionValue: "25"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Zolpidem",optionValue: "143"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Codeine",optionValue: "14"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Mimosa spp.",optionValue: "393"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "25I-NBOMe",optionValue: "542"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Tobacco",optionValue: "47"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Methylone",optionValue: "255"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "AB-FUBINACA",optionValue: "628"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Spice and Synthetic Cannabinoids",optionValue: "472"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Cannabinoid Receptor Agonists",optionValue: "484"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Alprazolam",optionValue: "98"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Pharms - Methylphenidate",optionValue: "114"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "5-MeO-AMT",optionValue: "104"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Venlafaxine",optionValue: "191"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Bupropion",optionValue: "87"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Methoxetamine",optionValue: "527"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Anadenanthera spp.",optionValue: "284"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Paroxetine",optionValue: "148"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "4-AcO-DMT",optionValue: "387"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Piperazines",optionValue: "99"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "4-Methylmethcathinone",optionValue: "672"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Buprenorphine",optionValue: "265"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Absinthe",optionValue: "4"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Calea zacatechichi",optionValue: "97"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Tryptophan",optionValue: "138"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Valerian",optionValue: "48"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "25C-NBOMe",optionValue: "540"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "2C-C",optionValue: "262"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "JWH-018",optionValue: "483"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Lotus/Lily",optionValue: "399"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Clonazepam",optionValue: "125"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Diazepam",optionValue: "115"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Gabapentin",optionValue: "183"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Wormwood",optionValue: "50"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Quetiapine",optionValue: "273"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Poppies - Opium",optionValue: "43"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "MDA",optionValue: "34"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Methadone",optionValue: "166"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Brugmansia",optionValue: "84"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Banisteriopsis caapi",optionValue: "169"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "GBL",optionValue: "89"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "PCP",optionValue: "113"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Catnip",optionValue: "68"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "MDPV",optionValue: "377"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    var OptionValues_PopularDrugs_Entry = {drug: "Morphine",optionValue: "211"};
+    OptionValues_PopularDrugs.push(OptionValues_PopularDrugs_Entry);
+    
 
 
     
@@ -142,7 +320,7 @@ function collectRest() {
                 largegroup: 0
             };
 
-            drugTotalsListEntry.drug = OptionValues_Drugs[i].drug;
+            drugTotalsListEntry.drug = OptionValues_PopularDrugs[i].drug;
 
             drugTotalsList.push(drugTotalsListEntry);
 
@@ -349,7 +527,7 @@ function collectRest() {
 
         function gettotals(thang) {
             //if we've iterated over all of them, stop
-            if (thang > allURLS.length) {
+            if (thang >= allURLS.length) {
                 console.log("totals filled");
                 thing = 0;
                 getbadtrips(thing);
@@ -366,7 +544,9 @@ function collectRest() {
                 //                console.log(drugTotalsList[thang].drug + " has " + drugTotalsList[thang].amount + " reports");
                 console.log("allURLS: " + thing);
                 thing++;
+//                console.log("thing: " + thing + ", " + "allURLS.length: " + allURLS.length);
                 gettotals(thing);
+                
 
             });
         } //end gettotals
@@ -375,7 +555,7 @@ function collectRest() {
 
         function getbadtrips(thang) {
             //if we've iterated over all of them, stop
-            if (thang > badtripURLS.length) {
+            if (thang >= badtripURLS.length) {
                 console.log("bad trips filled");
                 thing = 0;
                 getmystical(thing);
@@ -402,7 +582,7 @@ function collectRest() {
 
         function getmystical(thang) {
             //if we've iterated over all of them, stop
-            if (thang > mysticalURLS.length) {
+            if (thang >= mysticalURLS.length) {
                 console.log("mystical filled");
                 thing = 0;
                 getaddiction(thing);
@@ -430,7 +610,7 @@ function collectRest() {
 
         function getaddiction(thang) {
             //if we've iterated over all of them, stop
-            if (thang > addictionURLS.length) {
+            if (thang >= addictionURLS.length) {
                 console.log("addiction filled");
                 thing = 0;
                 getalone(thing);
@@ -456,7 +636,7 @@ function collectRest() {
 
         function getalone(thang) {
             //if we've iterated over all of them, stop
-            if (thang > aloneURLS.length) {
+            if (thang >= aloneURLS.length) {
                 console.log("alone filled");
                 thing = 0;
                 getsmallgroup(thing);
@@ -481,7 +661,7 @@ function collectRest() {
 
         function getsmallgroup(thang) {
             //if we've iterated over all of them, stop
-            if (thang > smallgroupURLS.length) {
+            if (thang >= smallgroupURLS.length) {
                 console.log("small group filled");
                 thing = 0;
                 getlargegroup(thing);
@@ -506,7 +686,7 @@ function collectRest() {
 
         function getlargegroup(thang) {
             //if we've iterated over all of them, stop
-            if (thang > largegroupURLS.length) {
+            if (thang >= largegroupURLS.length) {
                 console.log("large group filled");
                 //                thing = 0;
                 //                getlargegroup(thing);
