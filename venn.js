@@ -167,6 +167,7 @@ __      __          ______
         .attr("cx", function(d) {return xScale(d.mystical - d.badtrip); })
         .attr("cy", function(d) {return yScale(100- d.addiction); })
         .style("fill", function (d) { return colors(d.drug); })
+
         .on("click", function(d) {
            /*var name = d.drug;
            d3.select("svg").remove();
@@ -272,7 +273,11 @@ __      __          ______
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });
+        })
+    
+        .transition()
+                .duration(1000)
+                .style("opacity", .6);
         
         
         
