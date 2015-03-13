@@ -109,7 +109,7 @@ __      __          ______
 |_____/ \___|_| |_|_| |_|\___|     |_____/    \/   \_____|
 */
         
-    var svg = d3.select("body")
+    var svg = d3.select("body2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
