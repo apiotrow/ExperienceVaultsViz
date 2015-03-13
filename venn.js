@@ -260,6 +260,12 @@ __      __          ______
                 .style("top", d3.event.pageY + "px");
         })
     
+        .on("mousemove", function(d){
+            tooltip.style("left", d3.event.pageX + 15 +"px")
+            tooltip.style("top", d3.event.pageY+"px")
+            
+        })
+    
     
         //Then Add .on("mouseout", ....
         .on("mouseout", function() {
