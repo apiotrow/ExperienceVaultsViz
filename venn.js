@@ -163,11 +163,10 @@ __      __          ______
         .data(data)
         .enter().append("circle")
         .attr("class", "dot")
-        .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
+        .attr("r", 0)
         .attr("cx", function(d) {return xScale(d.mystical - d.badtrip); })
         .attr("cy", function(d) {return yScale(100- d.addiction); })
         .style("fill", function (d) { return colors(d.drug); })
-
         .on("click", function(d) {
            /*var name = d.drug;
            d3.select("svg").remove();
@@ -277,6 +276,7 @@ __      __          ______
     
         .transition()
                 .duration(1000)
+                .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
                 .style("opacity", .6);
         
         
