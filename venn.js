@@ -1,4 +1,13 @@
-    //Define Margin
+/*
+  _____ _       _           _     __      __            
+ / ____| |     | |         | |    \ \    / /            
+| |  __| | ___ | |__   __ _| |     \ \  / /_ _ _ __ ___ 
+| | |_ | |/ _ \| '_ \ / _` | |      \ \/ / _` | '__/ __|
+| |__| | | (_) | |_) | (_| | |       \  / (_| | |  \__ \
+ \_____|_|\___/|_.__/ \__,_|_|        \/ \__,_|_|  |___/
+ */
+
+//Define Margin
     var margin = {left: 80, right: 80, top: 50, bottom: 50 }, 
         width = 1100 - margin.left -margin.right,
         height = 800 - margin.top - margin.bottom;
@@ -36,8 +45,15 @@ d3.select("input").on('change', function() {
 
 
 //d3.select('button').on('click', function() {
-     //Define SVG
 
+/*
+  _____  _______      __     ______                _   _             
+ / ____|/ ____\ \    / /    |  ____|              | | (_)            
+| |    | (___  \ \  / /     | |__ _   _ _ __   ___| |_ _  ___  _ __  
+| |     \___ \  \ \/ /      |  __| | | | '_ \ / __| __| |/ _ \| '_ \ 
+| |____ ____) |  \  /       | |  | |_| | | | | (__| |_| | (_) | | | |
+ \_____|_____/    \/        |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|
+ */
        //Get Data
     d3.csv("topdrugdatapercentages.csv", function(error,data) {
          //Define Color
@@ -56,16 +72,42 @@ d3.select("input").on('change', function() {
                 
         });
         
+/*
+ _____                        _           
+|  __ \                      (_)          
+| |  | | ___  _ __ ___   __ _ _ _ __  ___ 
+| |  | |/ _ \| '_ ` _ \ / _` | | '_ \/ __|
+| |__| | (_) | | | | | | (_| | | | | \__ \
+|_____/ \___/|_| |_| |_|\__,_|_|_| |_|___/
+*/
+    
         xScale.domain([d3.min(data, function(d) { return d.mystical - d.badtrip; }), d3.max(data, function(d) { return d.mystical - d.badtrip; })]);
-        yScale.domain([d3.min(data, function(d) { return 100 - d.addiction; }), d3.max(data, function(d) { return 100 -d.addiction; })]);
+        yScale.domain([d3.min(data, function(d) { return 100 - d.addiction; }), 10 + d3.max(data, function(d) { return 100 -d.addiction; })]);
         
-
+/*
+__      __          ______                     
+\ \    / /         |___  /                     
+ \ \  / /_ _ _ __     / / ___   ___  _ __ ___  
+  \ \/ / _` | '__|   / / / _ \ / _ \| '_ ` _ \ 
+   \  / (_| | |     / /_| (_) | (_) | | | | | |
+    \/ \__,_|_|    /_____\___/ \___/|_| |_| |_|
+*/
        
       var zoom = d3.behavior.zoom()
         .x(xScale)
         .y(yScale)
-        .scaleExtent([1, 32])
+        .scaleExtent([0.1, 32])
         .on("zoom", zoomed);  
+        
+        
+/*
+ _____        __ _                   _______      _______ 
+|  __ \      / _(_)                 / ____\ \    / / ____|
+| |  | | ___| |_ _ _ __   ___      | (___  \ \  / / |  __ 
+| |  | |/ _ \  _| | '_ \ / _ \      \___ \  \ \/ /| | |_ |
+| |__| |  __/ | | | | | |  __/      ____) |  \  / | |__| |
+|_____/ \___|_| |_|_| |_|\___|     |_____/    \/   \_____|
+*/
         
     var svg = d3.select("body")
         .append("svg")
@@ -75,6 +117,9 @@ d3.select("input").on('change', function() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
         
+
+        
+        //lets your mouse be anywhere in order to zoom
         svg.append("rect")
             .attr("x", 0)
             .attr("y", 0)
@@ -85,6 +130,15 @@ d3.select("input").on('change', function() {
             //.style("stroke-size", "1px");
 
         
+/*
+ ______                              _ 
+|___  /                             | |
+   / / ___   ___  _ __ ___   ___  __| |
+  / / / _ \ / _ \| '_ ` _ \ / _ \/ _` |
+ / /_| (_) | (_) | | | | | |  __/ (_| |
+/_____\___/ \___/|_| |_| |_|\___|\__,_|
+                                       
+                                       */
      function zoomed() {
             svg.selectAll(".dot")
                 .attr("cx", function(d) {return xScale(d.mystical - d.badtrip);})
@@ -94,8 +148,17 @@ d3.select("input").on('change', function() {
     }
       //d3.select("svg").remove();
 
-        
-    //Draw Scatterplot
+
+/*
+ _____                        _____           _   _                  _       _   
+|  __ \                      / ____|         | | | |                | |     | |  
+| |  | |_ __ __ ___      __ | (___   ___ __ _| |_| |_ ___ _ __ _ __ | | ___ | |_ 
+| |  | | '__/ _` \ \ /\ / /  \___ \ / __/ _` | __| __/ _ \ '__| '_ \| |/ _ \| __|
+| |__| | | | (_| |\ V  V /   ____) | (_| (_| | |_| ||  __/ |  | |_) | | (_) | |_ 
+|_____/|_|  \__,_| \_/\_/   |_____/ \___\__,_|\__|\__\___|_|  | .__/|_|\___/ \__|
+                                                              | |                
+                                                              |_|                
+*/
     svg.selectAll("dot")
         .data(data)
         .enter().append("circle")
@@ -176,6 +239,17 @@ d3.select("input").on('change', function() {
                 }); */
         }) 
             //Add .on("mouseover", .....
+    
+/*
+ _______          _ _   _             _____       _                      _   _             
+|__   __|        | | | (_)           |_   _|     | |                    | | (_)            
+   | | ___   ___ | | |_ _ _ __         | |  _ __ | |_ ___ _ __ __ _  ___| |_ _  ___  _ __  
+   | |/ _ \ / _ \| | __| | '_ \        | | | '_ \| __/ _ \ '__/ _` |/ __| __| |/ _ \| '_ \ 
+   | | (_) | (_) | | |_| | |_) |      _| |_| | | | ||  __/ | | (_| | (__| |_| | (_) | | | |
+   |_|\___/ \___/|_|\__|_| .__/      |_____|_| |_|\__\___|_|  \__,_|\___|\__|_|\___/|_| |_|
+                         | |                                                           
+                         |_|              
+*/
         .on("mouseover", function(d) {
             tooltip.transition()
                 .duration(200)
@@ -185,13 +259,63 @@ d3.select("input").on('change', function() {
                 .style("left", d3.event.pageX + "px")
                 .style("top", d3.event.pageY + "px");
         })
+    
+    
         //Then Add .on("mouseout", ....
         .on("mouseout", function() {
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });   
+        });
         
-    });
+        
+        
+                
+/*
+ _____                          _           _          _     
+|  __ \                        | |         | |        | |    
+| |  | |_ __ __ ___      __    | |     __ _| |__   ___| |___ 
+| |  | | '__/ _` \ \ /\ / /    | |    / _` | '_ \ / _ \ / __|
+| |__| | | | (_| |\ V  V /     | |___| (_| | |_) |  __/ \__ \
+|_____/|_|  \__,_| \_/\_/      |______\__,_|_.__/ \___|_|___/
+*/
+        
+        //TOP: "less addictive"
+         svg.append("text")
+            .attr("x", width/2)
+            .attr("y", 15)
+            .style("text-anchor", "middle")
+            .style("fill", "Green")
+            .attr("font-size", "20px")
+            .text("Less Addictive");    
+        
+        //BOTTOM: "more addictive"
+        svg.append("text")
+            .attr("x", width/2)
+            .attr("y", height-15)
+            .style("text-anchor", "middle")
+            .style("fill", "Red")
+            .attr("font-size", "20px")
+            .text("More Addictive");   
+        
+        //LEFT: "more bad trips" 
+        svg.append("text")
+            .attr("x", 60)
+            .attr("y", height/2)
+            .style("text-anchor", "middle")
+            .style("fill", "Red")
+            .attr("font-size", "1em")
+            .text("More Bad Experiences");  
+        
+        //RIGHT: "more good trips"
+        svg.append("text")
+            .attr("x", width-60)
+            .attr("y", height/2)
+            .style("text-anchor", "middle")
+            .style("fill", "Green")
+            .attr("font-size", "1em")
+            .text("More Good Experiences");  
+        
+    //});
     
-//});
+});
