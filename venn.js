@@ -31,6 +31,23 @@
         .style("opacity", 0);
 
    
+    var classes = ["Hallucinogen",
+                   "Cannabinoid",
+                   "Stimulant",
+                   "Opioid",
+                   "Depressant",
+                   "Deliriant",
+                   "Other",
+                   "Dissociative"];
+
+    var classcolors = ["Aquamarine",
+                       "ForestGreen",
+                       "Gold",
+                       "Purple",
+                       "Violet",
+                       "Red",
+                       "DarkGray",
+                       "DarkOrange"];
 
     var amountThreshold = 0;
 
@@ -55,7 +72,7 @@ d3.select("input").on('change', function() {
  \_____|_____/    \/        |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|
  */
        //Get Data
-    d3.csv("topdrugdatapercentages.csv", function(error,data) {
+      d3.csv("topdrugdatapercentages.csv", function(error,data) {
          //Define Color
         var colors = d3.scale.category20();
         colors.domain(d3.keys(data[0]).filter(function(key) { return key !== "drug"; }));
@@ -69,7 +86,7 @@ d3.select("input").on('change', function() {
             d.alone = +d.alone;
             d.smallgroup = +d.smallgroup;
             d.largegroup = +d.largegroup;
-                
+            d.class = d.class;
         });
         
 /*
@@ -146,7 +163,6 @@ __      __          ______
             svg.select(".x.axis").call(xAxis);
             svg.select(".y.axis").call(yAxis);
     }
-      //d3.select("svg").remove();
 
 
 /*
@@ -166,77 +182,9 @@ __      __          ______
         .attr("r", 0)
         .attr("cx", function(d) {return xScale(d.mystical - d.badtrip); })
         .attr("cy", function(d) {return yScale(100- d.addiction); })
-        .style("fill", function (d) { return colors(d.drug); })
+        .style("fill", function (d) { return classcolors[d.class]; })
         .on("click", function(d) {
-           /*var name = d.drug;
-           d3.select("svg").remove();
-            var svg = d3.select("body")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-            svg.append("circle")
-                .attr("r", Math.sqrt(1556)/.2)
-                .attr("cx", width/2)
-                .attr("cy", height/2)
-                .style("fill", "green")
-                .style("opacity", .6)
-                .on("mouseover", function(d) {
-                    tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                    tooltip.html("Salvia Divinorum:" + "<br/>"
-                        + "Number of Reports: " + "1556" + "<br/>")
-                    .style("left", d3.event.pageX + "px")
-                    .style("top", d3.event.pageY + "px");
-                })
-                .on("mouseout", function() {
-                    tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                }); 
-            svg.append("circle")
-                .attr("r", Math.sqrt(700)/.2)
-                .attr("cx", width/2 - 210)
-                .attr("cy", height/2 + 115)
-                .style("fill", "red")
-                .style("opacity", .6)
-                .on("mouseover", function(d) {
-                    tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                    tooltip.html("Salvia Divinorum:" + "<br/>"
-                        + "Bad Trips: " + "713" + "<br/>")
-                    .style("left", d3.event.pageX + "px")
-                    .style("top", d3.event.pageY + "px");
-                })
-                .on("mouseout", function() {
-                    tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                }); 
-            svg.append("circle")
-                .attr("r", Math.sqrt(119)/.2)
-                .attr("cx", width/2 + 210)
-                .attr("cy", height/2 - 115)
-                .style("fill", "blue")
-                .style("opacity", .6)
-                .on("mouseover", function(d) {
-                    tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9)
-                    tooltip.html("Salvia Divinorum:" + "<br/>"
-                        + "Mystical Experiences: " + "809" + "<br/>")
-                    .style("left", d3.event.pageX + "px")
-                    .style("top", d3.event.pageY + "px");
-                })
-                .on("mouseout", function() {
-                    tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                }); */
+
         }) 
             //Add .on("mouseover", .....
     
@@ -255,7 +203,10 @@ __      __          ______
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(d["drug"] + "<br/>"
-                        + "Number of Reports: " + d["amount"] + "<br/>")
+                        + "Number of Reports: " + d["amount"] + "<br/>"
+                        + "Type: " + classes[d.class] + "<br/>"
+                        + "Negative Experience Rate: " + d["badtrip"] + "%<br/>"
+                        + "Reported Addiction Rate: " + d["addiction"] + "%<br/>")
                 .style("left", d3.event.pageX + "px")
                 .style("top", d3.event.pageY + "px");
         })
