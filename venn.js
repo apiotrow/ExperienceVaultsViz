@@ -277,7 +277,223 @@ __      __          ______
             .style("fill", "Green")
             .attr("font-size", "1em")
             .text("More Good Experiences");  
-        
-    //});
-    
+/*
+
+   _____  _____       __          __  _      ______ _____ ______ _   _ _____  
+  |  __ \|  __ \     /\ \        / / | |    |  ____/ ____|  ____| \ | |  __ \ 
+  | |  | | |__) |   /  \ \  /\  / /  | |    | |__ | |  __| |__  |  \| | |  | |
+  | |  | |  _  /   / /\ \ \/  \/ /   | |    |  __|| | |_ |  __| | . ` | |  | |
+  | |__| | | \ \  / ____ \  /\  /    | |____| |___| |__| | |____| |\  | |__| |
+  |_____/|_|  \_\/_/    \_\/  \/     |______|______\_____|______|_| \_|_____/ 
+*/
+        svg.append("rect")
+            .attr("x", width-280)
+            .attr("y", height-330)
+            .attr("width", 280)
+            .attr("height", 330)
+            .attr("fill", "lightgrey")
+            .style("stroke-size", "1px");
+
+        svg.append("circle")
+            .attr("r", Math.sqrt(100)/.4)
+            .attr("cx", width-100)
+            .attr("cy", height-300)
+            .style("fill", "white");
+
+        svg.append("circle")
+            .attr("r", Math.sqrt(500)/.4)
+            .attr("cx", width-100)
+            .attr("cy", height-217)
+            .style("fill", "white");
+
+        svg.append("circle")
+            .attr("r", Math.sqrt(1000)/.4)
+            .attr("cx", width-100)
+            .attr("cy", height-80)
+            .style("fill", "white");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width -180)
+            .attr("y", height-297)
+            .style("text-anchor", "end")
+            .attr("font-size", "14px")
+            .text("100 Reports");
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width -180)
+            .attr("y", height-209)
+            .style("text-anchor", "end")
+            .attr("font-size", "14px")
+            .text("500 Reports");
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width -180)
+            .attr("y", height-77)
+            .style("text-anchor", "end")
+            .attr("font-size", "14px")
+            .text("1000 Reports");
+
+         svg.append("text")
+            .attr("class", "label")
+            .attr("x", width -140)
+            .attr("y", height-15)
+            .style("text-anchor", "middle")
+            .style("fill", "Blue") 
+            .attr("font-size", "16px")
+            .text("Number of Submitted Experiences"); 
+/*
+ _____  _____       __          __  _  __________     __
+|  __ \|  __ \     /\ \        / / | |/ /  ____\ \   / /
+| |  | | |__) |   /  \ \  /\  / /  | ' /| |__   \ \_/ / 
+| |  | |  _  /   / /\ \ \/  \/ /   |  < |  __|   \   /  
+| |__| | | \ \  / ____ \  /\  /    | . \| |____   | |   
+|_____/|_|  \_\/_/    \_\/  \/     |_|\_\______|  |_|   
+*/
+        svg.append("rect")
+            .attr("x", 0)
+            .attr("y", height-330)
+            .attr("width", 110)
+            .attr("height", 330)
+            .attr("fill", "lightgrey")
+            .style("stroke-size", "1px");
+
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-325)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "Aquamarine");
+          
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-285)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "ForestGreen");
+          
+         svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-245)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "Gold");
+          
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-205)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "Purple");
+          
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-165)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "Violet");
+          
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-125)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "Red");
+          
+         svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-85)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "DarkOrange");
+          
+        svg.append("rect")
+            .attr("x", 5)
+            .attr("y", height-45)
+            .attr("width", 28)
+            .attr("height", 28)
+            .style("opacity", .8)
+            .style("fill", "DarkGray");
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 109)
+            .attr("y", height-308)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Hallucinogens");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 107)
+            .attr("y", height-268)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Cannabinoids");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 100)
+            .attr("y", height-228)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Stimulants");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 92)
+            .attr("y", height-188)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Opioids");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 105)
+            .attr("y", height-148)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Depressants");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 96)
+            .attr("y", height-108)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Deliriants");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 107)
+            .attr("y", height-68)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Dissociatives");
+          
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", 85)
+            .attr("y", height-28)
+            .style("text-anchor", "end")
+            .attr("font-size", "12px")
+            .text("Other");
+
+         svg.append("text")
+            .attr("class", "label")
+            .attr("x", 55)
+            .attr("y", height-5)
+            .style("text-anchor", "middle")
+            .style("fill", "Blue") 
+            .attr("font-size", "16px")
+            .text("Color Key");
 });
