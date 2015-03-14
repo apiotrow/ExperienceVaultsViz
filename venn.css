@@ -22,7 +22,7 @@ text {
     stroke: black;
     stroke-width: 0.5px;
     fill: #000000;
-    font-size: 1.5em;
+    /*font-size: 1.5em;*/
     font-family:sans-serif;
 }
 
