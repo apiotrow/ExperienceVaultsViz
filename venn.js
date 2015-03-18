@@ -205,6 +205,7 @@ __      __          ______
             tooltip.html(d["drug"] + "<br/>"
                         + "Number of Reports: " + d["amount"] + "<br/>"
                         + "Type: " + classes[d.class] + "<br/>"
+                        + "Good Experience Rate: " + d["mystical"] + "%<br/>"
                         + "Negative Experience Rate: " + d["badtrip"] + "%<br/>"
                         + "Reported Addiction Rate: " + d["addiction"] + "%<br/>")
                 .style("left", d3.event.pageX + "px")
