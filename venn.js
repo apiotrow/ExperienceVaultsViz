@@ -9,8 +9,8 @@
 
 //Define Margin
     var margin = {left: 80, right: 80, top: 50, bottom: 50 }, 
-        width = 1100 - margin.left -margin.right,
-        height = 800 - margin.top - margin.bottom;
+        width = 1200 - margin.left -margin.right,
+        height = 850 - margin.top - margin.bottom;
 
  //Define Scales   
     var xScale = d3.scale.linear()
@@ -158,7 +158,7 @@ __      __          ______
                                        */
      function zoomed() {
             svg.selectAll(".dot")
-                .attr("cx", function(d) {return xScale(d.mystical - d.badtrip);})
+                .attr("cx", function(d) {return xScale(d.mystical -  d.badtrip); })
                 .attr("cy", function(d) {return yScale(100- d.addiction);})
             svg.select(".x.axis").call(xAxis);
             svg.select(".y.axis").call(yAxis);
@@ -180,7 +180,7 @@ __      __          ______
         .enter().append("circle")
         .attr("class", "dot")
         .attr("r", 0)
-        .attr("cx", function(d) {return xScale(d.mystical - d.badtrip); })
+        .attr("cx", function(d) {return xScale(d.mystical -  d.badtrip); })
         .attr("cy", function(d) {return yScale(100- d.addiction); })
         .style("fill", function (d) { return classcolors[d.class]; })
         .on("click", function(d) {
@@ -229,7 +229,23 @@ __      __          ______
         .transition()
                 .duration(1000)
                 .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
-                .style("opacity", .6);
+                .style("opacity", .5);
+
+    svg.selectAll("notdot")
+        .data(data)
+        .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 0)
+        .attr("cx", function(d) {return xScale(d.mystical -  d.badtrip); })
+        .attr("cy", function(d) {return yScale(100- d.addiction); })
+
+        .style("fill", "none")
+	.style("stroke", "black")
+	.style("stroke-width", .5)
+ 	.transition()
+                .duration(1000)
+                .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
+                .style("opacity", .5);
         
         
         
@@ -287,64 +303,69 @@ __      __          ______
   | |__| | | \ \  / ____ \  /\  /    | |____| |___| |__| | |____| |\  | |__| |
   |_____/|_|  \_\/_/    \_\/  \/     |______|______\_____|______|_| \_|_____/ 
 */
-        svg.append("rect")
-            .attr("x", width-280)
-            .attr("y", height-330)
-            .attr("width", 280)
-            .attr("height", 330)
+	var LegendXPos = width-200
+	var LegendYPos = height-350 
+	var LegendWidth = 200
+	var LegendHeight = 400       
+
+	svg.append("rect")
+            .attr("x", LegendXPos)
+            .attr("y", LegendYPos)
+            .attr("width", LegendWidth)
+            .attr("height", LegendHeight)
             .attr("fill", "lightgrey")
             .style("stroke-size", "1px");
 
         svg.append("circle")
             .attr("r", Math.sqrt(100)/.4)
-            .attr("cx", width-100)
-            .attr("cy", height-300)
+            .attr("cx", LegendXPos + LegendWidth/2)
+            .attr("cy", LegendYPos + 40)
             .style("fill", "white");
 
         svg.append("circle")
             .attr("r", Math.sqrt(500)/.4)
-            .attr("cx", width-100)
-            .attr("cy", height-217)
+            .attr("cx", LegendXPos + LegendWidth/2)
+            .attr("cy", LegendYPos + 130)
             .style("fill", "white");
 
         svg.append("circle")
             .attr("r", Math.sqrt(1000)/.4)
-            .attr("cx", width-100)
-            .attr("cy", height-80)
+            .attr("cx", LegendXPos + LegendWidth/2)
+            .attr("cy", LegendYPos + 275)
             .style("fill", "white");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", width -180)
-            .attr("y", height-297)
-            .style("text-anchor", "end")
+            .attr("x", LegendXPos + LegendWidth/2)
+            .attr("y", LegendYPos + 40)
+            .style("text-anchor", "middle")
             .attr("font-size", "14px")
-            .text("100 Reports");
+            .text("100");
 
         svg.append("text")
             .attr("class", "label")
-            .attr("x", width -180)
-            .attr("y", height-209)
-            .style("text-anchor", "end")
+            .attr("x", LegendXPos + LegendWidth/2)
+            .attr("y", LegendYPos + 130)
+            .style("text-anchor", "middle")
             .attr("font-size", "14px")
-            .text("500 Reports");
+            .text("500");
 
         svg.append("text")
             .attr("class", "label")
-            .attr("x", width -180)
-            .attr("y", height-77)
-            .style("text-anchor", "end")
+            .attr("x", LegendXPos + LegendWidth/2)
+            .attr("y", LegendYPos + 275)
+            .style("text-anchor", "middle")
             .attr("font-size", "14px")
-            .text("1000 Reports");
+            .text("1000");
 
          svg.append("text")
             .attr("class", "label")
-            .attr("x", width -140)
-            .attr("y", height-15)
+            .attr("x", LegendXPos + LegendWidth/2)
+            .attr("y", LegendYPos + LegendHeight - 20)
             .style("text-anchor", "middle")
             .style("fill", "Blue") 
             .attr("font-size", "16px")
-            .text("Number of Submitted Experiences"); 
+            .text("Submitted Reports"); 
 /*
  _____  _____       __          __  _  __________     __
 |  __ \|  __ \     /\ \        / / | |/ /  ____\ \   / /
@@ -353,17 +374,23 @@ __      __          ______
 | |__| | | \ \  / ____ \  /\  /    | . \| |____   | |   
 |_____/|_|  \_\/_/    \_\/  \/     |_|\_\______|  |_|   
 */
-        svg.append("rect")
+	
+	var KeyYBase = 325
+	var KeyYInterval = 35
+	var KeyYTextBase = 308
+	var KeyTextXPos = 37      
+
+	svg.append("rect")
             .attr("x", 0)
             .attr("y", height-330)
-            .attr("width", 110)
-            .attr("height", 330)
+            .attr("width", 120)
+            .attr("height", 310)
             .attr("fill", "lightgrey")
             .style("stroke-size", "1px");
 
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-325)
+            .attr("y", height-KeyYBase+(0*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -371,7 +398,7 @@ __      __          ______
           
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-285)
+            .attr("y", height-KeyYBase+(1*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -379,7 +406,7 @@ __      __          ______
           
          svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-245)
+            .attr("y", height-KeyYBase+(2*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -387,7 +414,7 @@ __      __          ______
           
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-205)
+            .attr("y", height-KeyYBase+(3*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -395,7 +422,7 @@ __      __          ______
           
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-165)
+            .attr("y", height-KeyYBase+(4*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -403,7 +430,7 @@ __      __          ______
           
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-125)
+            .attr("y", height-KeyYBase+(5*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -411,7 +438,7 @@ __      __          ______
           
          svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-85)
+            .attr("y", height-KeyYBase+(6*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
@@ -419,80 +446,82 @@ __      __          ______
           
         svg.append("rect")
             .attr("x", 5)
-            .attr("y", height-45)
+            .attr("y", height-KeyYBase+(7*KeyYInterval))
             .attr("width", 28)
             .attr("height", 28)
             .style("opacity", .8)
             .style("fill", "DarkGray");
 
-        svg.append("text")
+	       
+
+	svg.append("text")
             .attr("class", "label")
-            .attr("x", 109)
-            .attr("y", height-308)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(0*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Hallucinogens");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 107)
-            .attr("y", height-268)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(1*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Cannabinoids");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 100)
-            .attr("y", height-228)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(2*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Stimulants");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 92)
-            .attr("y", height-188)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(3*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Opioids");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 105)
-            .attr("y", height-148)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(4*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Depressants");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 96)
-            .attr("y", height-108)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(5*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Deliriants");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 107)
-            .attr("y", height-68)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(6*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Dissociatives");
           
         svg.append("text")
             .attr("class", "label")
-            .attr("x", 85)
-            .attr("y", height-28)
-            .style("text-anchor", "end")
+            .attr("x", KeyTextXPos)
+            .attr("y", height-KeyYTextBase+(7*KeyYInterval))
+            .style("text-anchor", "begin")
             .attr("font-size", "12px")
             .text("Other");
 
          svg.append("text")
             .attr("class", "label")
             .attr("x", 55)
-            .attr("y", height-5)
+            .attr("y", height-30)
             .style("text-anchor", "middle")
             .style("fill", "Blue") 
             .attr("font-size", "16px")
