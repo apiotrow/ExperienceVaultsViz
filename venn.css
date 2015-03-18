@@ -34,7 +34,7 @@ text {
 .tooltip {
   position: absolute;
   width: 230px;
-  height: 90px;
+  height: 115px;
   pointer-events: none;
   background-color: white;
     border-radius: 10px;
