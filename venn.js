@@ -22,8 +22,13 @@
         //.domain([-10,400]) //Need to redfine this after loading the data
         .range([height, 0]);
 
-    var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(-height);
-    var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(-width);
+    var yScale100Minus = d3.scale.linear()
+        //.base(0.5)
+        //.domain([-10,400]) //Need to redfine this after loading the data
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(3);
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(3);
     
     //Define Tooltip here
     var tooltip = d3.select("body").append("div")
@@ -170,7 +175,7 @@ __      __          ______
             
             svg.selectAll(".labelBottom")
                 .attr("x", function(d) {return xScale(0);})
-                .attr("y", function(d) {return yScale(54);})
+                .attr("y", function(d) {return yScale(56);})
                 .attr("font-size", d3.event.scale*20 + 5 + "px");
                 
             svg.selectAll(".labelLeft")
@@ -188,6 +193,42 @@ __      __          ______
       "translate(" + d3.event.translate + ")"
       + " scale(" + d3.event.scale + ")");*/
     }
+          
+/*
+ _____                                                 
+|  __ \                           /\                   
+| |  | |_ __ __ ___      __      /  \   __  _____  ___ 
+| |  | | '__/ _` \ \ /\ / /     / /\ \  \ \/ / _ \/ __|
+| |__| | | | (_| |\ V  V /     / ____ \  >  <  __/\__ \
+|_____/|_|  \__,_| \_/\_/     /_/    \_\/_/\_\___||___/
+*/
+       /* //x-axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .append("text")
+            .attr("class", "label")
+            .attr("y", 50)
+            .attr("x", 5)
+            .style("text-anchor", "end")
+            .attr("font-size", "16px")
+            .text("Percentage of Good Experiences Minus Bad Experiences");
+
+
+        //Y-axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -50)
+            .attr("x", -50)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .attr("font-size", "16px")
+            .text("Percentage of Reports Describing Addiction");     */     
 
 
 /*
@@ -253,7 +294,7 @@ __      __          ______
     
         .transition()
                 .duration(1000)
-                .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
+                .attr("r", function(d) { return Math.sqrt(d.amount); })
                 .style("opacity", .5);
 
     svg.selectAll("notdot")
@@ -269,7 +310,7 @@ __      __          ______
 	.style("stroke-width", .5)
  	.transition()
                 .duration(1000)
-                .attr("r", function(d) { return Math.sqrt(d.amount)/.4; })
+                .attr("r", function(d) { return Math.sqrt(d.amount); })
                 .style("opacity", .5);
         
         
@@ -346,22 +387,23 @@ __      __          ______
             .attr("width", LegendWidth)
             .attr("height", LegendHeight)
             .attr("fill", "lightgrey")
+            .style("opacity", .6)
             .style("stroke-size", "1px");
 
         svg.append("circle")
-            .attr("r", Math.sqrt(100)/.4)
+            .attr("r", Math.sqrt(100))
             .attr("cx", LegendXPos + LegendWidth/2)
             .attr("cy", LegendYPos + 40)
             .style("fill", "white");
 
         svg.append("circle")
-            .attr("r", Math.sqrt(500)/.4)
+            .attr("r", Math.sqrt(500))
             .attr("cx", LegendXPos + LegendWidth/2)
             .attr("cy", LegendYPos + 130)
             .style("fill", "white");
 
         svg.append("circle")
-            .attr("r", Math.sqrt(1000)/.4)
+            .attr("r", Math.sqrt(1000))
             .attr("cx", LegendXPos + LegendWidth/2)
             .attr("cy", LegendYPos + 275)
             .style("fill", "white");
@@ -369,7 +411,7 @@ __      __          ______
         svg.append("text")
             .attr("class", "label")
             .attr("x", LegendXPos + LegendWidth/2)
-            .attr("y", LegendYPos + 40)
+            .attr("y", LegendYPos + 28)
             .style("text-anchor", "middle")
             .attr("font-size", "14px")
             .text("100");
@@ -418,6 +460,7 @@ __      __          ______
             .attr("width", 120)
             .attr("height", 310)
             .attr("fill", "lightgrey")
+            .style("opacity", .6)
             .style("stroke-size", "1px");
 
         svg.append("rect")
