@@ -377,7 +377,7 @@ __      __          ______
   |_____/|_|  \_\/_/    \_\/  \/     |______|______\_____|______|_| \_|_____/ 
 */
 	var LegendXPos = width-200
-	var LegendYPos = height-325 
+	var LegendYPos = height-225 
 	var LegendWidth = 150
 	var LegendHeight = 200     
 
