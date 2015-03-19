@@ -557,7 +557,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(0*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Hallucinogens");
+            .text("Hallucinogens (27)");
           
         svg.append("text")
             .attr("class", "label")
@@ -565,7 +565,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(1*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Cannabinoids");
+            .text("Cannabinoids (4)");
           
         svg.append("text")
             .attr("class", "label")
@@ -573,7 +573,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(2*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Stimulants");
+            .text("Stimulants (12)");
           
         svg.append("text")
             .attr("class", "label")
@@ -581,7 +581,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(3*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Opioids");
+            .text("Opioids (12)");
           
         svg.append("text")
             .attr("class", "label")
@@ -589,7 +589,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(4*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Depressants");
+            .text("Depressants (12)");
           
         svg.append("text")
             .attr("class", "label")
@@ -597,7 +597,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(5*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Deliriants");
+            .text("Deliriants (5)");
           
         svg.append("text")
             .attr("class", "label")
@@ -605,7 +605,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(6*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Dissociatives");
+            .text("Dissociatives (6)");
           
         svg.append("text")
             .attr("class", "label")
@@ -613,7 +613,7 @@ __      __          ______
             .attr("y", height-KeyYTextBase+(7*KeyYInterval))
             .style("text-anchor", "begin")
             .attr("font-size", "12px")
-            .text("Other");
+            .text("Other (10)");
 
          svg.append("text")
             .attr("class", "label")
