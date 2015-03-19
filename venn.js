@@ -181,7 +181,7 @@ __      __          ______
                 .attr("font-size", d3.event.scale*20 + 5 + "px");
                 
             svg.selectAll(".labelLeft")
-                .attr("x", function(d) {return xScale(-13);})
+                .attr("x", function(d) {return xScale(-17);})
                 .attr("y", function(d) {return yScale(81);})
                 .attr("font-size", d3.event.scale*20  + "px");
             
@@ -350,7 +350,7 @@ __      __          ______
         //LEFT: "more bad trips" 
         svg.append("text")
             .attr("class", "labelLeft")
-            .attr("x", function(d) {return xScale(-13);})
+            .attr("x", function(d) {return xScale(-17);})
             .attr("y", function(d) {return yScale(81);})
             .style("text-anchor", "middle")
             .style("fill", "Red")
@@ -715,6 +715,11 @@ function updateData() {
                     //.attr("cy", function(d) {return yScale(d.class);})
                 svg.select(".x.axis").call(xAxis);
                 svg.select(".y.axis").call(yAxis);
+                svg.selectAll(".lineVertical")
+                    .attr("x1", function(d) {return xScale(0);})
+                    .attr("x2", function(d) {return xScale(0);});
+                svg.selectAll(".lineVerticalLabel")
+                    .attr("x", function(d) {return xScale(0);});
                 /*
                 svg.selectAll(".labelLeft")
                     .attr("x", function(d) {return 0;})
@@ -762,7 +767,24 @@ function updateData() {
                 .style("text-anchor", "end")
                 .attr("font-size", "16px")
                 .text("Percentage of Reports Describing Addiction");     */     
-
+        
+            svg.append("line")
+                .attr("class", "lineVertical")
+                .attr("x1", function(d) {return xScale(0);})
+                .attr("x2", function(d) {return xScale(0);})
+                .attr("y1", 0)
+                .attr("y2", 1000)
+                .style("stroke", "lightgrey");
+        
+            svg.append("text")
+                .attr("class", "lineVerticalLabel")
+                .attr("x", function(d) {return xScale(0);})
+                .attr("y", height/2 +30)
+                .style("text-anchor", "middle")
+                .style("fill", "grey")
+                .attr("font-size", "14px")
+                .text("even usage")
+                .attr("opacity", 0.5);
 
     /*
      _____                        _____           _   _                  _       _   
@@ -1115,3 +1137,5 @@ function updateData() {
                 .text("Color Key");
     });
 }
+
+
