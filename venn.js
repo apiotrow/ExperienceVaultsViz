@@ -184,9 +184,16 @@ __      __          ______
                 .attr("font-size", d3.event.scale*20  + "px");
             
             svg.selectAll(".labelRight")
-                .attr("x", function(d) {return xScale(20);})
+                .attr("x", function(d) {return xScale(17);})
                 .attr("y", function(d) {return yScale(81);})
                 .attr("font-size", d3.event.scale*20  + "px");
+         
+            svg.selectAll(".lineVertical")
+                .attr("x1", xScale(0))
+                .attr("y1", -100)
+                .attr("x2", xScale(0))
+                .attr("y2", 1000);
+                
             
             
             /*svg.attr("transform",
@@ -202,7 +209,7 @@ __      __          ______
 | |__| | | | (_| |\ V  V /     / ____ \  >  <  __/\__ \
 |_____/|_|  \__,_| \_/\_/     /_/    \_\/_/\_\___||___/
 */
-       /* //x-axis
+        /*//x-axis
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -228,8 +235,23 @@ __      __          ______
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .attr("font-size", "16px")
-            .text("Percentage of Reports Describing Addiction");     */     
-
+            .text("Percentage of Reports Describing Addiction");  */      
+          /*
+        //vertical line down the middle  
+        svg.append("line")
+            .attr("class", "lineVertical")
+            .attr("x1", xScale(0))
+            .attr("y1", -100)
+            .attr("x2", xScale(0))
+            .attr("y2", 1000)
+            .style("stroke", "black");*/
+        
+        //horizontal line down the middle
+        /*svg.append("line")
+            .attr("x1", xScale(0))
+            .attr("y1", -100)
+            .attr("x2", xscale(0))
+            .attr("y2", 1000)*/
 
 /*
  _____                        _____           _   _                  _       _   
@@ -333,17 +355,17 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "LimeGreen")
             .attr("font-size", "25px")
-            .text("Less Addictive");    
+            .text("Less Addictive ↑");    
         
         //BOTTOM: "more addictive"
         svg.append("text")
             .attr("class", "labelBottom")
             .attr("x", function(d) {return xScale(0);})
-            .attr("y", function(d) {return yScale(54);})
+            .attr("y", function(d) {return yScale(56);})
             .style("text-anchor", "middle")
             .style("fill", "Red")
             .attr("font-size", "25px")
-            .text("More Addictive");
+            .text("More Addictive ↓");
         
         //LEFT: "more bad trips" 
         svg.append("text")
@@ -353,17 +375,17 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "Red")
             .attr("font-size", "20px")
-            .text("More Bad Experiences");  
+            .text("← More Bad Experiences");  
         
         //RIGHT: "more good trips"
         svg.append("text")
             .attr("class", "labelRight")
-            .attr("x", function(d) {return xScale(20);})
+            .attr("x", function(d) {return xScale(17);})
             .attr("y", function(d) {return yScale(81);})
             .style("text-anchor", "middle")
             .style("fill", "LimeGreen")
             .attr("font-size", "20px")
-            .text("More Good Experiences");  
+            .text("More Good Experiences →");  
               
 
           
@@ -379,7 +401,7 @@ __      __          ______
 	var LegendXPos = width-200
 	var LegendYPos = height-225 
 	var LegendWidth = 150
-	var LegendHeight = 200     
+	var LegendHeight = 200          
 
 	svg.append("rect")
             .attr("x", LegendXPos)
@@ -457,7 +479,7 @@ __      __          ______
 	svg.append("rect")
             .attr("x", 0)
             .attr("y", height-330)
-            .attr("width", 120)
+            .attr("width", 145)
             .attr("height", 310)
             .attr("fill", "lightgrey")
             .style("opacity", .6)
