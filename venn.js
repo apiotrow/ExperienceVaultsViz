@@ -162,6 +162,31 @@ __      __          ______
                 .attr("cy", function(d) {return yScale(100- d.addiction);})
             svg.select(".x.axis").call(xAxis);
             svg.select(".y.axis").call(yAxis);
+         
+            svg.selectAll(".labelTop")
+                .attr("x", function(d) {return xScale(0);})
+                .attr("y", function(d) {return yScale(103);})
+                .attr("font-size", d3.event.scale*20 + 5 + "px");
+            
+            svg.selectAll(".labelBottom")
+                .attr("x", function(d) {return xScale(0);})
+                .attr("y", function(d) {return yScale(54);})
+                .attr("font-size", d3.event.scale*20 + 5 + "px");
+                
+            svg.selectAll(".labelLeft")
+                .attr("x", function(d) {return xScale(-13);})
+                .attr("y", function(d) {return yScale(81);})
+                .attr("font-size", d3.event.scale*20  + "px");
+            
+            svg.selectAll(".labelRight")
+                .attr("x", function(d) {return xScale(20);})
+                .attr("y", function(d) {return yScale(81);})
+                .attr("font-size", d3.event.scale*20  + "px");
+            
+            
+            /*svg.attr("transform",
+      "translate(" + d3.event.translate + ")"
+      + " scale(" + d3.event.scale + ")");*/
     }
 
 
@@ -205,7 +230,7 @@ __      __          ______
             tooltip.html(d["drug"] + "<br/>"
                         + "Number of Reports: " + d["amount"] + "<br/>"
                         + "Type: " + classes[d.class] + "<br/>"
-                        + "Good Experience Rate: " + d["mystical"] + "%<br/>"
+                        + "Exceptional Experience Rate: " + d["mystical"] + "%<br/>"
                         + "Negative Experience Rate: " + d["badtrip"] + "%<br/>"
                         + "Reported Addiction Rate: " + d["addiction"] + "%<br/>")
                 .style("left", d3.event.pageX + "px")
@@ -261,39 +286,46 @@ __      __          ______
         
         //TOP: "less addictive"
          svg.append("text")
-            .attr("x", width/2)
-            .attr("y", 15)
+            .attr("class", "labelTop")
+            .attr("x", function(d) {return xScale(0);})
+            .attr("y", function(d) {return yScale(103);})
             .style("text-anchor", "middle")
-            .style("fill", "Green")
-            .attr("font-size", "20px")
+            .style("fill", "LimeGreen")
+            .attr("font-size", "25px")
             .text("Less Addictive");    
         
         //BOTTOM: "more addictive"
         svg.append("text")
-            .attr("x", width/2)
-            .attr("y", height-15)
+            .attr("class", "labelBottom")
+            .attr("x", function(d) {return xScale(0);})
+            .attr("y", function(d) {return yScale(54);})
             .style("text-anchor", "middle")
             .style("fill", "Red")
-            .attr("font-size", "20px")
-            .text("More Addictive");   
+            .attr("font-size", "25px")
+            .text("More Addictive");
         
         //LEFT: "more bad trips" 
         svg.append("text")
-            .attr("x", 60)
-            .attr("y", height/2)
+            .attr("class", "labelLeft")
+            .attr("x", function(d) {return xScale(-13);})
+            .attr("y", function(d) {return yScale(81);})
             .style("text-anchor", "middle")
             .style("fill", "Red")
-            .attr("font-size", "1em")
+            .attr("font-size", "20px")
             .text("More Bad Experiences");  
         
         //RIGHT: "more good trips"
         svg.append("text")
-            .attr("x", width-60)
-            .attr("y", height/2)
+            .attr("class", "labelRight")
+            .attr("x", function(d) {return xScale(20);})
+            .attr("y", function(d) {return yScale(81);})
             .style("text-anchor", "middle")
-            .style("fill", "Green")
-            .attr("font-size", "1em")
+            .style("fill", "LimeGreen")
+            .attr("font-size", "20px")
             .text("More Good Experiences");  
+              
+
+          
 /*
 
    _____  _____       __          __  _      ______ _____ ______ _   _ _____  
