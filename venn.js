@@ -10,6 +10,11 @@
 
     var inSecondView = false;
 
+    var buttonX = 10;
+    var buttonY = 10;
+    var buttonWidth = 200;
+    var buttonHeight = 50;
+
 //Define Margin
     var margin = {left: 80, right: 80, top: 50, bottom: 50 }, 
         width = 1200 - margin.left -margin.right,
@@ -230,9 +235,30 @@ __      __          ______
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .attr("font-size", "16px")
-            .text("Percentage of Reports Describing Addiction");     
-
+            .text("Percentage of Reports Describing Addiction");    
+            
 */  
+        svg.append("rect")
+                .attr("x", buttonX)
+                .attr("y", buttonY)
+                .attr("height", buttonHeight)
+                .attr("width", buttonWidth)
+                .style("fill", "gray")
+                .attr("opacity", 0.6)
+                .on("click", function(d) {
+                    updateData();
+                });
+          
+        svg.append("text")
+            .attr("x", buttonX + 5)
+            .attr("y", buttonY + 33)
+            .attr("opacity", 1)  
+            .text("Go to alone vs group data")
+            .on("click", function(d) {
+                    updateData();
+                });
+            
+
 /*
  _____                        _____           _   _                  _       _   
 |  __ \                      / ____|         | | | |                | |     | |  
@@ -341,7 +367,7 @@ __      __          ______
         svg.append("text")
             .attr("class", "labelBottom")
             .attr("x", function(d) {return xScale(0);})
-            .attr("y", function(d) {return yScale(54);})
+            .attr("y", function(d) {return yScale(56);})
             .style("text-anchor", "middle")
             .style("fill", "Red")
             .attr("font-size", "25px")
@@ -785,6 +811,29 @@ function updateData() {
                 .attr("font-size", "14px")
                 .text("even usage")
                 .attr("opacity", 0.5);
+        
+            //buttons to switch vis modes
+            svg.append("rect")
+                .attr("x", buttonX)
+                .attr("y", buttonY)
+                .attr("height", buttonHeight)
+                .attr("width", buttonWidth)
+                .style("fill", "gray")
+                .attr("opacity", 0.6)
+                .on("click", function(d) {
+                    original();
+                });
+            
+                svg.append("text")
+                .attr("x", buttonX + 5)
+                .attr("y", buttonY + 33)
+                .attr("opacity", 1)  
+                .text("Go to good vs bad data")
+                .on("click", function(d) {
+                        original();
+                    });
+        
+                
 
     /*
      _____                        _____           _   _                  _       _   
@@ -1137,5 +1186,3 @@ function updateData() {
                 .text("Color Key");
     });
 }
-
-
