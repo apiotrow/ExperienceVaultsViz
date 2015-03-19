@@ -8,6 +8,8 @@
  \_____|_|\___/|_.__/ \__,_|_|        \/ \__,_|_|  |___/
  */
 
+    var inSecondView = false;
+
 //Define Margin
     var margin = {left: 80, right: 80, top: 50, bottom: 50 }, 
         width = 1200 - margin.left -margin.right,
@@ -333,7 +335,7 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "LimeGreen")
             .attr("font-size", "25px")
-            .text("Less Addictive");    
+            .text("Less Addictive ↑");    
         
         //BOTTOM: "more addictive"
         svg.append("text")
@@ -343,7 +345,7 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "Red")
             .attr("font-size", "25px")
-            .text("More Addictive");
+            .text("More Addictive ↓");
         
         //LEFT: "more bad trips" 
         svg.append("text")
@@ -353,7 +355,7 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "Red")
             .attr("font-size", "20px")
-            .text("More Bad Experiences");  
+            .text("← More Bad Experiences");  
         
         //RIGHT: "more good trips"
         svg.append("text")
@@ -363,7 +365,7 @@ __      __          ______
             .style("text-anchor", "middle")
             .style("fill", "LimeGreen")
             .attr("font-size", "20px")
-            .text("More Good Experiences");  
+            .text("More Good Experiences →");  
               
 
           
@@ -591,7 +593,7 @@ __      __          ______
                 .attr("y", height-KeyYTextBase+(7*KeyYInterval))
                 .style("text-anchor", "begin")
                 .attr("font-size", "12px")
-                .text("Other (10)");
+                .text("Other (12)");
 
              svg.append("text")
                 .attr("class", "label")
@@ -864,7 +866,7 @@ function updateData() {
                 .style("text-anchor", "middle")
                 .style("fill", "Red")
                 .attr("font-size", "20px")
-                .text("More Usage Alone");  
+                .text("← More Usage Alone");  
 
             //RIGHT: "more good trips"
             svg.append("text")
@@ -874,7 +876,7 @@ function updateData() {
                 .style("text-anchor", "middle")
                 .style("fill", "LimeGreen")
                 .attr("font-size", "20px")
-                .text("More Usage in Groups");  
+                .text("More Usage in Groups →");  
 
 
 
@@ -1113,5 +1115,3 @@ function updateData() {
                 .text("Color Key");
     });
 }
-
-
