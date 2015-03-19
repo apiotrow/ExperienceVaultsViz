@@ -377,9 +377,9 @@ __      __          ______
   |_____/|_|  \_\/_/    \_\/  \/     |______|______\_____|______|_| \_|_____/ 
 */
 	var LegendXPos = width-200
-	var LegendYPos = height-350 
-	var LegendWidth = 200
-	var LegendHeight = 400       
+	var LegendYPos = height-325 
+	var LegendWidth = 150
+	var LegendHeight = 200     
 
 	svg.append("rect")
             .attr("x", LegendXPos)
@@ -393,25 +393,25 @@ __      __          ______
         svg.append("circle")
             .attr("r", Math.sqrt(100))
             .attr("cx", LegendXPos + LegendWidth/2)
-            .attr("cy", LegendYPos + 40)
+            .attr("cy", LegendYPos + 33.5)
             .style("fill", "white");
 
         svg.append("circle")
             .attr("r", Math.sqrt(500))
             .attr("cx", LegendXPos + LegendWidth/2)
-            .attr("cy", LegendYPos + 130)
+            .attr("cy", LegendYPos + 70)
             .style("fill", "white");
 
         svg.append("circle")
             .attr("r", Math.sqrt(1000))
             .attr("cx", LegendXPos + LegendWidth/2)
-            .attr("cy", LegendYPos + 275)
+            .attr("cy", LegendYPos + 128)
             .style("fill", "white");
           
         svg.append("text")
             .attr("class", "label")
             .attr("x", LegendXPos + LegendWidth/2)
-            .attr("y", LegendYPos + 28)
+            .attr("y", LegendYPos + 20)
             .style("text-anchor", "middle")
             .attr("font-size", "14px")
             .text("100");
@@ -419,7 +419,7 @@ __      __          ______
         svg.append("text")
             .attr("class", "label")
             .attr("x", LegendXPos + LegendWidth/2)
-            .attr("y", LegendYPos + 130)
+            .attr("y", LegendYPos + 75)
             .style("text-anchor", "middle")
             .attr("font-size", "14px")
             .text("500");
@@ -427,7 +427,7 @@ __      __          ______
         svg.append("text")
             .attr("class", "label")
             .attr("x", LegendXPos + LegendWidth/2)
-            .attr("y", LegendYPos + 275)
+            .attr("y", LegendYPos + 135)
             .style("text-anchor", "middle")
             .attr("font-size", "14px")
             .text("1000");
