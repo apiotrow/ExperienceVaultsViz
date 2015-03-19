@@ -15,6 +15,9 @@
     var buttonWidth = 200;
     var buttonHeight = 50;
 
+    var displayArray = new Array();
+    var originalView = true;
+
 //Define Margin
     var margin = {left: 80, right: 80, top: 50, bottom: 50 }, 
         width = 1200 - margin.left -margin.right,
@@ -64,6 +67,12 @@
 
     var amountThreshold = 0;
 
+
+    for(var i = 0; i < classes.length; ++i){
+        console.log(classes[i]);
+     displayArray[i] = true;   
+    }
+
 //I don't know how to select specific checkbox
 d3.select("input").on('change', function() {
     console.log("checkbox");
@@ -74,6 +83,7 @@ d3.select("input").on('change', function() {
  
 
 function original() {
+    originalView = true;
     d3.select("svg").remove();
 /*
   _____  _______      __     ______                _   _             
@@ -90,15 +100,17 @@ function original() {
         colors.domain(d3.keys(data[0]).filter(function(key) { return key !== "drug"; }));
         data.forEach(function(d) {
             d.drug = d.drug;
+            d.class = d.class;
             if (d.amount > amountThreshold)  {d.amount = +d.amount;}//filter out less popular drugs if checkbox is selected
             else {d.amount = +0;}
+            if (displayArray[d.class] == false){d.amount = +0;}
             d.badtrip = +d.badtrip;
             d.mystical = +d.mystical;
             d.addiction = +d.addiction;
             d.alone = +d.alone;
             d.smallgroup = +d.smallgroup;
             d.largegroup = +d.largegroup;
-            d.class = d.class;
+            
         });
         
 /*
@@ -497,7 +509,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Aquamarine");
+                .style("fill", "Aquamarine")
+            .on("click", function(d) {
+                        if(displayArray[0] == true) {displayArray[0] = false;}
+                        else{displayArray[0] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -505,7 +523,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "ForestGreen");
+                .style("fill", "ForestGreen")
+            .on("click", function(d) {
+                        if(displayArray[1] == true) {displayArray[1] = false;}
+                        else{displayArray[1] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
              svg.append("rect")
                 .attr("x", 5)
@@ -513,7 +537,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Gold");
+                .style("fill", "Gold")
+             .on("click", function(d) {
+                        if(displayArray[2] == true) {displayArray[2] = false;}
+                        else{displayArray[2] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -521,7 +551,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Purple");
+                .style("fill", "Purple")
+            .on("click", function(d) {
+                        if(displayArray[3] == true) {displayArray[3] = false;}
+                        else{displayArray[3] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -529,7 +565,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Violet");
+                .style("fill", "Violet")
+            .on("click", function(d) {
+                        if(displayArray[4] == true) {displayArray[4] = false;}
+                        else{displayArray[4] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -537,7 +579,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Red");
+                .style("fill", "Red")
+            .on("click", function(d) {
+                        if(displayArray[5] == true) {displayArray[5] = false;}
+                        else{displayArray[5] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
              svg.append("rect")
                 .attr("x", 5)
@@ -545,7 +593,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "DarkOrange");
+                .style("fill", "DarkOrange")
+             .on("click", function(d) {
+                        if(displayArray[7] == true) {displayArray[7] = false;}
+                        else{displayArray[7] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -553,7 +607,13 @@ __      __          ______
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "DarkGray");
+                .style("fill", "DarkGray")
+            .on("click", function(d) {
+                        if(displayArray[6] == true) {displayArray[6] = false;}
+                        else{displayArray[6] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
 
 
@@ -647,6 +707,7 @@ original();
                                                                 
 */
 function updateData() {
+    originalView = false;
 
     d3.select("svg").remove();
  
@@ -657,8 +718,10 @@ function updateData() {
             colors.domain(d3.keys(data[0]).filter(function(key) { return key !== "drug"; }));
             data.forEach(function(d) {
                 d.drug = d.drug;
+                d.class = d.class;
                 if (d.amount > amountThreshold)  {d.amount = +d.amount;}//filter out less popular drugs if checkbox is selected
-                else {d.amount = +0;}
+                else{d.amount = +0;}
+                if (displayArray[d.class] == false){d.amount = +0}
                 d.badtrip = +d.badtrip;
                 d.mystical = +d.mystical;
                 d.addiction = +d.addiction;
@@ -1033,9 +1096,9 @@ function updateData() {
     */
 
         var KeyYBase = 325
-        var KeyYInterval = 35
-        var KeyYTextBase = 308
-        var KeyTextXPos = 37      
+	var KeyYInterval = 35
+	var KeyYTextBase = 308
+	var KeyTextXPos = 37      
 
         svg.append("rect")
                 .attr("x", 0)
@@ -1052,7 +1115,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Aquamarine");
+                .style("fill", "Aquamarine")
+            .on("click", function(d) {
+                        if(displayArray[0] == true) {displayArray[0] = false;}
+                        else{displayArray[0] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -1060,7 +1129,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "ForestGreen");
+                .style("fill", "ForestGreen")
+            .on("click", function(d) {
+                        if(displayArray[1] == true) {displayArray[1] = false;}
+                        else{displayArray[1] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
              svg.append("rect")
                 .attr("x", 5)
@@ -1068,7 +1143,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Gold");
+                .style("fill", "Gold")
+             .on("click", function(d) {
+                        if(displayArray[2] == true) {displayArray[2] = false;}
+                        else{displayArray[2] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -1076,7 +1157,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Purple");
+                .style("fill", "Purple")
+            .on("click", function(d) {
+                        if(displayArray[3] == true) {displayArray[3] = false;}
+                        else{displayArray[3] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -1084,7 +1171,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Violet");
+                .style("fill", "Violet")
+            .on("click", function(d) {
+                        if(displayArray[4] == true) {displayArray[4] = false;}
+                        else{displayArray[4] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -1092,7 +1185,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "Red");
+                .style("fill", "Red")
+            .on("click", function(d) {
+                        if(displayArray[5] == true) {displayArray[5] = false;}
+                        else{displayArray[5] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
              svg.append("rect")
                 .attr("x", 5)
@@ -1100,7 +1199,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "DarkOrange");
+                .style("fill", "DarkOrange")
+             .on("click", function(d) {
+                        if(displayArray[7] == true) {displayArray[7] = false;}
+                        else{displayArray[7] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
             svg.append("rect")
                 .attr("x", 5)
@@ -1108,7 +1213,13 @@ function updateData() {
                 .attr("width", 28)
                 .attr("height", 28)
                 .style("opacity", .8)
-                .style("fill", "DarkGray");
+                .style("fill", "DarkGray")
+            .on("click", function(d) {
+                        if(displayArray[6] == true) {displayArray[6] = false;}
+                        else{displayArray[6] = true;}
+                        if(originalView == true){original();}
+                        else{updateData();}
+                    });
 
 
 
@@ -1174,7 +1285,7 @@ function updateData() {
                 .attr("y", height-KeyYTextBase+(7*KeyYInterval))
                 .style("text-anchor", "begin")
                 .attr("font-size", "12px")
-                .text("Other (10)");
+                .text("Other (12)");
 
              svg.append("text")
                 .attr("class", "label")
