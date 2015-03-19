@@ -30,10 +30,24 @@ text {
     fill: "black";
 }
 
+.labelTop {
+    fill: "black";
+}
+.labelBottom {
+    fill: "black";
+}
+.labelLeft {
+    fill: "black";
+}
+.labelRight {
+    fill: "black";
+}
+
+
 
 .tooltip {
   position: absolute;
-  width: 230px;
+  width: 236px;
   height: 115px;
   pointer-events: none;
   background-color: white;
