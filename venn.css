@@ -31,18 +31,25 @@ text {
 }
 
 .labelTop {
-    fill: "black";
+
 }
 .labelBottom {
-    fill: "black";
+
 }
 .labelLeft {
-    fill: "black";
+
 }
 .labelRight {
-    fill: "black";
+
 }
 
+.lineVertical{
+    stroke: "lightgrey";
+}
+
+.lineVerticalLabel{
+    fill: "grey";
+}
 
 
 .tooltip {
