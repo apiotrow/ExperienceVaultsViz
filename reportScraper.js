@@ -1,13 +1,15 @@
 function scrapeReports() {
 
-
-
     var urlFields = []; //for constructing the URL
-    //    var numURLFields = 16;
+    var reportAmt = 0;
+    var paging = false;
+    var nextPage = "";
+    var currStart = 0;
+    var pageSize = 500;
 
     var drugOne = 0;
-    var drugTwo = -2;
-    var drugThree = -2;
+    var drugTwo = -1;
+    var drugThree = -1;
     var category = -1;
     var nonSubstance = -1;
     var gender = -1;
@@ -29,27 +31,27 @@ function scrapeReports() {
         var iter = -1;
 
         //put all in their non-selected state
-        urlFields[++iter] = 0; //[0] = drugOne
-        urlFields[++iter] = -2; //[0] = drugTwo
-        urlFields[++iter] = -2; //[0] = drugThree
-        urlFields[++iter] = -1; //[0] = category
-        urlFields[++iter] = -1; //[0] = nonSubstance
-        urlFields[++iter] = -1; //[0] = gender
-        urlFields[++iter] = -1; //[0] = context
-        urlFields[++iter] = -1; //[0] = doseMethod
-        urlFields[++iter] = ""; //[0] = title
-        urlFields[++iter] = ""; //[0] = authorSearch
-        urlFields[++iter] = -1; //[0] = erowidAuthor
-        urlFields[++iter] = 1; //[0] = language
-        urlFields[++iter] = -1; //[0] = group
-        urlFields[++iter] = ""; //[0] = strength
-        urlFields[++iter] = ""; //[0] = intensityMin
-        urlFields[++iter] = ""; //[0] = intensityMax
+        //        urlFields[++iter] = 0; //[0] = drugOne
+        //        urlFields[++iter] = -2; //[0] = drugTwo
+        //        urlFields[++iter] = -2; //[0] = drugThree
+        //        urlFields[++iter] = -1; //[0] = category
+        //        urlFields[++iter] = -1; //[0] = nonSubstance
+        //        urlFields[++iter] = -1; //[0] = gender
+        //        urlFields[++iter] = -1; //[0] = context
+        //        urlFields[++iter] = -1; //[0] = doseMethod
+        //        urlFields[++iter] = ""; //[0] = title
+        //        urlFields[++iter] = ""; //[0] = authorSearch
+        //        urlFields[++iter] = -1; //[0] = erowidAuthor
+        //        urlFields[++iter] = 1; //[0] = language
+        //        urlFields[++iter] = -1; //[0] = group
+        //        urlFields[++iter] = ""; //[0] = strength
+        //        urlFields[++iter] = ""; //[0] = intensityMin
+        //        urlFields[++iter] = ""; //[0] = intensityMax
 
 
         drugOne = 0;
-        drugTwo = -2;
-        drugThree = -2;
+        drugTwo = -1;
+        drugThree = -1;
         category = -1;
         nonSubstance = -1;
         gender = -1;
@@ -68,13 +70,6 @@ function scrapeReports() {
 
 
     var allURLS = []; //holds all the URLs we construct using the option values
-    //    var drugURLS = [];
-    //    var categoryURLS = [];
-    //    var nonSubstanceURLS = [];
-    //    var contextURLS = [];
-    //    var doseMethodURLS = [];
-    //    var genderURLS = [];
-    //    var intensityURLS = [];
 
 
     for (var i = 0; i < optionValueArrays.length; i++) {
@@ -111,6 +106,7 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             } else if (optionValueArrays[i].type == "category") {
                 setupURL(drugOne,
                     drugTwo,
@@ -229,7 +225,7 @@ function scrapeReports() {
                 }
             }
 
-            url += "&ShowViews=0&Start=0&Max=100";
+            url += "&ShowViews=0&Start=0&Max=" + pageSize;
             url_Entry.url = url;
 
             allURLS.push(url_Entry);
@@ -262,6 +258,8 @@ function scrapeReports() {
 
     function parseSource(itemName, type) {
         var text = URLSource;
+
+
 
         var pos = text.indexOf('exp.php?ID');
 
@@ -303,19 +301,26 @@ function scrapeReports() {
             } else {
 
                 if (type == "drug") {
+                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1)
                     reportArrays[idnum].drugs.push(itemName);
                 } else if (type == "category") {
-                    reportArrays[idnum].category.push(itemName);
+                    if (reportArrays[idnum].category.indexOf(itemName) == -1)
+                        reportArrays[idnum].category.push(itemName);
                 } else if (type == "nonsubstance") {
-                    reportArrays[idnum].nonSubstance.push(itemName);
+                    if (reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
+                        reportArrays[idnum].nonSubstance.push(itemName);
                 } else if (type == "context") {
-                    reportArrays[idnum].context.push(itemName);
+                    if (reportArrays[idnum].context.indexOf(itemName) == -1)
+                        reportArrays[idnum].context.push(itemName);
                 } else if (type == "dosemethod") {
-                    reportArrays[idnum].doseMethod.push(itemName);
+                    if (reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
+                        reportArrays[idnum].doseMethod.push(itemName);
                 } else if (type == "intensity") {
-                    reportArrays[idnum].intensity.push(itemName);
+                    if (reportArrays[idnum].intensity.indexOf(itemName) == -1)
+                        reportArrays[idnum].intensity.push(itemName);
                 } else if (type == "genderselect") {
-                    reportArrays[idnum].gender.push(itemName);
+                    if (reportArrays[idnum].gender.indexOf(itemName) == -1)
+                        reportArrays[idnum].gender.push(itemName);
                 }
             }
 
@@ -343,15 +348,70 @@ function scrapeReports() {
             return;
         }
 
+
+
         //get the source for the search, count the reports, and shove them
         //with their appropriate drug in the drugTotalsList array
+        //        if (paging == false) {
         getSourceCode(allURLS[iter].url, function () {
             parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
 
-            urlIter++;
-            getURL(urlIter);
+            var url = allURLS[iter].url;
+            //            console.log(url);
+            var startBegin = url.indexOf("Start=") + 6;
+            var startEnd = url.indexOf("&Max");
 
+            url = url.substring(startBegin, startEnd);
+
+            //            if(currStart == 0){
+            //                currStart = Number(url);
+            //            }else{
+            currStart += pageSize;
+            //            }
+            
+            //            if ((reportAmt - currStart) < 100) {
+
+            nextPage = allURLS[iter].url.substring(0, startBegin - 6);
+            nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
+//            console.log(nextPage);
+            getSourceCode(nextPage, function () {
+                var totalBegin = URLSource.indexOf("><b>(") + 5;
+                var totalEnd = URLSource.indexOf("Total");
+                reportAmt = Number(URLSource.substring(totalBegin, totalEnd));
+                
+                console.log(allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + currStart + " of " + reportAmt);
+
+                if (URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
+//                    console.log("empty or zero");
+                    urlIter++;
+                    currStart = 0;
+                    getURL(urlIter);
+                } else {
+//                    console.log("not empty or zero");
+                    parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
+                    getURL(urlIter);
+                }
+            });
+
+
+            //            } else {
+            //                nextPage = allURLS[iter].url.substring(0, startBegin - 6);
+            //                nextPage += "Start=" + currStart + 100 + "&Max=100";
+            //                //                var nextPage = allURLS[iter].url.replace("Start=" + currStart, "Start=" + currStart + 100);
+            //                console.log(nextPage);
+            //                getSourceCode(nextPage, function () {
+            //                    parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type                         
+            //                    paging = true;
+            //                    getURL(nextPage);
+            //                });
+            //            }
         });
+        //        } else {
+
+
+        //        }
+
     }
+
 
 }
