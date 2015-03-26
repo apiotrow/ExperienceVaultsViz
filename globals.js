@@ -17,53 +17,62 @@ function fillOptionValueArrays() {
     var iter = -1;
     
     optionValueArrays[++iter] = {
+        type: "drug",
         begin: "S1",
         end: "S2",
         theArray: OptionValues_Drugs = []
     };
     optionValueArrays[++iter] = {
+        type: "category",
         begin: "C1",
         end: "S4",
         theArray: OptionValues_Category = []
     };
     optionValueArrays[++iter] = {
+        type: "nonsubstance",
         begin: "S4",
         end: "GenderSelect",
         theArray: OptionValues_NonSubstance = []
     };
     optionValueArrays[++iter] = {
+        type: "genderselect",
         begin: "GenderSelect",
         end: "Context",
         theArray: OptionValues_Gender = []
     };
     optionValueArrays[++iter] = {
+        type: "context",
         begin: "Context",
         end: "DoseMethodID",
         theArray: OptionValues_Context = []
     };
     optionValueArrays[++iter] = {
+        type: "dosemethod",
         begin: "DoseMethodID",
         end: "A1",
         theArray: OptionValues_DoseMethod = []
     };
 //    optionValueArrays[++iter] = {
+    //    type: "author",
 //        begin: "A1",
 //        end: "Lang",
 //        theArray: OptionValues_Author = []
 //    };
 //    optionValueArrays[++iter] = {
+    //    type: "language",
 //        begin: "Lang",
 //        end: "Group",
 //        theArray: OptionValues_Lang = []
 //    };
     optionValueArrays[++iter] = {
+        type: "intensity",
         begin: "Intensity",
         end: "I2",
         theArray: OptionValues_Intensity = []
     };
 }
 
-var reportArrays = [];
+var reportArrays = {};
 
 
 

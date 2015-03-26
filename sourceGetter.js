@@ -1,10 +1,8 @@
-
-
 // jquery.xdomainajax.js  ------ from padolsey
 //   function outputdata(your_url, drugName, categoryName) {
 function getSourceCode(your_url, callback) {
 
-    
+
 
     jQuery.ajax = (function (_ajax) {
 
@@ -28,6 +26,8 @@ function getSourceCode(your_url, callback) {
 
                 o.url = YQL;
                 o.dataType = 'json';
+                o.tryCount = 0,
+                o.retryLimit = 3,
 
                 o.data = {
                     q: query.replace('{URL}', url + (o.data ? (/\?/.test(url) ? '&' : '?') + jQuery.param(o.data) : '')),
@@ -47,15 +47,35 @@ function getSourceCode(your_url, callback) {
                         if (_success) {
                             // Fake XHR callback.
                             _success.call(this, {
+                                
                                 responseText: data.results[0]
                                 // YQL screws with <script>s
                                 // Get rid of them
                                 .replace(/<script[^>]+?\/>|<script(.|\s)*?\/script>/gi, '')
                             }, 'success');
+
                         }
 
                     };
                 })(o.success);
+
+                o.error = (function (xhr, textStatus, errorThrown) {
+                    console.log("hi");
+                    if (textStatus == 'timeout') {
+                        o.tryCount++;
+                        if (o.tryCount <= o.retryLimit) {
+                            //try again
+                            $.ajax(this);
+                            return;
+                        }
+                        return;
+                    }
+                    if (xhr.status == 500) {
+                        console.log("hi");
+                    } else {
+                        console.log("hi");
+                    }
+                });
 
             }
 
@@ -68,12 +88,31 @@ function getSourceCode(your_url, callback) {
     $.ajax({
         url: your_url,
         type: 'GET',
+        tryCount: 0,
+        retryLimit: 3,
         success: function (res) {
             var text = res.responseText;
 
             URLSource = text;
             callback(URLSource);
 
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log("hidown");
+            if (textStatus == 'timeout') {
+                this.tryCount++;
+                if (this.tryCount <= this.retryLimit) {
+                    //try again
+                    $.ajax(this);
+                    return;
+                }
+                return;
+            }
+            if (xhr.status == 500) {
+                console.log("hidown");
+            } else {
+                console.log("hidown");
+            }
         }
     });
 

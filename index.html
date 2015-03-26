@@ -19,21 +19,17 @@
     <br>
     <hr>
     <br>
-    <button onclick="outputOptionValues()">
-        Scrape Option Values
-    </button>
-    
-    <button onclick="outputReports()">
-        Scrape Reports
-    </button>
 
-<!--
+
+
+
+    <!--
     <button onclick="exportRestToCSV()">
         Export rest to CSV.
     </button>
 -->
 
-<!--
+    <!--
     <button onclick="makePercentages()">
         Make percentages.
     </button>
@@ -41,7 +37,17 @@
 
     <br>
     <div style="height:400px; overflow-y: scroll; display: inline-block;">
+        <button onclick="outputOptionValues()">
+            Scrape Option Values
+        </button>
         <table id='outTable'></table>
+    </div>
+
+    <div style="height:400px; overflow-y: scroll; display: inline-block;">
+        <button onclick="outputReports()">
+            Scrape Reports
+        </button>
+        <table id='reportTable'></table>
     </div>
 
 
@@ -69,14 +75,17 @@
                 printOptionValues();
             });
         }
-        
-        function outputReports(){
+
+        function outputReports() {
+            $(document).ready(function () {
+                $("#reportTable").html("<tr><td>Report ID</td><td>Drugs</td><td>Categories</td><td>Non-Substance</td><td>Context</td><td>Dose Method</td></tr>");
+            });
+            
             scrapeReports();
-        
         }
-        
-        
-        
+
+
+
 
 
         function makePercentages() {
