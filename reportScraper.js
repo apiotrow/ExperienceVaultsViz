@@ -5,9 +5,9 @@ function scrapeReports() {
     var urlFields = []; //for constructing the URL
     //    var numURLFields = 16;
 
-    var drugOne = -1;
-    var drugTwo = -1;
-    var drugThree = -1;
+    var drugOne = 0;
+    var drugTwo = -2;
+    var drugThree = -2;
     var category = -1;
     var nonSubstance = -1;
     var gender = -1;
@@ -22,8 +22,6 @@ function scrapeReports() {
     var intensityMin = "";
     var intensityMax = "";
 
-    var prevIdnum;
-
     resetURL();
 
     function resetURL() {
@@ -31,9 +29,9 @@ function scrapeReports() {
         var iter = -1;
 
         //put all in their non-selected state
-        urlFields[++iter] = -1; //[0] = drugOne
-        urlFields[++iter] = -1; //[0] = drugTwo
-        urlFields[++iter] = -1; //[0] = drugThree
+        urlFields[++iter] = 0; //[0] = drugOne
+        urlFields[++iter] = -2; //[0] = drugTwo
+        urlFields[++iter] = -2; //[0] = drugThree
         urlFields[++iter] = -1; //[0] = category
         urlFields[++iter] = -1; //[0] = nonSubstance
         urlFields[++iter] = -1; //[0] = gender
@@ -49,9 +47,9 @@ function scrapeReports() {
         urlFields[++iter] = ""; //[0] = intensityMax
 
 
-        drugOne = -1;
-        drugTwo = -1;
-        drugThree = -1;
+        drugOne = 0;
+        drugTwo = -2;
+        drugThree = -2;
         category = -1;
         nonSubstance = -1;
         gender = -1;
@@ -70,24 +68,25 @@ function scrapeReports() {
 
 
     var allURLS = []; //holds all the URLs we construct using the option values
-    var badtripURLS = [];
-    var mysticalURLS = [];
-    var addictionURLS = [];
-    var aloneURLS = [];
-    var smallgroupURLS = [];
-    var largegroupURLS = [];
-    var result = []; //holds the IDs we get. we use the length to know amount of reports.
+    //    var drugURLS = [];
+    //    var categoryURLS = [];
+    //    var nonSubstanceURLS = [];
+    //    var contextURLS = [];
+    //    var doseMethodURLS = [];
+    //    var genderURLS = [];
+    //    var intensityURLS = [];
 
 
     for (var i = 0; i < optionValueArrays.length; i++) {
 
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
-            if (j > 4) break;
+            if (j > 3) break;
 
-            var url = [];
+
             var url_Entry = {
+                urlType: optionValueArrays[i].type,
                 url: "",
-                itemName: ""
+                itemName: "",
             };
             url_Entry.url = ""; //holds URL
             url_Entry.itemName = optionValueArrays[i].theArray[j].item; //holds item name
@@ -129,6 +128,7 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             } else if (optionValueArrays[i].type == "nonsubstance") {
                 setupURL(drugOne,
                     drugTwo,
@@ -146,6 +146,7 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             } else if (optionValueArrays[i].type == "context") {
                 setupURL(drugOne,
                     drugTwo,
@@ -163,6 +164,7 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             } else if (optionValueArrays[i].type == "dosemethod") {
                 setupURL(drugOne,
                     drugTwo,
@@ -180,6 +182,7 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             } else if (optionValueArrays[i].type == "intensity") {
                 setupURL(drugOne,
                     drugTwo,
@@ -197,6 +200,7 @@ function scrapeReports() {
                     strength,
                     optionValueArrays[i].theArray[j].optionValue,
                     optionValueArrays[i].theArray[j].optionValue);
+
             } else if (optionValueArrays[i].type == "genderselect") {
                 setupURL(drugOne,
                     drugTwo,
@@ -214,18 +218,22 @@ function scrapeReports() {
                     strength,
                     intensityMin,
                     intensityMax);
+
             }
 
+            var url = "";
 
             for (var urlFields_index in urlFields) {
                 if (urlFields.hasOwnProperty(urlFields_index)) {
-                    url_Entry.url += urlFields[urlFields_index];
+                    url += urlFields[urlFields_index];
                 }
             }
 
-            url_Entry.url += "&ShowViews=0&Start=0&Max=99999";
+            url += "&ShowViews=0&Start=0&Max=100";
+            url_Entry.url = url;
 
             allURLS.push(url_Entry);
+
         }
     }
 
@@ -252,7 +260,7 @@ function scrapeReports() {
         }
     }
 
-    function parseSource(itemName) {
+    function parseSource(itemName, type) {
         var text = URLSource;
 
         var pos = text.indexOf('exp.php?ID');
@@ -264,23 +272,62 @@ function scrapeReports() {
 
             if (!(idnum in reportArrays)) {
                 var reportArray_Entry = {
-                    drugs: []
+                    drugs: [],
+                    category: [],
+                    nonSubstance: [],
+                    context: [],
+                    doseMethod: [],
+                    intensity: [],
+                    gender: []
                 };
-                reportArray_Entry.drugs.push(itemName);
+
+
+                if (type == "drug") {
+                    reportArray_Entry.drugs.push(itemName);
+                } else if (type == "category") {
+                    reportArray_Entry.category.push(itemName);
+                } else if (type == "nonsubstance") {
+                    reportArray_Entry.nonSubstance.push(itemName);
+                } else if (type == "context") {
+                    reportArray_Entry.context.push(itemName);
+                } else if (type == "dosemethod") {
+                    reportArray_Entry.doseMethod.push(itemName);
+                } else if (type == "intensity") {
+                    reportArray_Entry.intensity.push(itemName);
+                } else if (type == "genderselect") {
+                    reportArray_Entry.gender.push(itemName);
+                }
+
                 reportArrays[idnum] = reportArray_Entry;
 
             } else {
-                reportArrays[idnum].drugs.push(itemName);
+
+                if (type == "drug") {
+                    reportArrays[idnum].drugs.push(itemName);
+                } else if (type == "category") {
+                    reportArrays[idnum].category.push(itemName);
+                } else if (type == "nonsubstance") {
+                    reportArrays[idnum].nonSubstance.push(itemName);
+                } else if (type == "context") {
+                    reportArrays[idnum].context.push(itemName);
+                } else if (type == "dosemethod") {
+                    reportArrays[idnum].doseMethod.push(itemName);
+                } else if (type == "intensity") {
+                    reportArrays[idnum].intensity.push(itemName);
+                } else if (type == "genderselect") {
+                    reportArrays[idnum].gender.push(itemName);
+                }
             }
 
+
             $(document).ready(function () {
+
                 $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
-                $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td></tr>');
+                $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td><td>' + reportArrays[idnum].category + '</td><td>' + reportArrays[idnum].nonSubstance + '</td><td>' + reportArrays[idnum].context + '</td><td>' + reportArrays[idnum].doseMethod + '</td><td>' + reportArrays[idnum].intensity + '</td><td>' + reportArrays[idnum].gender + '</tr>');
 
             });
 
-            prevIdnum = idnum;
 
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
@@ -292,17 +339,14 @@ function scrapeReports() {
     function getURL(iter) {
         //if we've iterated over all of them, stop
         if (iter >= allURLS.length) {
-            console.log("scraping done");
+            console.log("we done");
             return;
         }
 
         //get the source for the search, count the reports, and shove them
         //with their appropriate drug in the drugTotalsList array
-        //        console.log(allURLS.length);
-        console.log(allURLS[iter].itemName);
         getSourceCode(allURLS[iter].url, function () {
-
-            parseSource(allURLS[iter].itemName); //send in item name
+            parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
 
             urlIter++;
             getURL(urlIter);

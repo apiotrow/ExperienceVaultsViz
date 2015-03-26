@@ -34,12 +34,12 @@ function fillOptionValueArrays() {
         end: "GenderSelect",
         theArray: OptionValues_NonSubstance = []
     };
-    optionValueArrays[++iter] = {
-        type: "genderselect",
-        begin: "GenderSelect",
-        end: "Context",
-        theArray: OptionValues_Gender = []
-    };
+//    optionValueArrays[++iter] = {
+//        type: "genderselect",
+//        begin: "GenderSelect",
+//        end: "Context",
+//        theArray: OptionValues_Gender = []
+//    };
     optionValueArrays[++iter] = {
         type: "context",
         begin: "Context",
