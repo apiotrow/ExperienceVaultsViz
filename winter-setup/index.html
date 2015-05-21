@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+
+    <p>
+        <center>Scraping control panel</center>
+    </p>
+
+    <button onclick="getDrugOptionValues()">
+        Get all drug option values.
+    </button>
+
+    <button onclick="exportToCSV()">
+        Export to CSV.
+    </button>
+
+    <br>
+    <hr>
+    <br>
+
+    <button onclick="sortCSV()">
+        Sort CSV
+    </button>
+
+    <br>
+    <hr>
+    <br>
+    <button onclick="getRest()">
+        Scrape bad trips, mysical experiences, addiction, alone, small group, and large group.
+    </button>
+
+    <button onclick="exportRestToCSV()">
+        Export rest to CSV.
+    </button>
+
+    <button onclick="makePercentages()">
+        Make percentages.
+    </button>
+
+
+
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="scraper.js"></script>
+    <script type="text/javascript" src="dataHolder.js"></script>
+    <script type="text/javascript" src="sourceCodeGetter.js"></script>
+    <script type="text/javascript" src="restscraper.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        function makePercentages() {
+            $.ajax({
+                url: "topdrugdata.csv",
+                async: false,
+                success: function (csvd) {
+                    data = $.csv2Array(csvd);
+                },
+                dataType: "text",
+                complete: function () {
+
+                    //get rid of titles (drug, amount)
+//                    data.splice(0, 1);
+
+                    //convert string of amounts into actual numbers
+                    for (var i = 1; i < data.length; i++) {
+                        data[i][1] = Number(data[i][1]);
+                        data[i][2] = Number(data[i][2]);
+                        data[i][3] = Number(data[i][3]);
+                        data[i][4] = Number(data[i][4]);
+                        data[i][5] = Number(data[i][5]);
+                        data[i][6] = Number(data[i][6]);
+                        data[i][7] = Number(data[i][7]);
+                    }
+
+                    //sort them from highest to lowest
+                    //                    data.sort(sortFunction);
+
+                    //                    function sortFunction(a, b) {
+                    //                        if (a[1] === b[1]) {
+                    //                            return 0;
+                    //                        } else {
+                    //                            return (a[1] > b[1]) ? -1 : 1;
+                    //                        }
+                    //                    }
+
+
+
+                    console.log(data);
+
+                    var csvData = new Array();
+                    csvData.push('"drug","amount","badtrip","mystical","addiction","alone","smallgroup","largegroup"');
+                    
+                    function makeIntoPercent(num){
+                        return (Math.round(10000 * num) / 100);
+                        
+                    }
+
+                    for (var j = 1; j < data.length; j++) {
+                    csvData.push('"' + data[j][0] + '","' + data[j][1] + '","' + makeIntoPercent(data[j][2] / data[j][1]) + '","' + makeIntoPercent(data[j][3] / data[j][1]) + '","' + makeIntoPercent(data[j][4] / data[j][1]) + '","' + makeIntoPercent(data[j][5] / data[j][1]) + '","' + makeIntoPercent(data[j][6] / data[j][1]) + '","' + makeIntoPercent(data[j][7] / data[j][1]) + '"');
+                    }
+
+                    var buffer = csvData.join("\n");
+                    var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
+                    var fileName = "data.csv";
+                    var link = document.createElement("a");
+                    if (link.download !== undefined) { // feature detection
+                        // Browsers that support HTML5 download attribute
+                        link.setAttribute("href", uri);
+                        link.setAttribute("download", fileName);
+                    } else if (navigator.msSaveBlob) { // IE 10+
+                        link.addEventListener("click", function (event) {
+                            var blob = new Blob([buffer], {
+                                "type": "text/csv;charset=utf-8;"
+                            });
+                            navigator.msSaveBlob(blob, fileName);
+                        }, false);
+                    } else {
+                        // it needs to implement server side export
+                        link.setAttribute("href", "http://www.example.com/export");
+                    }
+                    link.innerHTML = "Download CSV";
+                    document.body.appendChild(link);
+                }
+            });
+
+        }
+
+
+        function getRest() {
+            getSource("https://www.erowid.org/experiences/exp_search.cgi", function () {
+                collectRest();
+            });
+
+        }
+
+        function exportRestToCSV() {
+            var csvData = new Array();
+            csvData.push('"drug","amount","badtrip","mystical","addiction","alone","smallgroup","largegroup"');
+
+            for (var j = 0; j < drugTotalsList.length; j++) {
+                csvData.push('"' + drugTotalsList[j].drug + '","' + drugTotalsList[j].amount + '","' + drugTotalsList[j].badtrip + '","' + drugTotalsList[j].mystical + '","' + drugTotalsList[j].addiction + '","' + drugTotalsList[j].alone + '","' + drugTotalsList[j].smallgroup + '","' + drugTotalsList[j].largegroup + '"');
+            }
+
+            var buffer = csvData.join("\n");
+            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
+            var fileName = "data.csv";
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                link.setAttribute("href", uri);
+                link.setAttribute("download", fileName);
+            } else if (navigator.msSaveBlob) { // IE 10+
+                link.addEventListener("click", function (event) {
+                    var blob = new Blob([buffer], {
+                        "type": "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, fileName);
+                }, false);
+            } else {
+                // it needs to implement server side export
+                link.setAttribute("href", "http://www.example.com/export");
+            }
+            link.innerHTML = "Download CSV";
+            document.body.appendChild(link);
+
+        }
+
+
+        function getDrugOptionValues() {
+            getSource("https://www.erowid.org/experiences/exp_search.cgi", function () {
+                //                console.log(sourceCode);
+                collectTotals();
+            });
+        }
+
+        function exportToCSV() {
+            var csvData = new Array();
+            csvData.push('"drug","amount"');
+
+            for (var j = 0; j < drugTotalsList.length; j++) {
+                //                console.log(drugTotalsList[j].drug + ": " + drugTotalsList[j].amount);
+                csvData.push('"' + drugTotalsList[j].drug + '","' + drugTotalsList[j].amount + '"');
+            }
+
+            var buffer = csvData.join("\n");
+            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
+            var fileName = "data.csv";
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                link.setAttribute("href", uri);
+                link.setAttribute("download", fileName);
+            } else if (navigator.msSaveBlob) { // IE 10+
+                link.addEventListener("click", function (event) {
+                    var blob = new Blob([buffer], {
+                        "type": "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, fileName);
+                }, false);
+            } else {
+                // it needs to implement server side export
+                link.setAttribute("href", "http://www.example.com/export");
+            }
+            link.innerHTML = "Download CSV";
+            document.body.appendChild(link);
+        }
+
+        function sortCSV() {
+            $.ajax({
+                url: "drugamounts.csv",
+                async: false,
+                success: function (csvd) {
+                    data = $.csv2Array(csvd);
+                },
+                dataType: "text",
+                complete: function () {
+
+                    //get rid of titles (drug, amount)
+                    data.splice(0, 1);
+
+                    //convert string of amounts into actual numbers
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][1] = Number(data[i][1]);
+                    }
+
+                    //sort them from highest to lowest
+                    data.sort(sortFunction);
+
+                    function sortFunction(a, b) {
+                        if (a[1] === b[1]) {
+                            return 0;
+                        } else {
+                            return (a[1] > b[1]) ? -1 : 1;
+                        }
+                    }
+
+                    console.log(data);
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+
+</html>
