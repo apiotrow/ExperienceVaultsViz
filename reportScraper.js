@@ -2,10 +2,10 @@ function scrapeReports() {
 
     var urlFields = []; //for constructing the URL
     var reportAmt = 0;
-    var paging = false;
     var nextPage = "";
     var currStart = 0;
-    var pageSize = 500;
+    var pageSize = 500; //how big the pages are that we load
+    var onPageOne = true;
 
     var drugOne = 0;
     var drugTwo = -1;
@@ -75,7 +75,7 @@ function scrapeReports() {
     for (var i = 0; i < optionValueArrays.length; i++) {
 
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
-            if (j > 3) break;
+//            if (j > 3) break;
 
 
             var url_Entry = {
@@ -279,7 +279,7 @@ function scrapeReports() {
                     gender: []
                 };
 
-
+                
                 if (type == "drug") {
                     reportArray_Entry.drugs.push(itemName);
                 } else if (type == "category") {
@@ -300,9 +300,11 @@ function scrapeReports() {
 
             } else {
 
+                //the indexOf checks are required so we don't duplicate entries
+                //as we iterate through multiple pages
                 if (type == "drug") {
                     if (reportArrays[idnum].drugs.indexOf(itemName) == -1)
-                    reportArrays[idnum].drugs.push(itemName);
+                        reportArrays[idnum].drugs.push(itemName);
                 } else if (type == "category") {
                     if (reportArrays[idnum].category.indexOf(itemName) == -1)
                         reportArrays[idnum].category.push(itemName);
@@ -352,64 +354,51 @@ function scrapeReports() {
 
         //get the source for the search, count the reports, and shove them
         //with their appropriate drug in the drugTotalsList array
-        //        if (paging == false) {
+
         getSourceCode(allURLS[iter].url, function () {
-            parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
+            
+            //we're flipping through pages. don't parse the original URL again
+            if (onPageOne == true){
+                parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
+            }
 
             var url = allURLS[iter].url;
-            //            console.log(url);
+
             var startBegin = url.indexOf("Start=") + 6;
-            var startEnd = url.indexOf("&Max");
+            //            var startEnd = url.indexOf("&Max");
 
-            url = url.substring(startBegin, startEnd);
+            //            url = url.substring(startBegin, startEnd);
 
-            //            if(currStart == 0){
-            //                currStart = Number(url);
-            //            }else{
             currStart += pageSize;
-            //            }
-            
-            //            if ((reportAmt - currStart) < 100) {
+
 
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
             nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
-//            console.log(nextPage);
             getSourceCode(nextPage, function () {
                 var totalBegin = URLSource.indexOf("><b>(") + 5;
                 var totalEnd = URLSource.indexOf("Total");
                 reportAmt = Number(URLSource.substring(totalBegin, totalEnd));
+
                 
-                console.log(allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + currStart + " of " + reportAmt);
 
                 if (URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
-//                    console.log("empty or zero");
+                    console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + reportAmt + " of " + reportAmt);
+                    onPageOne = true;
                     urlIter++;
                     currStart = 0;
                     getURL(urlIter);
                 } else {
-//                    console.log("not empty or zero");
+                    console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + currStart + " of " + reportAmt);
+                    onPageOne = false;
                     parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
                     getURL(urlIter);
                 }
             });
 
 
-            //            } else {
-            //                nextPage = allURLS[iter].url.substring(0, startBegin - 6);
-            //                nextPage += "Start=" + currStart + 100 + "&Max=100";
-            //                //                var nextPage = allURLS[iter].url.replace("Start=" + currStart, "Start=" + currStart + 100);
-            //                console.log(nextPage);
-            //                getSourceCode(nextPage, function () {
-            //                    parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type                         
-            //                    paging = true;
-            //                    getURL(nextPage);
-            //                });
-            //            }
+
         });
-        //        } else {
 
-
-        //        }
 
     }
 
