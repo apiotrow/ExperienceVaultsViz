@@ -312,7 +312,7 @@ function scrapeReports() {
                 //we do it only in drug so that we only parse the dose chart once for each report.
                 if (type == "drug") {
                     reportArray_Entry.drugs.push(itemName);
-                
+                    
                     //get position of next ID
                     var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
                     
@@ -327,23 +327,87 @@ function scrapeReports() {
                     //get things
                     var titleText = doseChartRegion.substring(doseChartRegion.indexOf(">") + 1, doseChartRegion.indexOf("<"));
                     //shrink doseChartRegion to beginning of author
-                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
-                    var doseChartRegion = doseChartRegion.substring(13, nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(13, nextIDPos);
                     var authorText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
                     //shrink doseChartRegion to beginning of date
-                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
-                    var doseChartRegion = doseChartRegion.substring(9, nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(9, nextIDPos);
                     var dateText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
                     //shrink doseChartRegion to beginning of views
-                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
-                    var doseChartRegion = doseChartRegion.substring(7, nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
+                    doseChartRegion = doseChartRegion.substring(7, nextIDPos);
                     var viewsText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+
+                    //shrink doseChartRegion to first tr entry
+                    var trStart = doseChartRegion.indexOf("DOSE:");
+                    var trEnd = doseChartRegion.indexOf("</b></td>");
+                    var trRegion = doseChartRegion.substring(trStart, trEnd);
+                    //trEnd = trRegion.indexOf("</tr>");
+                    //trRegion = trRegion.substring(trStart, trEnd);
+                    
+                    console.log(trRegion);
+                    
+                    //gather categories that are within the dose chart
+                    var amountText = "";
+                    var methodText = "";
+                    var substanceText = "";
+                    var formText = "";
+                    var trCategs = ["amount","method","substance","form"];
+                    for(var k = 0; k < trCategs.length; k++){
+                        if(trRegion.indexOf("dosechart-" + trCategs[k]) != -1){
+                            var categName = "dosechart-" + trCategs[k];
+                            var thisRegion = trRegion.substring(trRegion.indexOf(categName), trEnd);
+                            thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
+                            
+                            //substance and form lines have an extra bracketed thing we need to skip over
+                            if(trCategs[k] == "substance" || trCategs[k] == "form"){
+                                thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
+                            }
+                            
+                            var resultText = thisRegion.substring(0, thisRegion.indexOf("<"));
+                            
+                            //the way trRegion is cut off, we need to go to very end rather than the next
+                            //instance of "<"
+                            if(trCategs[k] == "form"){
+                                resultText = thisRegion.substring(0, trEnd);
+                            }
+                            
+                            //remove whitespace that exists due to the &nbsp;'s
+                            resultText = resultText.trim();
+                            
+                            if(trCategs[k] == "amount")
+                                amountText = resultText;
+                            else if(trCategs[k] == "method")
+                                methodText = resultText;
+                            else if(trCategs[k] == "substance")
+                                substanceText = resultText;
+                            else if(trCategs[k] == "form")
+                                formText = resultText;
+                        }
+                    }
                     
                     //push new things
                     reportArray_Entry.title.push(titleText);
                     reportArray_Entry.author.push(authorText);
                     reportArray_Entry.date.push(dateText);
                     reportArray_Entry.views.push(viewsText);
+                    
+                    //check if the substance is a match. if it is, edit the drug entry to have amount,
+                    //method, and form
+                    if(substanceText!= "" && reportArray_Entry.drugs.indexOf(substanceText) != -1){
+                        var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(substanceText)];
+                        if(methodText != ""){
+                            entryText += "(" + methodText + ")";
+                        }
+                        if(amountText != ""){
+                            entryText += "(" + amountText + ")";
+                        }
+                        if(formText != ""){
+                            entryText += formText;
+                        }
+                        reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(substanceText)] = entryText;
+                    }
                 } else if (type == "category") {
                     reportArray_Entry.category.push(itemName);
                 } else if (type == "nonsubstance") {
@@ -359,14 +423,107 @@ function scrapeReports() {
                 }
 
                 reportArrays[idnum] = reportArray_Entry;
-
             } else {
-
                 //the indexOf checks are required so we don't duplicate entries
                 //as we iterate through multiple pages
                 if (type == "drug") {
-                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1)
+                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1){
                         reportArrays[idnum].drugs.push(itemName);
+
+                        //get position of next ID
+                        var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
+
+                        //if we're on last ID, next position will be -1, so set next to be end of document
+                        if(nextIDPos == -1){
+                            nextIDPos = text.length - 1;
+                        }
+
+                        //get the region the dose chart is in
+                        var doseChartRegion = text.substring(pos, nextIDPos);
+
+                        //get things
+                        var titleText = doseChartRegion.substring(doseChartRegion.indexOf(">") + 1, doseChartRegion.indexOf("<"));
+                        //shrink doseChartRegion to beginning of author
+                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
+                        doseChartRegion = doseChartRegion.substring(13, nextIDPos);
+                        var authorText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+                        //shrink doseChartRegion to beginning of date
+                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
+                        doseChartRegion = doseChartRegion.substring(9, nextIDPos);
+                        var dateText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+                        //shrink doseChartRegion to beginning of views
+                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
+                        doseChartRegion = doseChartRegion.substring(7, nextIDPos);
+                        var viewsText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+
+                        //shrink doseChartRegion to first tr entry
+                        var trStart = doseChartRegion.indexOf("<tr>");
+                        var trEnd = doseChartRegion.indexOf("</b></td>");
+                        var trRegion = doseChartRegion.substring(trStart, trEnd);
+
+                        //console.log(trRegion);
+
+                        //gather categories that are within the dose chart
+                        var amountText = "";
+                        var methodText = "";
+                        var substanceText = "";
+                        var formText = "";
+                        var trCategs = ["amount","method","substance","form"];
+                        for(var k = 0; k < trCategs.length; k++){
+                            if(trRegion.indexOf("dosechart-" + trCategs[k]) != -1){
+                                var categName = "dosechart-" + trCategs[k];
+                                var thisRegion = trRegion.substring(trRegion.indexOf(categName), trEnd);
+                                thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
+
+                                //substance and form lines have an extra bracketed thing we need to skip over
+                                if(trCategs[k] == "substance" || trCategs[k] == "form"){
+                                    thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
+                                }
+
+                                var resultText = thisRegion.substring(0, thisRegion.indexOf("<"));
+
+                                //the way trRegion is cut off, we need to go to very end rather than the next
+                                //instance of "<"
+                                if(trCategs[k] == "form"){
+                                    resultText = thisRegion.substring(0, trEnd);
+                                }
+
+                                //remove whitespace from the &nbsp;'s
+                                resultText = resultText.trim();
+
+                                if(trCategs[k] == "amount")
+                                    amountText = resultText;
+                                else if(trCategs[k] == "method")
+                                    methodText = resultText;
+                                else if(trCategs[k] == "substance")
+                                    substanceText = resultText;
+                                else if(trCategs[k] == "form")
+                                    formText = resultText;
+                            }
+                        }
+
+                        //push new things
+    //                    reportArray_Entry.title.push(titleText);
+    //                    reportArray_Entry.author.push(authorText);
+    //                    reportArray_Entry.date.push(dateText);
+    //                    reportArray_Entry.views.push(viewsText);
+
+                        //check if the substance is a match. if it is, edit the drug entry to have amount,
+                        //method, and form
+                        if(substanceText == itemName){
+                            var entryText = reportArrays[idnum].drugs[reportArrays[idnum].drugs.indexOf(substanceText)];
+                            if(methodText != ""){
+                                entryText += "(" + methodText + ")";
+                            }
+                            if(amountText != ""){
+                                entryText += "(" + amountText + ")";
+                            }
+                            if(formText != ""){
+                                entryText += formText;
+                            }
+                            reportArrays[idnum].drugs[reportArrays[idnum].drugs.indexOf(substanceText)] = entryText;
+                        }
+                    }
                 } else if (type == "category") {
                     if (reportArrays[idnum].category.indexOf(itemName) == -1)
                         reportArrays[idnum].category.push(itemName);
