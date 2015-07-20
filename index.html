@@ -128,9 +128,10 @@
                 link.setAttribute("href", "http://www.example.com/export");
             }
             link.innerHTML = "Download CSV";
+            link.setAttribute("id", "csvlink")
             document.body.appendChild(link);
-            
-            
+
+            document.getElementById('csvlink').click(); 
         }
 
 

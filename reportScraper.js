@@ -24,7 +24,7 @@ function scrapeReports() {
     var intensityMin = "";
     var intensityMax = "";
     
-    var testMode = true;
+    var testMode = false;
 
     resetURL();
 
@@ -78,7 +78,7 @@ function scrapeReports() {
 
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
             if(testMode == true){
-                if (j > 0) break; //uncomment this if we want to a do a quicker test
+                if (j > 1) break; //uncomment this if we want to a do a quicker test
             }
 
 
@@ -348,7 +348,7 @@ function scrapeReports() {
                 }
             }
 
-            /*
+            
             //fills in drug ID table
             $(document).ready(function () {
 
@@ -358,7 +358,7 @@ function scrapeReports() {
                 $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td><td>' + reportArrays[idnum].category + '</td><td>' + reportArrays[idnum].nonSubstance + '</td><td>' + reportArrays[idnum].context + '</td><td>' + reportArrays[idnum].doseMethod + '</td><td>' + reportArrays[idnum].intensity + '</td><td>' + reportArrays[idnum].gender + '</tr>');
 
             });
-            */
+            
                 
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
@@ -370,6 +370,7 @@ function scrapeReports() {
     function getURL(iter) {
         //if we've iterated over all of them, stop
         if (iter >= allURLS.length) {
+            exportToCSV();
             console.log("we done");
             return;
         }
@@ -422,9 +423,7 @@ function scrapeReports() {
 
 
         });
-
-
     }
-
+    
 
 }
