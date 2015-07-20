@@ -23,6 +23,8 @@ function scrapeReports() {
     var strength = "";
     var intensityMin = "";
     var intensityMax = "";
+    
+    var testMode = true;
 
     resetURL();
 
@@ -75,7 +77,9 @@ function scrapeReports() {
     for (var i = 0; i < optionValueArrays.length; i++) {
 
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
-            //if (j > 2) break; //uncomment this if we want to a do a quicker test
+            if(testMode == true){
+                if (j > 0) break; //uncomment this if we want to a do a quicker test
+            }
 
 
             var url_Entry = {
@@ -219,17 +223,35 @@ function scrapeReports() {
 
             var url = "";
 
-            for (var urlFields_index in urlFields) {
-                if (urlFields.hasOwnProperty(urlFields_index)) {
-                    url += urlFields[urlFields_index];
+            if(testMode == true){
+                if(/*optionValueArrays[i].type != "category" &&*/
+                  optionValueArrays[i].type != "nonsubstance" &&
+                  optionValueArrays[i].type != "context" &&
+                  optionValueArrays[i].type != "dosemethod" &&
+                  optionValueArrays[i].type != "genderselect"){
+                    for (var urlFields_index in urlFields) {
+                        if (urlFields.hasOwnProperty(urlFields_index)) {
+                            url += urlFields[urlFields_index];
+                        }
+                    }
+
+                    url += "&ShowViews=0&Start=0&Max=" + pageSize;
+                    url_Entry.url = url;
+
+                    allURLS.push(url_Entry);
                 }
+            }else{
+                for (var urlFields_index in urlFields) {
+                    if (urlFields.hasOwnProperty(urlFields_index)) {
+                        url += urlFields[urlFields_index];
+                    }
+                }
+
+                url += "&ShowViews=0&Start=0&Max=" + pageSize;
+                url_Entry.url = url;
+
+                allURLS.push(url_Entry);
             }
-
-            url += "&ShowViews=0&Start=0&Max=" + pageSize;
-            url_Entry.url = url;
-
-            allURLS.push(url_Entry);
-
         }
     }
 
@@ -258,8 +280,6 @@ function scrapeReports() {
 
     function parseSource(itemName, type) {
         var text = URLSource;
-
-
 
         var pos = text.indexOf('exp.php?ID');
 
@@ -328,6 +348,7 @@ function scrapeReports() {
                 }
             }
 
+            /*
             //fills in drug ID table
             $(document).ready(function () {
 
@@ -337,8 +358,8 @@ function scrapeReports() {
                 $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td><td>' + reportArrays[idnum].category + '</td><td>' + reportArrays[idnum].nonSubstance + '</td><td>' + reportArrays[idnum].context + '</td><td>' + reportArrays[idnum].doseMethod + '</td><td>' + reportArrays[idnum].intensity + '</td><td>' + reportArrays[idnum].gender + '</tr>');
 
             });
-
-
+            */
+                
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
     }
