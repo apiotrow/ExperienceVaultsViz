@@ -1,4 +1,7 @@
+
+
 function scrapeReports() {
+   
 
     var urlFields = []; //for constructing the URL
     var reportAmt = 0;
@@ -247,7 +250,7 @@ function scrapeReports() {
                     }
                 }
 
-                url += "&ShowViews=0&Start=0&Max=" + pageSize;
+                url += "&SP=1&ShowViews=1&Start=0&Max=" + pageSize;
                 url_Entry.url = url;
 
                 allURLS.push(url_Entry);
@@ -298,12 +301,49 @@ function scrapeReports() {
                     context: [],
                     doseMethod: [],
                     intensity: [],
-                    gender: []
+                    gender: [],
+                    title: [],
+                    author: [],
+                    date: [],
+                    views:[],
                 };
 
-                
+                //every report has a drug entry, so if we do the dose chart parsing here, we won't miss any.
+                //we do it only in drug so that we only parse the dose chart once for each report.
                 if (type == "drug") {
                     reportArray_Entry.drugs.push(itemName);
+                
+                    //get position of next ID
+                    var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
+                    
+                    //if we're on last ID, next position will be -1, so set next to be end of document
+                    if(nextIDPos == -1){
+                        nextIDPos = text.length - 1;
+                    }
+                    
+                    //get the region the dose chart is in
+                    var doseChartRegion = text.substring(pos, nextIDPos);
+                    
+                    //get things
+                    var titleText = doseChartRegion.substring(doseChartRegion.indexOf(">") + 1, doseChartRegion.indexOf("<"));
+                    //shrink doseChartRegion to beginning of author
+                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
+                    var doseChartRegion = doseChartRegion.substring(13, nextIDPos);
+                    var authorText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+                    //shrink doseChartRegion to beginning of date
+                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
+                    var doseChartRegion = doseChartRegion.substring(9, nextIDPos);
+                    var dateText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+                    //shrink doseChartRegion to beginning of views
+                    var doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
+                    var doseChartRegion = doseChartRegion.substring(7, nextIDPos);
+                    var viewsText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
+                    
+                    //push new things
+                    reportArray_Entry.title.push(titleText);
+                    reportArray_Entry.author.push(authorText);
+                    reportArray_Entry.date.push(dateText);
+                    reportArray_Entry.views.push(viewsText);
                 } else if (type == "category") {
                     reportArray_Entry.category.push(itemName);
                 } else if (type == "nonsubstance") {
@@ -355,22 +395,39 @@ function scrapeReports() {
                 $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
                 //put the ID in the table with all its info
-                $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td><td>' + reportArrays[idnum].category + '</td><td>' + reportArrays[idnum].nonSubstance + '</td><td>' + reportArrays[idnum].context + '</td><td>' + reportArrays[idnum].doseMethod + '</td><td>' + reportArrays[idnum].intensity + '</td><td>' + reportArrays[idnum].gender + '</tr>');
+                $("#reportTable").append('<tr id="' 
+                                         + idnum + '"><td>' 
+                                         + idnum + '</td><td>' 
+                                         + reportArrays[idnum].drugs + '</td><td>' 
+                                         + reportArrays[idnum].category + '</td><td>' 
+                                         + reportArrays[idnum].nonSubstance + '</td><td>' 
+                                         + reportArrays[idnum].context + '</td><td>' 
+                                         + reportArrays[idnum].doseMethod + '</td><td>' 
+                                         + reportArrays[idnum].intensity + '</td><td>' 
+                                         + reportArrays[idnum].gender + '</td><td>' 
+                                         + reportArrays[idnum].title + '</td><td>' 
+                                         + reportArrays[idnum].author + '</td><td>'
+                                         + reportArrays[idnum].date + '</td><td>'
+                                         + reportArrays[idnum].views + '</tr>');
 
             });
             
                 
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
+        
+        //print current amount of scraped data
+        //console.log(Object.keys(reportArrays).length);
     }
 
     var urlIter = 0;
     getURL(urlIter);
 
     function getURL(iter) {
-        //if we've iterated over all of them, stop
+        //if we've iterated over all of them
         if (iter >= allURLS.length) {
-            exportToCSV();
+            //exportToCSV();
+            
             console.log("we done");
             return;
         }
@@ -414,6 +471,9 @@ function scrapeReports() {
                     getURL(urlIter);
                 } else {
                     console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + currStart + " of " + reportAmt);
+                    
+
+                    
                     onPageOne = false;
                     parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
                     getURL(urlIter);
@@ -427,3 +487,4 @@ function scrapeReports() {
     
 
 }
+

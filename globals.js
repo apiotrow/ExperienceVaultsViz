@@ -72,7 +72,7 @@ function fillOptionValueArrays() {
     };
 }
 
-var reportArrays = {};
+ var reportArrays = {};
 
 
 
