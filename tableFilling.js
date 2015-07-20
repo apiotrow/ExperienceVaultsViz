@@ -1,3 +1,5 @@
+//handles printing of option values
+
 function printOptionValues() {
     for(var i = 0; i < optionValueArrays.length; i++){
         printLoop(optionValueArrays[i].theArray);

@@ -54,6 +54,13 @@
         </button>
         <table id='reportTable'></table>
     </div>
+    
+    <div style="height:400px; overflow-y: scroll; display: inline-block;">
+        <button onclick="exportToCSV()">
+            Export Data to CSV
+        </button>
+        <table id='reportTable'></table>
+    </div>
 
 
 
@@ -89,9 +96,53 @@
             scrapeReports();
         }
 
+        function exportToCSV() {
+            var csvData = new Array();
+            csvData.push('"reportid",drugs","categories","nonsubstance","context","dosemethod","intensity","gender"');
+            //console.log(reportArrays.length);
+            
+            var keys = [];
+            for (var key in reportArrays) {
+                if(reportArrays.hasOwnProperty(key)){
+                    csvData.push('"' + key + '","' + reportArrays[key].drugs + '","' + reportArrays[key].category + '","' + reportArrays[key].nonSubstance + '","' + reportArrays[key].context + '","' + reportArrays[key].doseMethod + '","' + reportArrays[key].intensity + '","' + reportArrays[key].gender + '"');
+                }
+            }
+
+            var buffer = csvData.join("\n");
+            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
+            var fileName = "data.csv";
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                link.setAttribute("href", uri);
+                link.setAttribute("download", fileName);
+            } else if (navigator.msSaveBlob) { // IE 10+
+                link.addEventListener("click", function (event) {
+                    var blob = new Blob([buffer], {
+                        "type": "text/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, fileName);
+                }, false);
+            } else {
+                // it needs to implement server side export
+                link.setAttribute("href", "http://www.example.com/export");
+            }
+            link.innerHTML = "Download CSV";
+            document.body.appendChild(link);
+
+        }
 
 
 
+        
+        
+        
+        
+        
+        
+        
+        
+        ///older junk
 
         function makePercentages() {
             $.ajax({

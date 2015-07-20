@@ -75,7 +75,7 @@ function scrapeReports() {
     for (var i = 0; i < optionValueArrays.length; i++) {
 
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
-//            if (j > 3) break;
+            //if (j > 2) break; //uncomment this if we want to a do a quicker test
 
 
             var url_Entry = {
@@ -269,6 +269,8 @@ function scrapeReports() {
             var idnum = idArea.substring(idArea.indexOf('=') + 1, idArea.indexOf('"'));
 
             if (!(idnum in reportArrays)) {
+                
+                //all the data for one report
                 var reportArray_Entry = {
                     drugs: [],
                     category: [],
@@ -326,11 +328,12 @@ function scrapeReports() {
                 }
             }
 
-
+            //fills in drug ID table
             $(document).ready(function () {
 
                 $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
+                //put the ID in the table with all its info
                 $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + reportArrays[idnum].drugs + '</td><td>' + reportArrays[idnum].category + '</td><td>' + reportArrays[idnum].nonSubstance + '</td><td>' + reportArrays[idnum].context + '</td><td>' + reportArrays[idnum].doseMethod + '</td><td>' + reportArrays[idnum].intensity + '</td><td>' + reportArrays[idnum].gender + '</tr>');
 
             });
