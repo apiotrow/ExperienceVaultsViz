@@ -1,4 +1,4 @@
-
+//scrape the reports using the option values
 
 function scrapeReports() {
     var urlFields = []; //for constructing the URL
@@ -37,6 +37,8 @@ function scrapeReports() {
     getURL(urlIter);
     
     
+    //iterate through option values, generating URLS which will later
+    //be iterated through to get their source code
     function fillURLArray(){
         for (var i = 0; i < optionValueArrays.length; i++) {
             for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
@@ -122,10 +124,9 @@ function scrapeReports() {
         }
     }
     
-
+    //set the url fields back to their default values
     function resetURL() {
         urlFields = [];
-        var iter = -1;
 
         drugOne = 0;
         drugTwo = -1;
@@ -167,16 +168,125 @@ function scrapeReports() {
         }
     }
 
-    
+    //go through the HTML source and extrapolate the various values we want, for each report in the source
     function parseSource(itemName, type) {
         var text = URLSource;
         var pos = text.indexOf('exp.php?ID');
+
+        //move through HTML source by jumping from one report ID to the next
+        while (pos != -1) {
+            var idArea = text.substring(pos, text.indexOf(">", pos));
+            var idnum = idArea.substring(idArea.indexOf('=') + 1, idArea.indexOf('"'));
+            
+            //hold these here so dataLoop can modify them by reference
+            dataParams = {
+                titleText: "",
+                authorText: "",
+                dateText: "",
+                viewsText: ""
+            }
+
+            //if the report we're looking at is new to the report array, add it.
+            //author, title, date, and views are added only in this initial insertion.
+            if (!(idnum in reportArrays)) {
+                //all the data for one report
+                var reportArray_Entry = {
+                    drugs: [],
+                    category: [],
+                    nonSubstance: [],
+                    context: [],
+                    doseMethod: [],
+                    intensity: [],
+                    gender: [],
+                    title: [],
+                    author: [],
+                    date: [],
+                    views:[],
+                };
+
+                //every report has a drug entry, so if we do the dose chart parsing here, we won't miss any.
+                //we do it only in drug so that we only parse the dose chart once for each report.
+                if (type == "drug") {
+                    //pass reportArray_Entry, title, author, date, and views text in by reference
+                    dataLoop(dataParams, reportArray_Entry);
+
+                    //push new things
+                    reportArray_Entry.title.push(dataParams.titleText);
+                    reportArray_Entry.author.push(dataParams.authorText);
+                    reportArray_Entry.date.push(dataParams.dateText);
+                    reportArray_Entry.views.push(dataParams.viewsText);
+                } else if (type == "category") {
+                    reportArray_Entry.category.push(itemName);
+                } else if (type == "nonsubstance") {
+                    reportArray_Entry.nonSubstance.push(itemName);
+                } else if (type == "context") {
+                    reportArray_Entry.context.push(itemName);
+                } else if (type == "dosemethod") {
+                    reportArray_Entry.doseMethod.push(itemName);
+                } else if (type == "intensity") {
+                    reportArray_Entry.intensity.push(itemName);
+                } else if (type == "genderselect") {
+                    reportArray_Entry.gender.push(itemName);
+                }
+
+                reportArrays[idnum] = reportArray_Entry;
+                
+            //the report is already in the array. add whatever new information needs to be added.
+            } else {
+                //the indexOf checks are required so we don't duplicate entries
+                //as we iterate through multiple pages
+                if (type == "drug") {
+                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1){
+                        dataLoop(dataParams, reportArrays[idnum]);
+                    }
+                } else if (type == "category") {
+                    if (reportArrays[idnum].category.indexOf(itemName) == -1)
+                        reportArrays[idnum].category.push(itemName);
+                } else if (type == "nonsubstance") {
+                    if (reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
+                        reportArrays[idnum].nonSubstance.push(itemName);
+                } else if (type == "context") {
+                    if (reportArrays[idnum].context.indexOf(itemName) == -1)
+                        reportArrays[idnum].context.push(itemName);
+                } else if (type == "dosemethod") {
+                    if (reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
+                        reportArrays[idnum].doseMethod.push(itemName);
+                } else if (type == "intensity") {
+                    if (reportArrays[idnum].intensity.indexOf(itemName) == -1)
+                        reportArrays[idnum].intensity.push(itemName);
+                } else if (type == "genderselect") {
+                    if (reportArrays[idnum].gender.indexOf(itemName) == -1)
+                        reportArrays[idnum].gender.push(itemName);
+                }
+            }
+
+            //fills in drug ID table
+            $(document).ready(function () {
+                $("#" + idnum).remove(); //if entry in table exists, replace it with new one
+
+                //put the ID in the table with all its info
+                $("#reportTable").append('<tr id="' 
+                                         + idnum + '"><td>' 
+                                         + idnum + '</td><td>' 
+                                         + reportArrays[idnum].drugs + '</td><td>' 
+                                         + reportArrays[idnum].category + '</td><td>' 
+                                         + reportArrays[idnum].nonSubstance + '</td><td>' 
+                                         + reportArrays[idnum].context + '</td><td>' 
+                                         + reportArrays[idnum].doseMethod + '</td><td>' 
+                                         + reportArrays[idnum].intensity + '</td><td>' 
+                                         + reportArrays[idnum].gender + '</td><td>' 
+                                         + reportArrays[idnum].title + '</td><td>' 
+                                         + reportArrays[idnum].author + '</td><td>'
+                                         + reportArrays[idnum].date + '</td><td>'
+                                         + reportArrays[idnum].views + '</tr>');
+
+            });
+            
+            pos = text.indexOf('exp.php?ID', pos + 1);
+        }
         
-//        var parseParams = {
-//            text: URLSource,
-//            pos: text.indexOf('exp.php?ID')
-//        }
-        
+        //loop through a single tr block, extrapolating the amount, method, and form.
+        //called from dataLoop.
         function loopThroughTrs(params){
             for(var k = 0; k < params.trCategs.length; k++){
                 //check if the dosechart-category exists, because some don't have dosechart-form, etc.
@@ -213,10 +323,9 @@ function scrapeReports() {
             }
         }//end loopThroughTrs
         
+        //retrieve report title, author, date, and view count, and then
+        //update the entry for this drug
         function dataLoop(params, reportArrayEntry){
-            //is this updating the actual array, or not?
-            //may have to push before we call this function
-            //and instead send in the necessary info from the array
             reportArrayEntry.drugs.push(itemName);
 
             //get position of next ID
@@ -307,437 +416,10 @@ function scrapeReports() {
                 loopParams.trRegion = loopParams.thisRegion.substring(loopParams.trStart, loopParams.trEnd);
             }//end while
         }//end dataLoop
-
-        while (pos != -1) {
-            var idArea = text.substring(pos, text.indexOf(">", pos));
-            var idnum = idArea.substring(idArea.indexOf('=') + 1, idArea.indexOf('"'));
-            
-            dataParams = {
-                titleText: "",
-                authorText: "",
-                dateText: "",
-                viewsText: ""
-            }
-
-            if (!(idnum in reportArrays)) {
-                //all the data for one report
-                var reportArray_Entry = {
-                    drugs: [],
-                    category: [],
-                    nonSubstance: [],
-                    context: [],
-                    doseMethod: [],
-                    intensity: [],
-                    gender: [],
-                    title: [],
-                    author: [],
-                    date: [],
-                    views:[],
-                };
-
-                //every report has a drug entry, so if we do the dose chart parsing here, we won't miss any.
-                //we do it only in drug so that we only parse the dose chart once for each report.
-                if (type == "drug") {
-                    dataLoop(dataParams, reportArray_Entry);
-                    
-                    
-//                    reportArray_Entry.drugs.push(itemName);
-//                    
-//                    //get position of next ID
-//                    var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
-//                    
-//                    //if we're on last ID, next position will be -1, so set next to be end of document
-//                    if(nextIDPos == -1){
-//                        nextIDPos = text.length - 1;
-//                    }
-//                    
-//                    //get the region the dose chart is in
-//                    var doseChartRegion = text.substring(pos, nextIDPos);
-//                    
-//                    //get things
-//                    var titleText = doseChartRegion.substring(doseChartRegion.indexOf(">") + 1, doseChartRegion.indexOf("<"));
-//                    //shrink doseChartRegion to beginning of author
-//                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
-//                    doseChartRegion = doseChartRegion.substring(13, nextIDPos);
-//                    var authorText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//                    //shrink doseChartRegion to beginning of date
-//                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
-//                    doseChartRegion = doseChartRegion.substring(9, nextIDPos);
-//                    var dateText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//                    //shrink doseChartRegion to beginning of views
-//                    doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
-//                    doseChartRegion = doseChartRegion.substring(7, nextIDPos);
-//                    var viewsText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//
-//                    //shrink doseChartRegion to first tr entry
-////                    var trStart = doseChartRegion.indexOf("DOSE:");
-////                    var trEnd = doseChartRegion.indexOf("</table>") + 9;
-////                    var trRegion = doseChartRegion.substring(trStart, trEnd);
-//                    
-//
-//                    
-//                    //gather categories that are within the dose chart
-////                    var amountText = "";
-////                    var methodText = "";
-////                    var substanceText = "";
-////                    var formText = "";
-////                    var thisRegion = "";
-////                    var trCategs = ["amount","method","substance","form"];
-//
-//                    var loopParams = {
-//                        amountText: "",
-//                        methodText: "",
-//                        substanceText: "",
-//                        formText: "",
-//                        thisRegion: "",
-//                        trCategs: ["amount","method","substance","form"],
-//                        trStart: doseChartRegion.indexOf("DOSE:"),
-//                        trEnd: doseChartRegion.indexOf("</table>") + 9,
-//                        trRegion: ""
-//                    }
-//                    loopParams.trRegion = doseChartRegion.substring(loopParams.trStart, loopParams.trEnd)
-//                    
-////                  while(trStart != -1){
-//                    while(loopParams.trStart != -1){
-//                        loopThroughTrs(loopParams);
-//                        
-////                        for(var k = 0; k < trCategs.length; k++){
-////                            //check if the dosechart-category exists, because some don't have dosechart-form, etc.
-////                            if(trRegion.indexOf("dosechart-" + trCategs[k]) != -1){
-////                                var categName = "dosechart-" + trCategs[k];
-////                                thisRegion = trRegion.substring(trRegion.indexOf(categName), trEnd);
-////                                thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-////
-////                                //substance may have a link we need to skip over
-////                                var linkRegion = thisRegion.substring(0, thisRegion.indexOf(">") + 1);
-////                                if(trCategs[k] == "substance" && linkRegion.indexOf("href") != -1){
-////                                    thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-////                                }
-////                                
-////                                //form has a <b> we have to skip over
-////                                if(trCategs[k] == "form"){
-////                                    thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-////                                }
-////
-////                                var resultText = thisRegion.substring(0, thisRegion.indexOf("<"));
-////
-////                                //remove whitespace that exists due to the &nbsp;'s
-////                                resultText = resultText.trim();
-////
-////                                if(trCategs[k] == "amount")
-////                                    amountText = resultText;
-////                                else if(trCategs[k] == "method")
-////                                    methodText = resultText;
-////                                else if(trCategs[k] == "substance")
-////                                    substanceText = resultText;
-////                                else if(trCategs[k] == "form")
-////                                    formText = resultText;
-////                            } 
-////                        }
-////                        //check if the substance is a match. if it is, edit the drug entry to have amount,
-////                        //method, and form
-////                        if(substanceText != "" && substanceText == itemName){
-////                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(substanceText)];
-////                            if(methodText != ""){
-////                                entryText += "(" + methodText + ")";
-////                            }
-////                            if(amountText != ""){
-////                                entryText += "(" + amountText + ")";
-////                            }
-////                            if(formText != ""){
-////                                entryText += formText;
-////                            }
-////                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(substanceText)] = entryText;
-////                        //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
-////                        }else if(substanceText != "" && itemName.indexOf(substanceText) != -1){
-////                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-////                            if(methodText != ""){
-////                                entryText += "(" + methodText + ")";
-////                            }
-////                            if(amountText != ""){
-////                                entryText += "(" + amountText + ")";
-////                            }
-////                            if(formText != ""){
-////                                entryText += formText;
-////                            }
-////                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-////                        //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
-////                        }else if(substanceText != "" && substanceText.indexOf(itemName) != -1){
-////                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-////                            if(methodText != ""){
-////                                entryText += "(" + methodText + ")";
-////                            }
-////                            if(amountText != ""){
-////                                entryText += "(" + amountText + ")";
-////                            }
-////                            if(formText != ""){
-////                                entryText += formText;
-////                            }
-////                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-////                        }
-////                        trStart = thisRegion.indexOf("<tr>");
-////                        trRegion = thisRegion.substring(trStart, trEnd);
-//                        
-//                        //check if the substance is a match. if it is, edit the drug entry to have amount,
-//                        //method, and form
-//                        if(loopParams.substanceText != "" && loopParams.substanceText == itemName){
-//                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(loopParams.substanceText)];
-//                            if(loopParams.methodText != ""){
-//                                entryText += "(" + loopParams.methodText + ")";
-//                            }
-//                            if(loopParams.amountText != ""){
-//                                entryText += "(" + loopParams.amountText + ")";
-//                            }
-//                            if(loopParams.formText != ""){
-//                                entryText += loopParams.formText;
-//                            }
-//                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(loopParams.substanceText)] = entryText;
-//                        //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
-//                        }else if(loopParams.substanceText != "" && itemName.indexOf(loopParams.substanceText) != -1){
-//                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-//                            if(loopParams.methodText != ""){
-//                                entryText += "(" + loopParams.methodText + ")";
-//                            }
-//                            if(loopParams.amountText != ""){
-//                                entryText += "(" + loopParams.amountText + ")";
-//                            }
-//                            if(loopParams.formText != ""){
-//                                entryText += loopParams.formText;
-//                            }
-//                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-//                        //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
-//                        }else if(loopParams.substanceText != "" && loopParams.substanceText.indexOf(itemName) != -1){
-//                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-//                            if(loopParams.methodText != ""){
-//                                entryText += "(" + loopParams.methodText + ")";
-//                            }
-//                            if(loopParams.amountText != ""){
-//                                entryText += "(" + loopParams.amountText + ")";
-//                            }
-//                            if(loopParams.formText != ""){
-//                                entryText += loopParams.formText;
-//                            }
-//                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-//                        }
-//
-//                        loopParams.trStart = loopParams.thisRegion.indexOf("<tr>");
-//                        loopParams.trRegion = loopParams.thisRegion.substring(loopParams.trStart, loopParams.trEnd);
-//                    }//end while
-                    
-//                    //push new things
-//                    reportArray_Entry.title.push(titleText);
-//                    reportArray_Entry.author.push(authorText);
-//                    reportArray_Entry.date.push(dateText);
-//                    reportArray_Entry.views.push(viewsText);
-                    
-                    //push new things
-                    reportArray_Entry.title.push(dataParams.titleText);
-                    reportArray_Entry.author.push(dataParams.authorText);
-                    reportArray_Entry.date.push(dataParams.dateText);
-                    reportArray_Entry.views.push(dataParams.viewsText);
-                } else if (type == "category") {
-                    reportArray_Entry.category.push(itemName);
-                } else if (type == "nonsubstance") {
-                    reportArray_Entry.nonSubstance.push(itemName);
-                } else if (type == "context") {
-                    reportArray_Entry.context.push(itemName);
-                } else if (type == "dosemethod") {
-                    reportArray_Entry.doseMethod.push(itemName);
-                } else if (type == "intensity") {
-                    reportArray_Entry.intensity.push(itemName);
-                } else if (type == "genderselect") {
-                    reportArray_Entry.gender.push(itemName);
-                }
-
-                reportArrays[idnum] = reportArray_Entry;
-            } else {
-                console.log("already in there");
-                //the indexOf checks are required so we don't duplicate entries
-                //as we iterate through multiple pages
-                if (type == "drug") {
-                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1){
-                        reportArrays[idnum].drugs.push(itemName);
-                    
-                        //get position of next ID
-//                        var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
-//
-//                        //if we're on last ID, next position will be -1, so set next to be end of document
-//                        if(nextIDPos == -1){
-//                            nextIDPos = text.length - 1;
-//                        }
-//
-//                        //get the region the dose chart is in
-//                        var doseChartRegion = text.substring(pos, nextIDPos);
-//
-//                        //get things
-//                        //var titleText = doseChartRegion.substring(doseChartRegion.indexOf(">") + 1, doseChartRegion.indexOf("<"));
-//                        //shrink doseChartRegion to beginning of author
-//                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("<"), nextIDPos);
-//                        doseChartRegion = doseChartRegion.substring(13, nextIDPos);
-//                        //var authorText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//                        //shrink doseChartRegion to beginning of date
-//                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf('="right"'), nextIDPos);
-//                        doseChartRegion = doseChartRegion.substring(9, nextIDPos);
-//                        //var dateText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//                        //shrink doseChartRegion to beginning of views
-//                        doseChartRegion = doseChartRegion.substring(doseChartRegion.indexOf("right"), nextIDPos);
-//                        doseChartRegion = doseChartRegion.substring(7, nextIDPos);
-//                        //var viewsText = doseChartRegion.substring(0, doseChartRegion.indexOf("<"));
-//
-//                        //shrink doseChartRegion to first tr entry
-//                        var trStart = doseChartRegion.indexOf("DOSE:");
-//                        var trEnd = doseChartRegion.indexOf("</table>") + 9;
-//                        var trRegion = doseChartRegion.substring(trStart, trEnd);
-//
-//                        while(trStart != -1){
-//                            //gather categories that are within the dose chart
-//                            var amountText = "";
-//                            var methodText = "";
-//                            var substanceText = "";
-//                            var formText = "";
-//                            var thisRegion = "";
-//                            var trCategs = ["amount","method","substance","form"];
-//                            for(var k = 0; k < trCategs.length; k++){
-//                                //check if the dosechart-category exists, because some don't have dosechart-form, etc.
-//                                if(trRegion.indexOf("dosechart-" + trCategs[k]) != -1){
-//                                    var categName = "dosechart-" + trCategs[k];
-//                                    thisRegion = trRegion.substring(trRegion.indexOf(categName), trEnd);
-//                                    thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-//
-//                                    //substance may have a link we need to skip over
-//                                    var linkRegion = thisRegion.substring(0, thisRegion.indexOf(">") + 1);
-//                                    if(trCategs[k] == "substance" && linkRegion.indexOf("href") != -1){
-//                                        thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-//                                    }
-//
-//                                    //form has a <b> we have to skip over
-//                                    if(trCategs[k] == "form"){
-//                                        thisRegion = thisRegion.substring(thisRegion.indexOf(">") + 1, trEnd);
-//                                    }
-//
-//
-//                                    var resultText = thisRegion.substring(0, thisRegion.indexOf("<"));
-//
-//                                    //the way trRegion is cut off, we need to go to very end rather than the next
-//                                    //instance of "<"
-//                                    //if(trCategs[k] == "form"){
-//        //                                resultText = thisRegion.substring(0, trEnd);
-//                                    //}
-//
-//                                    //remove whitespace that exists due to the &nbsp;'s
-//                                    resultText = resultText.trim();
-//
-//                                    if(trCategs[k] == "amount")
-//                                        amountText = resultText;
-//                                    else if(trCategs[k] == "method")
-//                                        methodText = resultText;
-//                                    else if(trCategs[k] == "substance")
-//                                        substanceText = resultText;
-//                                    else if(trCategs[k] == "form")
-//                                        formText = resultText;
-//                                } 
-//                            }
-//                            //check if the substance is a match. if it is, edit the drug entry to have amount,
-//                            //method, and form
-//                            if(substanceText != "" && substanceText == itemName){
-//                                var entryText = reportArrays[idnum].drugs[reportArrays[idnum].drugs.indexOf(substanceText)];
-//                                if(methodText != ""){
-//                                    entryText += "(" + methodText + ")";
-//                                }
-//                                if(amountText != ""){
-//                                    entryText += "(" + amountText + ")";
-//                                }
-//                                if(formText != ""){
-//                                    entryText += formText;
-//                                }
-//                                reportArrays[idnum].drugs[reportArrays[idnum].drugs.indexOf(substanceText)] = entryText;
-//                            //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
-//                            }else if(substanceText != "" && itemName.indexOf(substanceText) != -1){
-//                                var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-//                                if(methodText != ""){
-//                                    entryText += "(" + methodText + ")";
-//                                }
-//                                if(amountText != ""){
-//                                    entryText += "(" + amountText + ")";
-//                                }
-//                                if(formText != ""){
-//                                    entryText += formText;
-//                                }
-//                                reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-//                            }
-//                            //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
-//                            else if(substanceText != "" && substanceText.indexOf(itemName) != -1){
-//                                    var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
-//                                    if(methodText != ""){
-//                                        entryText += "(" + methodText + ")";
-//                                    }
-//                                    if(amountText != ""){
-//                                        entryText += "(" + amountText + ")";
-//                                    }
-//                                    if(formText != ""){
-//                                        entryText += formText;
-//                                    }
-//                                    reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
-//                                }
-//
-//                            trStart = thisRegion.indexOf("<tr>");
-//                            trRegion = thisRegion.substring(trStart, trEnd);
-//                        }//end while
-
-                        //push new things
-                        //reportArray_Entry.title.push(titleText);
-                       // reportArray_Entry.author.push(authorText);
-                       // reportArray_Entry.date.push(dateText);
-                        //reportArray_Entry.views.push(viewsText);
-                    }
-                } else if (type == "category") {
-                    if (reportArrays[idnum].category.indexOf(itemName) == -1)
-                        reportArrays[idnum].category.push(itemName);
-                } else if (type == "nonsubstance") {
-                    if (reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
-                        reportArrays[idnum].nonSubstance.push(itemName);
-                } else if (type == "context") {
-                    if (reportArrays[idnum].context.indexOf(itemName) == -1)
-                        reportArrays[idnum].context.push(itemName);
-                } else if (type == "dosemethod") {
-                    if (reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
-                        reportArrays[idnum].doseMethod.push(itemName);
-                } else if (type == "intensity") {
-                    if (reportArrays[idnum].intensity.indexOf(itemName) == -1)
-                        reportArrays[idnum].intensity.push(itemName);
-                } else if (type == "genderselect") {
-                    if (reportArrays[idnum].gender.indexOf(itemName) == -1)
-                        reportArrays[idnum].gender.push(itemName);
-                }
-            }
-
-            //fills in drug ID table
-            $(document).ready(function () {
-                $("#" + idnum).remove(); //if entry in table exists, replace it with new one
-
-                //put the ID in the table with all its info
-                $("#reportTable").append('<tr id="' 
-                                         + idnum + '"><td>' 
-                                         + idnum + '</td><td>' 
-                                         + reportArrays[idnum].drugs + '</td><td>' 
-                                         + reportArrays[idnum].category + '</td><td>' 
-                                         + reportArrays[idnum].nonSubstance + '</td><td>' 
-                                         + reportArrays[idnum].context + '</td><td>' 
-                                         + reportArrays[idnum].doseMethod + '</td><td>' 
-                                         + reportArrays[idnum].intensity + '</td><td>' 
-                                         + reportArrays[idnum].gender + '</td><td>' 
-                                         + reportArrays[idnum].title + '</td><td>' 
-                                         + reportArrays[idnum].author + '</td><td>'
-                                         + reportArrays[idnum].date + '</td><td>'
-                                         + reportArrays[idnum].views + '</tr>');
-
-            });
-            
-            pos = text.indexOf('exp.php?ID', pos + 1);
-        }
     }
-
-
+    
+    //page through the search results by retrieving the source code and progressively
+    //modifying the URL in order to move from one page to the next.
     function getURL(iter) {
         //if we've iterated over all of them
         if (iter >= allURLS.length) {
@@ -766,6 +448,13 @@ function scrapeReports() {
 
                 if (URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
                     console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + reportAmt + " of " + reportAmt);
+                    
+                    $(document).ready(function () {
+                        //put the ID in the table with all its info
+                        $("#yes").remove();
+                        $("#progressBar").append('<p id="yes">' + iter + " of " + allURLS.length + "</p>");
+                    });
+
                     onPageOne = true;
                     urlIter++;
                     currStart = 0;

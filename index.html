@@ -14,9 +14,9 @@
     </p>
 
         <p>
-        <center>First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in).</center>
+        <center>First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in).
             <br>
-            Open up the JavaScript console to view information about the search progress.
+            </center>
     </p>
 
 
@@ -41,14 +41,19 @@
 -->
 
     <br>
-    <div style="height:550px; overflow-y: scroll; display: inline-block;">
+    <div id="progressBar" style="height:90px;  width: 500; display: inline-block;">
+        
+    </div>
+    <br>
+    
+    <div style="height:550px;  width:20%; overflow-y: scroll; display: inline-block;">
         <button onclick="outputOptionValues()">
             Scrape Option Values
         </button>
         <table id='outTable'></table>
     </div>
 
-    <div style="height:550px; overflow-y: scroll; display: inline-block;">
+    <div style="height:550px; width:78%; overflow-y: scroll; display: inline-block;">
         <button onclick="outputReports()">
             Scrape Reports
         </button>
@@ -138,6 +143,9 @@
 
 
 
+        
+        
+        
         
         
         
