@@ -68,135 +68,41 @@ function scrapeReports() {
             url_Entry.itemName = optionValueArrays[i].theArray[j].item; //holds item name
 
             resetURL();
-
+            
             if (optionValueArrays[i].type == "drug") {
-                setupURL(optionValueArrays[i].theArray[j].optionValue,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    nonSubstance,
-                    gender,
-                    context,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
-            } else if (optionValueArrays[i].type == "category") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    nonSubstance,
-                    gender,
-                    context,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
+                drugOne = optionValueArrays[i].theArray[j].optionValue;
+            }else if(optionValueArrays[i].type == "category"){
+                category = optionValueArrays[i].theArray[j].optionValue;
             } else if (optionValueArrays[i].type == "nonsubstance") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    gender,
-                    context,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
-            } else if (optionValueArrays[i].type == "context") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    nonSubstance,
-                    gender,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
-            } else if (optionValueArrays[i].type == "dosemethod") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    nonSubstance,
-                    gender,
-                    context,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
-            } else if (optionValueArrays[i].type == "intensity") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    nonSubstance,
-                    gender,
-                    context,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    optionValueArrays[i].theArray[j].optionValue);
-
-            } else if (optionValueArrays[i].type == "genderselect") {
-                setupURL(drugOne,
-                    drugTwo,
-                    drugThree,
-                    category,
-                    nonSubstance,
-                    optionValueArrays[i].theArray[j].optionValue,
-                    context,
-                    doseMethod,
-                    title,
-                    authorSearch,
-                    erowidAuthor,
-                    language,
-                    group,
-                    strength,
-                    intensityMin,
-                    intensityMax);
-
+                nonSubstance = optionValueArrays[i].theArray[j].optionValue;
+            }else if (optionValueArrays[i].type == "context") {
+                context = optionValueArrays[i].theArray[j].optionValue;
+            }else if (optionValueArrays[i].type == "dosemethod") {
+                doseMethod = optionValueArrays[i].theArray[j].optionValue;
+            }else if (optionValueArrays[i].type == "intensity") {
+                intensityMin = optionValueArrays[i].theArray[j].optionValue;
+                intensityMax = optionValueArrays[i].theArray[j].optionValue;
+            }else if (optionValueArrays[i].type == "genderselect") {
+                gender = optionValueArrays[i].theArray[j].optionValue;
             }
-
+            
+            setupURL(drugOne,
+                    drugTwo,
+                    drugThree,
+                    category,
+                    nonSubstance,
+                    gender,
+                    context,
+                    doseMethod,
+                    title,
+                    authorSearch,
+                    erowidAuthor,
+                    language,
+                    group,
+                    strength,
+                    intensityMin,
+                    intensityMax);
+            
             var url = "";
 
             if(testMode == true){
@@ -380,6 +286,19 @@ function scrapeReports() {
                                 entryText += formText;
                             }
                             reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
+                        //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
+                        }else if(substanceText != "" && substanceText.indexOf(itemName) != -1){
+                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
+                            if(methodText != ""){
+                                entryText += "(" + methodText + ")";
+                            }
+                            if(amountText != ""){
+                                entryText += "(" + amountText + ")";
+                            }
+                            if(formText != ""){
+                                entryText += formText;
+                            }
+                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
                         }
                         
                         trStart = thisRegion.indexOf("<tr>");
@@ -520,6 +439,20 @@ function scrapeReports() {
                                 }
                                 reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
                             }
+                            //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
+                            else if(substanceText != "" && substanceText.indexOf(itemName) != -1){
+                                    var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
+                                    if(methodText != ""){
+                                        entryText += "(" + methodText + ")";
+                                    }
+                                    if(amountText != ""){
+                                        entryText += "(" + amountText + ")";
+                                    }
+                                    if(formText != ""){
+                                        entryText += formText;
+                                    }
+                                    reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
+                                }
 
                             trStart = thisRegion.indexOf("<tr>");
                             trRegion = thisRegion.substring(trStart, trEnd);

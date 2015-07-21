@@ -1,3 +1,5 @@
+//option value scraping
+
 function scrapeAllOptionValues(){
     for(var i = 0; i < optionValueArrays.length; i++){
         scrapeOptionValues(optionValueArrays[i].begin, optionValueArrays[i].end, optionValueArrays[i].theArray);

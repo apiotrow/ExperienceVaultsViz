@@ -1,9 +1,6 @@
-// jquery.xdomainajax.js  ------ from padolsey
-//   function outputdata(your_url, drugName, categoryName) {
+//get source code from a url
+//jquery.xdomainajax.js  ------ from padolsey
 function getSourceCode(your_url, callback) {
-
-
-
     jQuery.ajax = (function (_ajax) {
 
         var protocol = location.protocol,
@@ -98,7 +95,7 @@ function getSourceCode(your_url, callback) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log("hidown");
+
             if (textStatus == 'timeout') {
                 this.tryCount++;
                 if (this.tryCount <= this.retryLimit) {
@@ -107,11 +104,6 @@ function getSourceCode(your_url, callback) {
                     return;
                 }
                 return;
-            }
-            if (xhr.status == 500) {
-                console.log("hidown");
-            } else {
-                console.log("hidown");
             }
         }
     });
