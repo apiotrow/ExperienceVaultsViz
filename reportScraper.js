@@ -375,41 +375,44 @@ function scrapeReports() {
                 if(loopParams.substanceText != "" && loopParams.substanceText == itemName){
                     var entryText = reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(loopParams.substanceText)];
                     if(loopParams.methodText != ""){
-                        entryText += "(" + loopParams.methodText + ")";
+                        entryText += "[method]" + loopParams.methodText;
                     }
                     if(loopParams.amountText != ""){
-                        entryText += "(" + loopParams.amountText + ")";
+                        entryText += "[amount]" + loopParams.amountText;
                     }
                     if(loopParams.formText != ""){
-                        entryText += loopParams.formText;
+                        loopParams.formText = loopParams.formText.replace(/\(|\)/g,'') //remove parenthesis
+                        entryText += "[form]"+ loopParams.formText;
                     }
-                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(loopParams.substanceText)] = entryText;
+//                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(loopParams.substanceText)] = entryText;
                 //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
                 }else if(loopParams.substanceText != "" && itemName.indexOf(loopParams.substanceText) != -1){
                     var entryText = reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)];
                     if(loopParams.methodText != ""){
-                        entryText += "(" + loopParams.methodText + ")";
+                        entryText += "[method]" + loopParams.methodText;
                     }
                     if(loopParams.amountText != ""){
-                        entryText += "(" + loopParams.amountText + ")";
+                        entryText += "[amount]" + loopParams.amountText;
                     }
                     if(loopParams.formText != ""){
-                        entryText += loopParams.formText;
+                        loopParams.formText = loopParams.formText.replace(/\(|\)/g,'') //remove parenthesis
+                        entryText += "[form]"+ loopParams.formText;
                     }
-                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
+//                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
                 //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
                 }else if(loopParams.substanceText != "" && loopParams.substanceText.indexOf(itemName) != -1){
                     var entryText = reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)];
                     if(loopParams.methodText != ""){
-                        entryText += "(" + loopParams.methodText + ")";
+                        entryText += "[method]" + loopParams.methodText;
                     }
                     if(loopParams.amountText != ""){
-                        entryText += "(" + loopParams.amountText + ")";
+                        entryText += "[amount]" + loopParams.amountText;
                     }
                     if(loopParams.formText != ""){
-                        entryText += loopParams.formText;
+                        loopParams.formText = loopParams.formText.replace(/\(|\)/g,'') //remove parenthesis
+                        entryText += "[form]"+ loopParams.formText;
                     }
-                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
+//                    reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
                 }
 
                 loopParams.trStart = loopParams.thisRegion.indexOf("<tr>");
