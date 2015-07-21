@@ -399,6 +399,19 @@ function scrapeReports() {
                                 entryText += formText;
                             }
                             reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(substanceText)] = entryText;
+                        //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
+                        }else if(substanceText != "" && itemName.indexOf(substanceText) != -1){
+                            var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
+                            if(methodText != ""){
+                                entryText += "(" + methodText + ")";
+                            }
+                            if(amountText != ""){
+                                entryText += "(" + amountText + ")";
+                            }
+                            if(formText != ""){
+                                entryText += formText;
+                            }
+                            reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
                         }
                         
                         trStart = thisRegion.indexOf("<tr>");
@@ -525,6 +538,19 @@ function scrapeReports() {
                                     entryText += formText;
                                 }
                                 reportArrays[idnum].drugs[reportArrays[idnum].drugs.indexOf(substanceText)] = entryText;
+                            //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
+                            }else if(substanceText != "" && itemName.indexOf(substanceText) != -1){
+                                var entryText = reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)];
+                                if(methodText != ""){
+                                    entryText += "(" + methodText + ")";
+                                }
+                                if(amountText != ""){
+                                    entryText += "(" + amountText + ")";
+                                }
+                                if(formText != ""){
+                                    entryText += formText;
+                                }
+                                reportArray_Entry.drugs[reportArray_Entry.drugs.indexOf(itemName)] = entryText;
                             }
 
                             trStart = thisRegion.indexOf("<tr>");
