@@ -172,10 +172,10 @@ function scrapeReports() {
         var text = URLSource;
         var pos = text.indexOf('exp.php?ID');
         
-        var parseParams = {
-            text: URLSource,
-            pos: text.indexOf('exp.php?ID')
-        }
+//        var parseParams = {
+//            text: URLSource,
+//            pos: text.indexOf('exp.php?ID')
+//        }
         
         function loopThroughTrs(params){
             for(var k = 0; k < params.trCategs.length; k++){
@@ -211,9 +211,12 @@ function scrapeReports() {
                         params.formText = resultText;
                 } 
             }
-        }
+        }//end loopThroughTrs
         
         function dataLoop(params, reportArrayEntry){
+            //is this updating the actual array, or not?
+            //may have to push before we call this function
+            //and instead send in the necessary info from the array
             reportArrayEntry.drugs.push(itemName);
 
             //get position of next ID
@@ -335,12 +338,10 @@ function scrapeReports() {
                 //every report has a drug entry, so if we do the dose chart parsing here, we won't miss any.
                 //we do it only in drug so that we only parse the dose chart once for each report.
                 if (type == "drug") {
-                    reportArray_Entry.drugs.push(itemName);
-                    
                     dataLoop(dataParams, reportArray_Entry);
                     
                     
-                    
+//                    reportArray_Entry.drugs.push(itemName);
 //                    
 //                    //get position of next ID
 //                    var nextIDPos = text.indexOf('exp.php?ID', pos + 1);
