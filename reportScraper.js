@@ -1,13 +1,11 @@
 
 
 function scrapeReports() {
-   
-
     var urlFields = []; //for constructing the URL
-    var reportAmt = 0;
+    var reportAmt = 0; //storing so we can track progress of scraping
     var nextPage = "";
     var currStart = 0;
-    var pageSize = 500; //how big the pages are that we load
+    var pageSize = 500; //how big the pages are that we flip though
     var onPageOne = true;
 
     var drugOne = 0;
@@ -35,25 +33,6 @@ function scrapeReports() {
         urlFields = [];
         var iter = -1;
 
-        //put all in their non-selected state
-        //        urlFields[++iter] = 0; //[0] = drugOne
-        //        urlFields[++iter] = -2; //[0] = drugTwo
-        //        urlFields[++iter] = -2; //[0] = drugThree
-        //        urlFields[++iter] = -1; //[0] = category
-        //        urlFields[++iter] = -1; //[0] = nonSubstance
-        //        urlFields[++iter] = -1; //[0] = gender
-        //        urlFields[++iter] = -1; //[0] = context
-        //        urlFields[++iter] = -1; //[0] = doseMethod
-        //        urlFields[++iter] = ""; //[0] = title
-        //        urlFields[++iter] = ""; //[0] = authorSearch
-        //        urlFields[++iter] = -1; //[0] = erowidAuthor
-        //        urlFields[++iter] = 1; //[0] = language
-        //        urlFields[++iter] = -1; //[0] = group
-        //        urlFields[++iter] = ""; //[0] = strength
-        //        urlFields[++iter] = ""; //[0] = intensityMin
-        //        urlFields[++iter] = ""; //[0] = intensityMax
-
-
         drugOne = 0;
         drugTwo = -1;
         drugThree = -1;
@@ -72,18 +51,13 @@ function scrapeReports() {
         intensityMax = "";
     }
 
-
-
     var allURLS = []; //holds all the URLs we construct using the option values
 
-
     for (var i = 0; i < optionValueArrays.length; i++) {
-
         for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
             if(testMode == true){
                 if (j > 1) break; //uncomment this if we want to a do a quicker test
             }
-
 
             var url_Entry = {
                 urlType: optionValueArrays[i].type,
@@ -92,7 +66,6 @@ function scrapeReports() {
             };
             url_Entry.url = ""; //holds URL
             url_Entry.itemName = optionValueArrays[i].theArray[j].item; //holds item name
-
 
             resetURL();
 
@@ -239,9 +212,6 @@ function scrapeReports() {
                     }
 
                     url += "&ShowViews=0&Start=0&Max=" + pageSize;
-                    url_Entry.url = url;
-
-                    allURLS.push(url_Entry);
                 }
             }else{
                 for (var urlFields_index in urlFields) {
@@ -251,10 +221,9 @@ function scrapeReports() {
                 }
 
                 url += "&SP=1&ShowViews=1&Start=0&Max=" + pageSize;
-                url_Entry.url = url;
-
-                allURLS.push(url_Entry);
             }
+            url_Entry.url = url;
+            allURLS.push(url_Entry);
         }
     }
 
@@ -281,13 +250,12 @@ function scrapeReports() {
         }
     }
 
+    
     function parseSource(itemName, type) {
         var text = URLSource;
-
         var pos = text.indexOf('exp.php?ID');
 
         while (pos != -1) {
-
             var idArea = text.substring(pos, text.indexOf(">", pos));
             var idnum = idArea.substring(idArea.indexOf('=') + 1, idArea.indexOf('"'));
 
@@ -584,10 +552,8 @@ function scrapeReports() {
                 }
             }
 
-            
             //fills in drug ID table
             $(document).ready(function () {
-
                 $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
                 //put the ID in the table with all its info
@@ -611,9 +577,6 @@ function scrapeReports() {
                 
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
-        
-        //print current amount of scraped data
-        //console.log(Object.keys(reportArrays).length);
     }
 
     var urlIter = 0;
@@ -623,41 +586,27 @@ function scrapeReports() {
         //if we've iterated over all of them
         if (iter >= allURLS.length) {
             //exportToCSV();
-            
             console.log("we done");
             return;
         }
 
-
-
         //get the source for the search, count the reports, and shove them
         //with their appropriate drug in the drugTotalsList array
-
         getSourceCode(allURLS[iter].url, function () {
-            
             //we're flipping through pages. don't parse the original URL again
             if (onPageOne == true){
                 parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
             }
 
             var url = allURLS[iter].url;
-
             var startBegin = url.indexOf("Start=") + 6;
-            //            var startEnd = url.indexOf("&Max");
-
-            //            url = url.substring(startBegin, startEnd);
-
             currStart += pageSize;
-
-
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
             nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
             getSourceCode(nextPage, function () {
                 var totalBegin = URLSource.indexOf("><b>(") + 5;
                 var totalEnd = URLSource.indexOf("Total");
                 reportAmt = Number(URLSource.substring(totalBegin, totalEnd));
-
-                
 
                 if (URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
                     console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + reportAmt + " of " + reportAmt);
@@ -668,19 +617,11 @@ function scrapeReports() {
                 } else {
                     console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + currStart + " of " + reportAmt);
                     
-
-                    
                     onPageOne = false;
                     parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
                     getURL(urlIter);
                 }
             });
-
-
-
         });
     }
-    
-
 }
-
