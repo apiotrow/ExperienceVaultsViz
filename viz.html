@@ -3,6 +3,11 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="formatting.css">
+    <script type="text/javascript" src="csvthings.js"></script>
+    <script type="text/javascript" src="ovScraper.js"></script>
+    <script type="text/javascript" src="globals.js"></script>
+    <script type="text/javascript" src="sourceGetter.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -15,19 +20,34 @@
         </p>
 
         <hr>
-        
+
         <p id="top-links">
             <a href="index.html">Main Page</a>&nbsp;&nbsp;&nbsp;
             <a href="scraper.html">Scraper</a>&nbsp;&nbsp;&nbsp;
             <a href="viz.html">Visualizations</a>&nbsp;&nbsp;&nbsp;
         </p>
-        
-        <hr>
-                
-        First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in).
+
+        <hr>Printing out stuff
 
         <hr>
     </center>
+
+
+
+
+    <script type="text/javascript">
+        var csvFile = 'data-3-brackets.csv';
+    </script>
+
+
+
+    <div style="height:550px;  width:20%; overflow-y: scroll; display: inline-block;">
+        <button onclick="getDrugFrequency(csvFile)">
+            Which drugs are most popular?
+        </button>
+        <table id='popularTable'></table>
+    </div>
+
 </body>
 
 </html>
