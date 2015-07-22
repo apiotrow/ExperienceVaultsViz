@@ -10,3 +10,24 @@ th,td {
 body {
     font-size:20px;
 }
+#top-heading{
+    font-size: 40px;
+}
+#top-subheading{
+    font-size: 30px;
+}
+#top-links{
+    font-size: 25px;
+}
+
+a:link{
+    font-size: 20px;
+    color: green;
+}
+a:visited {
+    color: purple;
+}
+a:active {
+    color: red;
+}
+

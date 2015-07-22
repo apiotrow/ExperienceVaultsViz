@@ -3,27 +3,33 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="formatting.css">
-
 </head>
 
 <body>
+    <center>
+        <p id="top-heading">
+            Erowid Experience Vaults Visualization
+        </p>
+        <p id="top-subheading">
+            Main Page
+        </p>
+        
+        <hr>
+        
+        <p id="top-links">
+            <a href="index.html">Main Page</a>&nbsp;&nbsp;&nbsp;
+            <a href="scraper.html">Scraper</a>&nbsp;&nbsp;&nbsp;
+            <a href="viz.html">Visualizations</a>&nbsp;&nbsp;&nbsp;
+        </p>
+        
+        <hr>
+        
+        Welcome to my <a href="https://www.erowid.org/experiences/exp_front.shtml">Erowid Experience Vaults</a> data scraping / data visualizing project.
+
+        <hr>
+    </center>
 
 
-    <p>
-        <center>Scraping control panel</center>
-    </p>
-
-        <p>
-        <center>First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in).
-            <br>
-            </center>
-    </p>
-
-
-
-    <br>
-    <hr>
-    <br>
 
 
 
@@ -40,27 +46,8 @@
     </button>
 -->
 
-    <br>
-    <div id="progressBar" style="height:90px;  width: 500; display: inline-block;">
-        
-    </div>
-    <br>
-    
-    <div style="height:550px;  width:20%; overflow-y: scroll; display: inline-block;">
-        <button onclick="outputOptionValues()">
-            Scrape Option Values
-        </button>
-        <table id='outTable'></table>
-    </div>
 
-    <div style="height:550px; width:78%; overflow-y: scroll; display: inline-block;">
-        <button onclick="outputReports()">
-            Scrape Reports
-        </button>
-        <table id='reportTable'></table>
-    </div>
-    
-<!--
+    <!--
     <div style="height:400px; overflow-y: scroll; display: inline-block;">
         <button onclick="exportToCSV()">
             Export Data to CSV
@@ -83,190 +70,6 @@
 
 
     <script type="text/javascript">
-        function outputOptionValues() {
-
-            $(document).ready(function () {
-                $("#outTable").html("<tr><td>Drug</td><td>Option Value</td></tr>");
-            });
-
-            getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
-                scrapeAllOptionValues();
-                printOptionValues();
-            });
-        }
-
-        function outputReports() {
-            $(document).ready(function () {
-                $("#reportTable").html("<tr><td>Report ID</td><td>Drugs</td><td>Categories</td><td>Non-Substance</td><td>Context</td><td>Dose Method</td><td>Intensity</td><td>Gender</td><td>Title</td><td>Author</td><td>Date</td><td>Views</td></tr>");
-            });
-            
-            scrapeReports();
-        }
-
-        function exportToCSV() {
-            var csvData = new Array();
-            csvData.push('"reportid",drugs","categories","nonsubstance","context","dosemethod","intensity","gender"');
-            //console.log(reportArrays.length);
-            
-            var keys = [];
-            for (var key in reportArrays) {
-                if(reportArrays.hasOwnProperty(key)){
-                    csvData.push('"' + key + '","' + reportArrays[key].drugs + '","' + reportArrays[key].category + '","' + reportArrays[key].nonSubstance + '","' + reportArrays[key].context + '","' + reportArrays[key].doseMethod + '","' + reportArrays[key].intensity + '","' + reportArrays[key].gender + '"');
-                }
-            }
-
-            var buffer = csvData.join("\n");
-            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
-            var fileName = "data.csv";
-            var link = document.createElement("a");
-            if (link.download !== undefined) { // feature detection
-                // Browsers that support HTML5 download attribute
-                link.setAttribute("href", uri);
-                link.setAttribute("download", fileName);
-            } else if (navigator.msSaveBlob) { // IE 10+
-                link.addEventListener("click", function (event) {
-                    var blob = new Blob([buffer], {
-                        "type": "text/csv;charset=utf-8;"
-                    });
-                    navigator.msSaveBlob(blob, fileName);
-                }, false);
-            } else {
-                // it needs to implement server side export
-                link.setAttribute("href", "http://www.example.com/export");
-            }
-            link.innerHTML = "Download CSV";
-            link.setAttribute("id", "csvlink")
-            document.body.appendChild(link);
-
-            document.getElementById('csvlink').click(); 
-        }
-
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        ///older junk
-
-        function makePercentages() {
-            $.ajax({
-                url: "topdrugdata.csv",
-                async: false,
-                success: function (csvd) {
-                    data = $.csv2Array(csvd);
-                },
-                dataType: "text",
-                complete: function () {
-
-                    //get rid of titles (drug, amount)
-                    //                    data.splice(0, 1);
-
-                    //convert string of amounts into actual numbers
-                    for (var i = 1; i < data.length; i++) {
-                        data[i][1] = Number(data[i][1]);
-                        data[i][2] = Number(data[i][2]);
-                        data[i][3] = Number(data[i][3]);
-                        data[i][4] = Number(data[i][4]);
-                        data[i][5] = Number(data[i][5]);
-                        data[i][6] = Number(data[i][6]);
-                        data[i][7] = Number(data[i][7]);
-                    }
-
-                    //sort them from highest to lowest
-                    //                    data.sort(sortFunction);
-
-                    //                    function sortFunction(a, b) {
-                    //                        if (a[1] === b[1]) {
-                    //                            return 0;
-                    //                        } else {
-                    //                            return (a[1] > b[1]) ? -1 : 1;
-                    //                        }
-                    //                    }
-
-
-
-                    console.log(data);
-
-                    var csvData = new Array();
-                    csvData.push('"drug","amount","badtrip","mystical","addiction","alone","smallgroup","largegroup"');
-
-                    function makeIntoPercent(num) {
-                        return (Math.round(10000 * num) / 100);
-
-                    }
-
-                    for (var j = 1; j < data.length; j++) {
-                        csvData.push('"' + data[j][0] + '","' + data[j][1] + '","' + makeIntoPercent(data[j][2] / data[j][1]) + '","' + makeIntoPercent(data[j][3] / data[j][1]) + '","' + makeIntoPercent(data[j][4] / data[j][1]) + '","' + makeIntoPercent(data[j][5] / data[j][1]) + '","' + makeIntoPercent(data[j][6] / data[j][1]) + '","' + makeIntoPercent(data[j][7] / data[j][1]) + '"');
-                    }
-
-                    var buffer = csvData.join("\n");
-                    var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
-                    var fileName = "data.csv";
-                    var link = document.createElement("a");
-                    if (link.download !== undefined) { // feature detection
-                        // Browsers that support HTML5 download attribute
-                        link.setAttribute("href", uri);
-                        link.setAttribute("download", fileName);
-                    } else if (navigator.msSaveBlob) { // IE 10+
-                        link.addEventListener("click", function (event) {
-                            var blob = new Blob([buffer], {
-                                "type": "text/csv;charset=utf-8;"
-                            });
-                            navigator.msSaveBlob(blob, fileName);
-                        }, false);
-                    } else {
-                        // it needs to implement server side export
-                        link.setAttribute("href", "http://www.example.com/export");
-                    }
-                    link.innerHTML = "Download CSV";
-                    document.body.appendChild(link);
-                }
-            });
-
-        }
-
-
-
-
-        function exportRestToCSV() {
-            var csvData = new Array();
-            csvData.push('"drug","amount","badtrip","mystical","addiction","alone","smallgroup","largegroup"');
-
-            for (var j = 0; j < drugTotalsList.length; j++) {
-                csvData.push('"' + drugTotalsList[j].drug + '","' + drugTotalsList[j].amount + '","' + drugTotalsList[j].badtrip + '","' + drugTotalsList[j].mystical + '","' + drugTotalsList[j].addiction + '","' + drugTotalsList[j].alone + '","' + drugTotalsList[j].smallgroup + '","' + drugTotalsList[j].largegroup + '"');
-            }
-
-            var buffer = csvData.join("\n");
-            var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
-            var fileName = "data.csv";
-            var link = document.createElement("a");
-            if (link.download !== undefined) { // feature detection
-                // Browsers that support HTML5 download attribute
-                link.setAttribute("href", uri);
-                link.setAttribute("download", fileName);
-            } else if (navigator.msSaveBlob) { // IE 10+
-                link.addEventListener("click", function (event) {
-                    var blob = new Blob([buffer], {
-                        "type": "text/csv;charset=utf-8;"
-                    });
-                    navigator.msSaveBlob(blob, fileName);
-                }, false);
-            } else {
-                // it needs to implement server side export
-                link.setAttribute("href", "http://www.example.com/export");
-            }
-            link.innerHTML = "Download CSV";
-            document.body.appendChild(link);
-
-        }
     </script>
 
 
