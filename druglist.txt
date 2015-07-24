@@ -1,4 +1,4 @@
-"1,4-Butanediol"
+1,4-Butanediol
 19-Norandrostenedione
 1P-LSD
 2-Aminoindan
@@ -31,7 +31,7 @@
 2C-T-4
 2C-T-7
 2C-T-FM
-"3,4-Dichloromethylphenidate"
+3,4-Dichloromethylphenidate
 3-Fluoroamphetamine
 3-MEO-PCE
 3-MeO-PCP
@@ -182,8 +182,8 @@ Coca
 Cocaine
 Codeine
 Coleus
-"CP 47,497"
-"CP 55,940"
+CP 47,497
+CP 55,940
 Cytisus scoparius
 Damiana
 Datura
@@ -526,7 +526,7 @@ Pramiracetam
 Prazosin
 PRL-8-53
 Prochlorperazine
-"Products - Bath Salts, Plant Food, etc"
+Products - Bath Salts, Plant Food, etc
 Products - Other
 Products - Smoking Blends - Cannabis-Like
 Products - Spice and Synthetic Cannabinoids

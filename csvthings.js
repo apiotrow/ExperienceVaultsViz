@@ -3,12 +3,29 @@ This file holds a lot of CSV parsing stuff
 */
 
 complete = {};
+ids = [];
+drugList = [];
+dataxy = {};
+xyiter = 0;
 
 //outputs the list of how frequent a drug shows up in the vault
 function csvToDatastructure(file) {
-    var csvText = "";
     readTextFile(file, function (result) {
         fillInDataStructure(result);
+    });
+}
+
+//outputs the list of how frequent a drug shows up in the vault
+function optionValueToDataStructure(file) {
+    readTextFile(file, function (result) {
+        fillInDrugList(result);
+    });
+}
+
+function fillInDrugList(result) {
+    drugList = result.split(/\s+/);
+    $(document).ready(function () {
+        $("#cds").append("Drug list created");
     });
 }
 
@@ -31,7 +48,6 @@ function fillInDataStructure(result) {
     var csvText = result;
     var reports = csvText.split(/\r/); //array where each entry is a single report
     var reportArray = [];
-    var drugList = []; //list of drug names
 
     //replace commas in nested entries
     for (var i = 1; i < reports.length; i++) {
@@ -86,6 +102,14 @@ function fillInDataStructure(result) {
 
         //insert identry into complete data structure
         complete[reportArray[i][0]] = idEntry;
+
+        //fix drug names that have commas in them, and so
+        //had them replaced with semicolons
+        reportArray[i][1] = reportArray[i][1].replace("1;4-Butanediol", "1,4-Butanediol");
+        reportArray[i][1] = reportArray[i][1].replace("Products - Bath Salts; Plant Food; etc", "Products - Bath Salts, Plant Food, etc");
+        reportArray[i][1] = reportArray[i][1].replace("3;4-Dichloromethylphenidate", "3,4-Dichloromethylphenidate");
+        reportArray[i][1] = reportArray[i][1].replace("CP 47;497", "CP 47,497");
+        reportArray[i][1] = reportArray[i][1].replace("CP 55;940", "CP 55,940");
 
         //insert drugs for this report
         var drugs = reportArray[i][1].split(";");
@@ -172,7 +196,7 @@ function fillInDataStructure(result) {
         complete[reportArray[i][0]].views = reportArray[i][11];
     }
 
-    var ids = [];
+    ids = [];
     var keyCount = 0;
     for (var key in complete) {
         if (complete.hasOwnProperty(key)) {
@@ -185,23 +209,61 @@ function fillInDataStructure(result) {
         $("#cds").append("<br>Data structure filled. " + keyCount + " entries.");
     });
 
-    var mushrooms = 0;
-    var both = 0;
-    var bothandoral = 0;
+
+    for (var i = 0; i < 100; i++) {
+        drugCategPercent(drugList[i], "Mystical Experiences");
+    }
+
+    var tuples = [];
+    for (var key in dataxy) tuples.push([key, dataxy[key]]);
+
+    tuples.sort(function (a, b) {
+        a = a[1];
+        b = b[1];
+
+        return a > b ? -1 : (a < b ? 1 : 0);
+    });
+
+    for (var i = 0; i < tuples.length; i++) {
+        var key = tuples[i][0];
+        var value = tuples[i][1];
+
+        console.log(key + ": " + value);
+    }
+
+
+    //    var mushrooms = 0;
+    //    var both = 0;
+    //    var bothandoral = 0;
+    //    for (var i = 0; i < ids.length; i++) {
+    //        if ($.inArray("Mushrooms", complete[ids[i]].drugArray) != -1) {
+    //            var index = $.inArray("Mushrooms", complete[ids[i]].drugArray);
+    //            mushrooms++;
+    //            if ($.inArray("Mystical Experiences", complete[ids[i]].categ) != -1) {
+    //                both++;
+    //                if (complete[ids[i]].methodArray[index] == "oral") {
+    //                    bothandoral++;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    console.log(mushrooms + " " + both + " " + bothandoral);
+}
+
+function drugCategPercent(drug, categ) {
+    var drugCount = 0;
+    var bothCount = 0;
+
     for (var i = 0; i < ids.length; i++) {
-        if ($.inArray("Mushrooms", complete[ids[i]].drugArray) != -1) {
-            var index = $.inArray("Mushrooms", complete[ids[i]].drugArray);
-            mushrooms++;
-            if ($.inArray("Mystical Experiences", complete[ids[i]].categ) != -1) {
-                both++;
-                if (complete[ids[i]].methodArray[index] == "oral") {
-                    bothandoral++;
-                }
+        if ($.inArray(drug, complete[ids[i]].drugArray) != -1) {
+            drugCount++;
+
+            if ($.inArray(categ, complete[ids[i]].categ) != -1) {
+                bothCount++;
             }
         }
     }
-    console.log(mushrooms + " " + both + " " + bothandoral);
-
-
-
+    if(drugCount != 0)
+        dataxy[drug] = (Math.round((bothCount / drugCount) * 1000) / 10);
+    //console.log(dataXY[XYiter][1] + " has " + dataXY[XYiter][0] + " percent chance of mystical");
 }

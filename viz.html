@@ -37,9 +37,14 @@
 
     <script type="text/javascript">
         var csvFile = 'data-3-brackets.csv';
+        var drugListFile = 'druglist.txt';
     </script>
 
-
+    <div id="cds" style="display: inline-block;">
+        <button onclick="optionValueToDataStructure(drugListFile)">
+            Create drug list
+        </button>
+    </div>
 
     <div id="cds" style="display: inline-block;">
         <button onclick="csvToDatastructure(csvFile)">
