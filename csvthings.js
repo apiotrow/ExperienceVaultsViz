@@ -41,7 +41,7 @@ function fillInDataStructure(result) {
     //    });
 
     //replace commas in nested entries
-    for (var i = 1; i < /*reports.length*/ 50; i++) {
+    for (var i = 1; i < reports.length; i++) {
 
         //check if entry has quotes in it. if so,
         //loop through all entries that are surrounded by quotes, and remove
@@ -101,12 +101,14 @@ function fillInDataStructure(result) {
                 form: ""
             }
 
+            //get drug name
             if (drugs[j].indexOf("[") != -1) {
                 drugEntry.drug = drugs[j].substring(0, drugs[j].indexOf("["));
             } else {
                 drugEntry.drug = drugs[j].substring(0);
             }
 
+            //get method of administration
             if (drugs[j].indexOf("[method]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[method]") + 8);
                 if (text.indexOf("[") != -1) {
@@ -116,6 +118,7 @@ function fillInDataStructure(result) {
                 }
             }
 
+            //get amount of drug
             if (drugs[j].indexOf("[amount]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[amount]") + 8);
                 if (text.indexOf("[") != -1) {
@@ -125,6 +128,7 @@ function fillInDataStructure(result) {
                 }
             }
 
+            //get form of drug
             if (drugs[j].indexOf("[form]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[form]") + 6);
                 if (text.indexOf("[") != -1) {
@@ -133,7 +137,7 @@ function fillInDataStructure(result) {
                     drugEntry.form = text.substring(0);
                 }
             }
-//            console.log(drugEntry.drug + " " + drugEntry.method + " " + drugEntry.amount + " " + drugEntry.form);
+            //            console.log(drugEntry.drug + " " + drugEntry.method + " " + drugEntry.amount + " " + drugEntry.form);
             complete[reportArray[i][0]].drugs.push(drugEntry);
         }
 
@@ -147,17 +151,17 @@ function fillInDataStructure(result) {
         complete[reportArray[i][0]].author = reportArray[i][9];
         complete[reportArray[i][0]].date = reportArray[i][10];
         complete[reportArray[i][0]].views = reportArray[i][11];
-        
-        console.log(complete[reportArray[i][0]]);
     }
-    
-    
 
+    var keyCount = 0;
     for (var key in complete) {
         if (complete.hasOwnProperty(key)) {
-            //            console.log(key);
-            console.log(complete[key].categ);
+            keyCount++;
         }
     }
+
+    $(document).ready(function () {
+        $("#cds").append("<br>Data structure filled. " + keyCount + " entries.");
+    });
 
 }
