@@ -33,13 +33,6 @@ function fillInDataStructure(result) {
     var reportArray = [];
     var drugList = []; //list of drug names
 
-    //    getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
-    //        scrapeAllOptionValues();
-    //        for (var i = 0; i < optionValueArrays[0].theArray.length; i++) {
-    //            druglist.push(optionValueArrays[0].theArray[i].item);
-    //        }
-    //    });
-
     //replace commas in nested entries
     for (var i = 1; i < reports.length; i++) {
 
@@ -75,7 +68,11 @@ function fillInDataStructure(result) {
     for (var i = 0; i < reportArray.length; i++) {
         //entry for one report
         var idEntry = {
-            drugs: [],
+            drugArray: [], //these 4 arrays line up by their indexes
+            methodArray: [], //e.g. drugArray[1] used methodArray[1] method
+            amountArray: [],
+            formArray: [],
+            drugs: [], //holds all the above info, but in an object
             categ: [],
             nonsub: [],
             context: [],
@@ -93,6 +90,7 @@ function fillInDataStructure(result) {
         //insert drugs for this report
         var drugs = reportArray[i][1].split(";");
         for (var j = 0; j < drugs.length; j++) {
+
             //entry for the drug array in the completeEntry object ^
             var drugEntry = {
                 drug: "",
@@ -103,48 +101,69 @@ function fillInDataStructure(result) {
 
             //get drug name
             if (drugs[j].indexOf("[") != -1) {
-                drugEntry.drug = drugs[j].substring(0, drugs[j].indexOf("["));
+                var drugName = drugs[j].substring(0, drugs[j].indexOf("["));
+                drugEntry.drug = drugName;
             } else {
-                drugEntry.drug = drugs[j].substring(0);
+                var drugName = drugs[j].substring(0);
+                drugEntry.drug = drugName;
             }
+            complete[reportArray[i][0]].drugArray.push(drugName);
 
             //get method of administration
             if (drugs[j].indexOf("[method]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[method]") + 8);
                 if (text.indexOf("[") != -1) {
-                    drugEntry.method = text.substring(0, text.indexOf("["));
+                    var name = text.substring(0, text.indexOf("["));
+                    drugEntry.method = name;
                 } else {
-                    drugEntry.method = text.substring(0);
+                    var name = text.substring(0);
+                    drugEntry.method = name;
                 }
+                complete[reportArray[i][0]].methodArray.push(name);
+            } else {
+                //push a blank if no method exists
+                complete[reportArray[i][0]].methodArray.push("");
             }
 
             //get amount of drug
             if (drugs[j].indexOf("[amount]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[amount]") + 8);
                 if (text.indexOf("[") != -1) {
-                    drugEntry.amount = text.substring(0, text.indexOf("["));
+                    var name = text.substring(0, text.indexOf("["));
+                    drugEntry.amount = name;
                 } else {
                     drugEntry.amount = text.substring(0);
                 }
+                complete[reportArray[i][0]].amountArray.push(name);
+            } else {
+                //push a blank if no method exists
+                complete[reportArray[i][0]].amountArray.push("");
             }
 
             //get form of drug
             if (drugs[j].indexOf("[form]") != -1) {
                 var text = drugs[j].substring(drugs[j].indexOf("[form]") + 6);
                 if (text.indexOf("[") != -1) {
-                    drugEntry.form = text.substring(0, text.indexOf("["));
+                    var name = text.substring(0, text.indexOf("["));
+                    drugEntry.form = name;
                 } else {
-                    drugEntry.form = text.substring(0);
+                    var name = text.substring(0);
+                    drugEntry.form = name;
                 }
+                complete[reportArray[i][0]].formArray.push(name);
+            } else {
+                //push a blank if no method exists
+                complete[reportArray[i][0]].formArray.push("");
             }
-            //            console.log(drugEntry.drug + " " + drugEntry.method + " " + drugEntry.amount + " " + drugEntry.form);
+
+            //push the drug entry object
             complete[reportArray[i][0]].drugs.push(drugEntry);
         }
 
         //insert every other column for this report
-        complete[reportArray[i][0]].categ.push(reportArray[i][2].split(";"));
-        complete[reportArray[i][0]].nonsub.push(reportArray[i][3].split(";"));
-        complete[reportArray[i][0]].context.push(reportArray[i][4].split(";"));
+        complete[reportArray[i][0]].categ = reportArray[i][2].split(";");
+        complete[reportArray[i][0]].nonsub.push = reportArray[i][3].split(";");
+        complete[reportArray[i][0]].context.push = reportArray[i][4].split(";");
         complete[reportArray[i][0]].intensity = reportArray[i][6];
         complete[reportArray[i][0]].gender = reportArray[i][7];
         complete[reportArray[i][0]].title = reportArray[i][8];
@@ -153,15 +172,36 @@ function fillInDataStructure(result) {
         complete[reportArray[i][0]].views = reportArray[i][11];
     }
 
+    var ids = [];
     var keyCount = 0;
     for (var key in complete) {
         if (complete.hasOwnProperty(key)) {
             keyCount++;
+            ids.push(key);
         }
     }
 
     $(document).ready(function () {
         $("#cds").append("<br>Data structure filled. " + keyCount + " entries.");
     });
+
+    var mushrooms = 0;
+    var both = 0;
+    var bothandoral = 0;
+    for (var i = 0; i < ids.length; i++) {
+        if ($.inArray("Mushrooms", complete[ids[i]].drugArray) != -1) {
+            var index = $.inArray("Mushrooms", complete[ids[i]].drugArray);
+            mushrooms++;
+            if ($.inArray("Mystical Experiences", complete[ids[i]].categ) != -1) {
+                both++;
+                if (complete[ids[i]].methodArray[index] == "oral") {
+                    bothandoral++;
+                }
+            }
+        }
+    }
+    console.log(mushrooms + " " + both + " " + bothandoral);
+
+
 
 }
