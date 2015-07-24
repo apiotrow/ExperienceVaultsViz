@@ -34,41 +34,47 @@ function fillInDataStructure(result) {
     var freq = {}; //final drug frequency count
     var drugsInEachEntry = [];
 
-//    getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
-//        scrapeAllOptionValues();
-//        for (var i = 0; i < optionValueArrays[0].theArray.length; i++) {
-//            druglist.push(optionValueArrays[0].theArray[i].item);
-//        }
-//    });
+    //    getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
+    //        scrapeAllOptionValues();
+    //        for (var i = 0; i < optionValueArrays[0].theArray.length; i++) {
+    //            druglist.push(optionValueArrays[0].theArray[i].item);
+    //        }
+    //    });
 
 
+    var ttt = [];
     //replace commas in nested entries
     for (var i = 1; i < /*reports.length*/ 50; i++) {
-        //find where drug list begins
-        var entryBegin = reports[i].indexOf(",");
 
-        //if report entries has multiple drugs, change the delimiter between them to be
-        //a chracter besides a comma, which would cause parsing issues
-        if (reports[i].charAt(entryBegin + 1) == '"') {
-            var firstQuote = entryBegin + 1;
-            
-            //new string with first quote removed
+        //check if entry has quotes in it. if so,
+        //loop through all entries that are surrounded by quotes, and remove
+        //the quotes around them, and replace the commas with another character
+        var firstQuote = reports[i].indexOf('"');
+        while (firstQuote != -1) {
+
+            //new report entry with first quote removed
             var temp = reports[i].substring(0, firstQuote) + reports[i].substring(firstQuote + 1);
-            var secondQuote = temp.indexOf('"'); //get second quote
-            //new string with second quote removed
-            temp = temp.substring(0, secondQuote) + temp.substring(secondQuote + 1); 
-            
-            var tempsDrugEntry = temp.substring(firstQuote + 1, secondQuote + 1);
-//            var newEntry = entry.replace(/"/g, ""); //get rid of quotes
-            var newtempsDrugEntry = tempsDrugEntry.replace(/,/g, ';'); //replace commas with another character
-            reports[i] = temp.replace(tempsDrugEntry, newtempsDrugEntry);
-            
 
-            console.log(reports[i]);
+            //get location of second quote
+            var secondQuote = temp.indexOf('"');
 
+            //remove second quote from new entry
+            temp = temp.substring(0, secondQuote) + temp.substring(secondQuote + 1);
+
+            //get the formerly quoted entry and replace the commas with something else
+            var tempsQuotedEntry = temp.substring(firstQuote + 1, secondQuote);
+            var newtempsQuotedEntry = tempsQuotedEntry.replace(/,/g, ';'); //replace commas with another character
+
+            //replace the old report entry with the new one
+            reports[i] = temp.replace(tempsQuotedEntry, newtempsQuotedEntry);
+
+            //check for another set of quotes in the entry
+            firstQuote = reports[i].indexOf('"');
         }
+        ttt.push(reports[i].split(","));
+        
     }
-
+    console.log(ttt);
 
     //insert entries into complete structure
     complete[reports[i][0]] = idEntry;
