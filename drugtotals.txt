@@ -1,0 +1,606 @@
+Mushrooms	1755
+Cannabis	1644
+Salvia divinorum	1556
+MDMA	1212
+LSD	1211
+DXM	589
+Opiates	537
+Pharmaceuticals	512
+Opioids	508
+Alcohol	462
+Cocaine	448
+Morning Glory	443
+2C-I	441
+Harmala Alkaloids	432
+Amphetamines	405
+DMT	352
+Methamphetamine	304
+Syrian Rue	304
+H.B. Woodrose	303
+5-MeO-DMT	301
+Ketamine	298
+2C-E	297
+5-MeO-DiPT	286
+SSRIs	264
+Cacti	262
+Nitrous Oxide	249
+AMT	243
+NBOMe Series	242
+Nutmeg	240
+Kratom	236
+2C-B	232
+Datura	229
+Diphenhydramine	225
+Benzodiazepines	208
+Pharms - Oxycodone	207
+2C-T-7	204
+Pharms - Tramadol	203
+Ayahuasca	200
+Amanitas	189
+Caffeine	185
+DPT	183
+Dimenhydrinate	182
+Heroin	181
+Hydrocodone	170
+Kava	162
+2C-T-2	153
+Inhalants	149
+GHB	147
+Pharms - Zolpidem	147
+Codeine	143
+Mimosa spp.	142
+25I-NBOMe	134
+Tobacco	129
+AB-FUBINACA	127
+Methylone	127
+Cannabinoid Receptor Agonists	125
+Products - Spice and Synthetic Cannabinoids	125
+Pharms - Methylphenidate	123
+Pharms - Alprazolam	121
+Methoxetamine	118
+5-MeO-AMT	117
+Pharms - Venlafaxine	117
+Pharms - Bupropion	115
+Anadenanthera spp.	109
+Pharms - Paroxetine	108
+Modafinil	105
+4-AcO-DMT	102
+Melatonin	96
+Piperazines	95
+4-Methylmethcathinone	94
+Pharms - Buprenorphine	93
+Absinthe	92
+Calea zacatechichi	88
+Tryptophan	87
+Valerian	84
+25C-NBOMe	83
+2C-C	82
+JWH-018	81
+Lotus/Lily	81
+Pharms - Clonazepam	80
+Pharms - Diazepam	80
+Pharms - Gabapentin	78
+Wormwood	75
+Pharms - Quetiapine	74
+Piracetam	74
+Poppies - Opium	74
+MDA	73
+Methadone	71
+Banisteriopsis caapi	70
+Brugmansia	70
+GBL	69
+PCP	69
+Catnip	68
+MDPV	68
+Morphine	68
+Damiana	66
+DiPT	63
+Ephedrine	63
+Leonotis leonurus	59
+2C-D	58
+DOC	57
+Pharms - Sertraline	57
+2C-P	55
+Pharms - Fentanyl	55
+Yohimbe	55
+4-Acetoxy-DiPT	53
+Sceletium tortuosum	53
+4-HO-DiPT	51
+6-APB	51
+Passion Flower	51
+Pharms - Carisoprodol	51
+Unknown	51
+Opium	50
+5-MeO-MIPT	49
+DOB	49
+4-Fluoroamphetamine	48
+Various	48
+Mescaline	47
+Pharms - Lorazepam	47
+1,4-Butanediol	46
+Chlorpheniramine Maleate	45
+Bromo-Dragonfly	44
+Ether	44
+Hydromorphone	43
+Lactuca spp.	43
+4-Acetoxy-DET	41
+Pharms - Mirtazapine	41
+Pharms - Cyclobenzaprine	40
+Psychotria viridis	40
+4-HO-MET	39
+5-MeO-DALT	39
+DOI	39
+Yerba Mate	39
+Pharms - Fluoxetine	38
+Pharms - Pregabalin	38
+4-HO-MiPT	37
+Heimia salicifolia	37
+Ginkgo biloba	36
+Pharms - Escitalopram	36
+MDAI	35
+Coleus	33
+Belladonna	32
+Calamus	32
+Peyote	32
+Pharms - Zopiclone	32
+Products - Bath Salts, Plant Food, etc	31
+Tabernanthe iboga	31
+Ibogaine	30
+Naloxone	30
+St. John's Wort	30
+Adrafinil	29
+4-Acetoxy-MiPT	28
+Ethylphenidate	28
+Pharms - Amitriptyline	28
+Pharms - Citalopram	28
+DMAE	27
+DOM	27
+Inhalants - Nitrites	27
+Moclobemide	26
+Pharms - Olanzapine	26
+Pharms - Trazodone	26
+Skullcap	26
+Betel Nut	25
+bk-MBDB	25
+Mugwort	25
+AL-LAD	24
+Pharms - Promethazine	24
+Barbiturates	23
+Pharms - Oxymorphone	23
+TMA-2	23
+Vitamin B-6	23
+2C-T-21	22
+Acacia	22
+Smarts - Phenibut	22
+2C-T-4	21
+Pharms - Atomoxetine	21
+Pharms - Propoxyphene	21
+Pharms - Risperidone	21
+Voacanga africana	21
+25B-NBOMe	20
+Coca	20
+Pharms - Lithium	20
+Products - Smoking Blends - Cannabis-Like	20
+Pharms - Clonidine	19
+Pseudoephedrine	19
+Animals	18
+Hops	18
+Pharms - Selegeline	18
+Red Rock	18
+Ginseng	17
+Lisdexamfetamine	17
+Pharms - Propylhexedrine	17
+2C-B-Fly	16
+4-Methylethcathinone	16
+DHEA	16
+Guarana	16
+MBDB	16
+Methcathinone	16
+Pharms - Triazolam	16
+Vinpocetine	16
+2-Aminoindan	15
+Aniracetam	15
+Hydergine	15
+IAP	15
+LSA	15
+Pharms - Sildenafil	15
+PMA	15
+Catha edulis	14
+Ephedra sinica	14
+Pharms - Zaleplon	14
+Poppies - California	14
+Toad Venom	14
+Etizolam	13
+Herbal Ecstasy	13
+Mandrake	13
+Methiopropamine	13
+Pharms - Dihydrocodeine	13
+Pharms - Metaxalone	13
+Scopolamine	13
+4-Methylaminorex	12
+Galangal	12
+LSZ	12
+Metoprolol	12
+Pharms - Albuterol	12
+Pharms - Aripiprazole	12
+Pharms - Flunitrazepam	12
+Pharms - Meperidine	12
+Pharms - Temazepam	12
+Salvia officinalis	12
+4-HO-DET	11
+5-MAPB	11
+Chocolate	11
+Diplopterys cabrerana	11
+Nicotine	11
+Pharms - Phentermine	11
+Psilocin	11
+Turbina corymbosa	11
+Chloroform	10
+Naltrexone	10
+Pharms - Cyclizine	10
+Psilocybin	10
+Allylescaline	9
+bk-MDEA	9
+Ginger	9
+Huasca - Misc Combo	9
+MAOI	9
+MIPT	9
+Pharms - Haloperidol	9
+Pharms - Lamotrigine	9
+Pharms - Phenytoin	9
+Pharms - Topiramate	9
+Tea	9
+Vitamins - Niacin	9
+4-MeO-PCP	8
+BK-2C-B	8
+Capsicum spp.	8
+Chamomile	8
+DET	8
+JWH-122	8
+Lavandula spp.	8
+MDE	8
+Periwinkle	8
+Pharms - Buspirone	8
+Pharms - Corticosteroid	8
+Pharms - Propranolol	8
+Tyrosine	8
+1P-LSD	7
+3-MeO-PCP	7
+AET	7
+Animals - Frogs	7
+Bufotenin	7
+Cloves	7
+CP 55,940	7
+GABA	7
+Lagochilus inebrians	7
+Leonurus sibiricus	7
+Methaqualone	7
+Rhodiola rosea	7
+TMA-6	7
+Virola spp.	7
+Acetaminophen	6
+Carbogen	6
+Ethylcathinone	6
+GVL	6
+Hyoscyamus niger	6
+JWH-250	6
+Levmetamfetamine	6
+Loperamide	6
+Mucuna pruriens	6
+Phalaris Grass	6
+Pharms - Baclofen	6
+Pharms - Butorphanol	6
+Pharms - Chlordiazepoxide	6
+Pharms - Divalproex	6
+Pharms - Memantine	6
+Pharms - Prednisone	6
+Pharms - Tiletamine	6
+Phyllomedusa bicolor	6
+Piperazines - MeOPP	6
+Theanine	6
+Vitamin C	6
+Yarrow	6
+3C-P	5
+a-PVP	5
+Lemon Balm	5
+MET	5
+Milk Thistle	5
+Pharms - Fluvoxamine	5
+Pharms - Meclizine	5
+Pharms - Nalbuphine	5
+Pharms - Phenazepam	5
+Pharms - Tiagabine	5
+Sassafras	5
+Silene capensis	5
+Vasopressin	5
+4-HO-MPT	4
+5-MeO-DPT	4
+AH-7921	4
+Cathinone	4
+Dizocilpine	4
+Harmaline	4
+Hyoscyamine	4
+Oxygen	4
+Pharms - Dexmethylphenidate	4
+Pharms - Propofol	4
+Pharms - Ziprasidone	4
+Phenylalanine	4
+Sophora secundiflora	4
+Spearmint	4
+2-Fluoromethamphetamine	3
+25D-NBOMe	3
+4-AcO-DALT	3
+4-Fluoromethamphetamine	3
+4-MeO-MiPT	3
+5-APB	3
+Acacia confusa	3
+Adrenochrome	3
+Argemone spp.	3
+Armodafinil	3
+Bad/Suspect Ecstasy	3
+bk-MBDP	3
+BOD	3
+Catuaba	3
+Clonazolam	3
+Cytisus scoparius	3
+Desmanthus illinoensis	3
+Desoxypipradrol	3
+Diphenidine	3
+DON	3
+Ergot	3
+Erythrina mulungu	3
+GHV	3
+Glaucine	3
+Heimia myrtifolia	3
+JWH-210	3
+Kola Nut	3
+Lady's Slipper	3
+Lecithin	3
+Methallylescaline	3
+Methocarbamol	3
+Miracle Berry	3
+MMDA	3
+Napthylpyrovalerone	3
+Petroleum Ether	3
+Pharms - Antibiotics	3
+Pharms - Atenolol	3
+Pharms - Benzphetamine	3
+Pharms - Chlorpromazine	3
+Pharms - Doxylamine	3
+Pharms - Midazolam	3
+Pharms - Phenelzine	3
+Pharms - Phenylephrine	3
+Pharms - Tianeptine	3
+Salvia apiana	3
+Xenon	3
+2-Fluoroamphetamine	2
+2-Me-DMT	2
+2-Methyl-2-Butanol	2
+25G-NBOMe	2
+25I-NBOH	2
+3-Methylmethcathinone	2
+3C-E	2
+4-AcO-DPT	2
+4-Ethylmethcathinone	2
+4-Fluoromethcathinone	2
+4-Methoxymethcathinone	2
+4-MTA	2
+5-MeO-AET	2
+Albizia julibrissin	2
+Aleph-4	2
+AM-DIPT	2
+BDB	2
+Brunfelsia	2
+Butalbital	2
+BZ	2
+Capsaicin	2
+Cheese - Blue	2
+Clozapine	2
+Diclazepam	2
+Dimethocaine	2
+Dioscorea spp.	2
+Diphenyl-2-pyrrolidinemethanol	2
+DMMDA	2
+DOET	2
+DXO	2
+Ephenidine	2
+Escaline	2
+GABOB	2
+Gotu Kola	2
+Huperzine	2
+JWH-073	2
+JWH-200	2
+Leonotis nepetaefolia	2
+Lobelia spp.	2
+MT-45	2
+Mulberry	2
+NBOH Series	2
+Nootka Lupine	2
+Pedicularis spp.	2
+Pharms - Doxepin	2
+Pharms - Doxycycline	2
+Pharms - Ethylmorphine	2
+Pharms - Flurazepam	2
+Pharms - Mefloquine	2
+Pharms - Procyclidine	2
+Pharms - Zolazepam	2
+Phenethylamines - Other	2
+Picamilon	2
+Piperazines - pFPP	2
+Salvinorin A	2
+Steroids	2
+Tapentadol	2
+TCB-2	2
+TMA	2
+Xylazine	2
+19-Norandrostenedione	1
+2-MeO-Diphenidine	1
+2C-EF	1
+2C-G-N	1
+2C-H	1
+2C-N	1
+2C-T-FM	1
+3,4-Dichloromethylphenidate	1
+3-MEO-PCE	1
+3C-B	1
+3F-Phenmetrazine	1
+4-AcO-EIPT	1
+5-IT	1
+5-MeO-DET	1
+5-Methoxy-Tryptamine	1
+5-Methyl-MDA	1
+6-APDB	1
+6-MAPB	1
+7-Hydroxy-Mytragynine	1
+Aconitum napellus	1
+alpha-PHP	1
+Animals - Black Widow Spider	1
+Arundo donax	1
+Aspirin	1
+bk-MDDMA	1
+Black Cohosh	1
+Boophone disticha	1
+Carbidopa	1
+Casimiroa edulis	1
+Cerebrolysin	1
+Chloral Hydrate	1
+Citicoline	1
+Clenbuterol	1
+DOPR	1
+Erythroxylum novogranatense	1
+Etaqualone	1
+ETH-LAD	1
+Galantamine	1
+Gamma-Crotonolactone	1
+Garlic	1
+Halothane	1
+Harmine	1
+HOT-2	1
+Hydroxyzine	1
+Indian Warrior	1
+Isopropylphenidate	1
+JWH-019	1
+JWH-081	1
+L-DOPA	1
+Leonurus cardiaca	1
+Licorice Root	1
+Lorcaserin	1
+LSA - Other	1
+MDMB-CHMICA	1
+MDOH	1
+MDPR	1
+Methylmethaqualone	1
+MMDA-3a	1
+Monotropa uniflora	1
+Mullein	1
+Myrrh	1
+Nabilone	1
+Naproxen	1
+Nitric Oxide	1
+Pennyroyal	1
+Pharms - Fenfluramine	1
+Pharms - Hydroxyzine	1
+Pharms - Levofloxacin	1
+Pharms - Levorphanol	1
+Pharms - Levothyroxine	1
+Pharms - Lidocaine	1
+Pharms - Methotrimeprazine	1
+Pharms - Nortriptyline	1
+Pharms - Perazine	1
+Pharms - Procaine	1
+Pharms - Reboxetine	1
+Pharms - Valproate	1
+Phosphatidylserine	1
+Pituri	1
+PMMA	1
+Pramipexole	1
+Pramiracetam	1
+PRL-8-53	1
+Products - Other	1
+Pyrazolam	1
+Ritonavir	1
+Sakae Naa	1
+Smarts - Oxiracetam	1
+Stipa robusta	1
+Tabernaemontana	1
+Thujone	1
+Trihexyphenidyl	1
+Triprolidine	1
+Vitamins - Choline	1
+XLR-11	1
+2-hydroxycocaine	0
+25B-NBOH	0
+3-Fluoroamphetamine	0
+4-Fluorococaine	0
+4-HO-DPT	0
+AB-CHMINACA	0
+Acetylfentanyl	0
+Aloes	0
+Anise	0
+Barbital	0
+Bee	0
+Bismuth Subsalicylate	0
+Blue Lily	0
+Borage	0
+Bromazepam	0
+Bryonia	0
+Cacahuaxochitl	0
+Cacao	0
+Cannabidiol	0
+Cannabis - High CBD	0
+Cannabis - High THC	0
+Cestrum spp.	0
+CP 47,497	0
+Desfontainia spinosa	0
+Desfontainia spp.	0
+Desloratadine	0
+Desomorphine	0
+Echinacea	0
+Epimedium spp.	0
+Ethylene	0
+Eyebright	0
+Flubromazolam	0
+Foxglove	0
+Horseradish	0
+Hydrangea	0
+Hypocretin	0
+Idebenone	0
+Ilex guayusa	0
+JB-336	0
+Jojoba	0
+Levamisole	0
+Lofepramine	0
+Loratadine	0
+Metaxalone	0
+Methylbenzylpiperazine	0
+MPTP	0
+MSM	0
+Mytragynine	0
+N-Ethylnorketamine	0
+Nightshade	0
+Noopept	0
+Ondansetron	0
+Orphenadrine	0
+Oxytocin	0
+Pentedrone	0
+Pharms - Carbamazepine	0
+Pharms - Ketobemidone	0
+Pharms - Meprobamate	0
+Pharms - Thiothixene	0
+Pharms - Valproic Acid	0
+Pharms - Warfarin	0
+Placebo	0
+Prazosin	0
+Prochlorperazine	0
+Prolintane	0
+Propofol	0
+Salvinorin B	0
+Salvinorin B Ethoxymethyl Ether	0
+SAMe	0
+Sumatriptan	0
+Testosterone	0
+Tetrahydroharmine	0
+Triazolam	0
+Uvaursi	0
+Vervain	0
+Wasabi	0

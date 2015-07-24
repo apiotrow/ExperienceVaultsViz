@@ -40,15 +40,21 @@
         var drugListFile = 'druglist.txt';
     </script>
 
-    <div id="cds" style="display: inline-block;">
+    <div id="cdl" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <button onclick="optionValueToDataStructure(drugListFile)">
             Create drug list
         </button>
     </div>
 
-    <div id="cds" style="display: inline-block;">
+    <div id="cds" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <button onclick="csvToDatastructure(csvFile)">
             Create data structure
+        </button>
+    </div>
+    
+        <div id="output" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
+        <button onclick="findBadTrips()">
+            Find Bad Trips
         </button>
     </div>
 

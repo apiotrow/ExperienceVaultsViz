@@ -9,6 +9,7 @@
     <script type="text/javascript" src="ovScraper.js"></script>
     <script type="text/javascript" src="tableFilling.js"></script>
     <script type="text/javascript" src="reportScraper.js"></script>
+    <script type="text/javascript" src="totalsScraper.js"></script>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
@@ -33,9 +34,7 @@
             <a href="viz.html">Visualizations</a>&nbsp;&nbsp;&nbsp;
         </p>
 
-        <hr>
-        
-        First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in).
+        <hr>First scrape the option values (when the chart shows up, it is complete), then scrape the reports (will take up to an hour to completely fill in), or scrape the totals.
 
         <hr>
     </center>
@@ -52,11 +51,18 @@
         <table id='outTable'></table>
     </div>
 
-    <div style="height:550px; width:68%; overflow-y: scroll; display: inline-block;">
+    <div style="height:550px; width:50%; overflow-y: scroll; display: inline-block;">
         <button onclick="outputReports()">
             Scrape Reports
         </button>
         <table id='reportTable'></table>
+    </div>
+
+    <div style="height:550px; width:20%; overflow-y: scroll; display: inline-block;">
+        <button onclick="outputTotals()">
+            Scrape Total
+        </button>
+        <table id='totalsTable'></table>
     </div>
 
 
@@ -82,6 +88,14 @@
             });
 
             scrapeReports();
+        }
+
+        function outputTotals() {
+            $(document).ready(function () {
+                $("#totalsTable").html("<tr><td>Drugs</td><td>Totals</td></tr>");
+            });
+
+            scrapeTotals();
         }
 
         function exportToCSV() {

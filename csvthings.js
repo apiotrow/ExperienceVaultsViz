@@ -6,7 +6,7 @@ complete = {};
 ids = [];
 drugList = [];
 dataxy = {};
-xyiter = 0;
+iditer = 0;
 
 //outputs the list of how frequent a drug shows up in the vault
 function csvToDatastructure(file) {
@@ -25,7 +25,7 @@ function optionValueToDataStructure(file) {
 function fillInDrugList(result) {
     drugList = result.split(/\s+/);
     $(document).ready(function () {
-        $("#cds").append("Drug list created");
+        $("#cdl").append("<br>Drug list created");
     });
 }
 
@@ -100,6 +100,7 @@ function fillInDataStructure(result) {
             views: ""
         }
 
+
         //insert identry into complete data structure
         complete[reportArray[i][0]] = idEntry;
 
@@ -113,6 +114,9 @@ function fillInDataStructure(result) {
 
         //insert drugs for this report
         var drugs = reportArray[i][1].split(";");
+//        if(reportArray[i][1].indexOf("Pharms") != -1)
+//        if($.inArray("Pharms", drugs) != -1)
+            console.log(drugs);
         for (var j = 0; j < drugs.length; j++) {
 
             //entry for the drug array in the completeEntry object ^
@@ -135,12 +139,13 @@ function fillInDataStructure(result) {
 
             //get method of administration
             if (drugs[j].indexOf("[method]") != -1) {
+                var name = "";
                 var text = drugs[j].substring(drugs[j].indexOf("[method]") + 8);
                 if (text.indexOf("[") != -1) {
-                    var name = text.substring(0, text.indexOf("["));
+                    name = text.substring(0, text.indexOf("["));
                     drugEntry.method = name;
                 } else {
-                    var name = text.substring(0);
+                    name = text.substring(0);
                     drugEntry.method = name;
                 }
                 complete[reportArray[i][0]].methodArray.push(name);
@@ -151,12 +156,14 @@ function fillInDataStructure(result) {
 
             //get amount of drug
             if (drugs[j].indexOf("[amount]") != -1) {
+                var name = "";
                 var text = drugs[j].substring(drugs[j].indexOf("[amount]") + 8);
                 if (text.indexOf("[") != -1) {
-                    var name = text.substring(0, text.indexOf("["));
+                    name = text.substring(0, text.indexOf("["));
                     drugEntry.amount = name;
                 } else {
-                    drugEntry.amount = text.substring(0);
+                    name = text.substring(0);
+                    drugEntry.amount = name;
                 }
                 complete[reportArray[i][0]].amountArray.push(name);
             } else {
@@ -166,12 +173,13 @@ function fillInDataStructure(result) {
 
             //get form of drug
             if (drugs[j].indexOf("[form]") != -1) {
+                var name = "";
                 var text = drugs[j].substring(drugs[j].indexOf("[form]") + 6);
                 if (text.indexOf("[") != -1) {
-                    var name = text.substring(0, text.indexOf("["));
+                    name = text.substring(0, text.indexOf("["));
                     drugEntry.form = name;
                 } else {
-                    var name = text.substring(0);
+                    name = text.substring(0);
                     drugEntry.form = name;
                 }
                 complete[reportArray[i][0]].formArray.push(name);
@@ -208,10 +216,11 @@ function fillInDataStructure(result) {
     $(document).ready(function () {
         $("#cds").append("<br>Data structure filled. " + keyCount + " entries.");
     });
+}
 
-
-    for (var i = 0; i < 100; i++) {
-        drugCategPercent(drugList[i], "Mystical Experiences");
+function findBadTrips() {
+    for (var i = 0; i < drugList.length; i++) {
+        drugCategPercent(drugList[i], "Bad Trips");
     }
 
     var tuples = [];
@@ -228,33 +237,19 @@ function fillInDataStructure(result) {
         var key = tuples[i][0];
         var value = tuples[i][1];
 
-        console.log(key + ": " + value);
+//        console.log(key + ": " + value);
+//        $(document).ready(function () {
+//            $("#output").append("<br>" + key + " has a " + value + "% chance of bad trip");
+//        });
+
     }
-
-
-    //    var mushrooms = 0;
-    //    var both = 0;
-    //    var bothandoral = 0;
-    //    for (var i = 0; i < ids.length; i++) {
-    //        if ($.inArray("Mushrooms", complete[ids[i]].drugArray) != -1) {
-    //            var index = $.inArray("Mushrooms", complete[ids[i]].drugArray);
-    //            mushrooms++;
-    //            if ($.inArray("Mystical Experiences", complete[ids[i]].categ) != -1) {
-    //                both++;
-    //                if (complete[ids[i]].methodArray[index] == "oral") {
-    //                    bothandoral++;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    console.log(mushrooms + " " + both + " " + bothandoral);
 }
 
 function drugCategPercent(drug, categ) {
     var drugCount = 0;
     var bothCount = 0;
 
-    for (var i = 0; i < ids.length; i++) {
+    for (var i = 0; i < ids.length / 4; i++) {
         if ($.inArray(drug, complete[ids[i]].drugArray) != -1) {
             drugCount++;
 
@@ -263,7 +258,7 @@ function drugCategPercent(drug, categ) {
             }
         }
     }
-    if(drugCount != 0)
+    if (drugCount > 50)
         dataxy[drug] = (Math.round((bothCount / drugCount) * 1000) / 10);
-    //console.log(dataXY[XYiter][1] + " has " + dataXY[XYiter][0] + " percent chance of mystical");
+
 }
