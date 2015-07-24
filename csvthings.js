@@ -5,6 +5,8 @@ This file holds a lot of CSV parsing stuff
 complete = {};
 ids = [];
 drugList = [];
+drugTotalsArray = []; //list of drugs and amounts in ascending order
+drugTotalsHash = {}; //drug:total
 dataxy = {};
 iditer = 0;
 
@@ -20,6 +22,21 @@ function optionValueToDataStructure(file) {
     readTextFile(file, function (result) {
         fillInDrugList(result);
     });
+
+    file = "drugtotals.txt"
+    readTextFile(file, function (result) {
+        fillInDrugTotals(result);
+    });
+}
+
+function fillInDrugTotals(result) {
+    drugTotalsArray = result.split(/\n/);
+    //remove escape characters from each drug name
+    for (var i = 0; i < drugTotalsArray.length; i++) {
+        drugTotalsArray[i] = drugTotalsArray[i].replace(/(\r\n|\n|\r)/gm, "");
+        drugTotalsArray[i] = drugTotalsArray[i].split(/\t/);
+        drugTotalsHash[drugTotalsArray[i][0]] = drugTotalsArray[i][1];
+    }
 }
 
 function fillInDrugList(result) {
@@ -27,10 +44,10 @@ function fillInDrugList(result) {
     $(document).ready(function () {
         $("#cdl").append("<br>Drug list created");
     });
-    
+
     //remove escape characters from each drug name
     for (var i = 0; i < drugList.length; i++) {
-        drugList[i] = drugList[i].replace(/(\r\n|\n|\r)/gm,"");
+        drugList[i] = drugList[i].replace(/(\r\n|\n|\r)/gm, "");
     }
 }
 
@@ -221,8 +238,8 @@ function fillInDataStructure(result) {
 }
 
 function findBadTrips() {
-    for (var i = 0; i < drugList.length; i++) {
-        drugCategPercent(drugList[i], "Bad Trips");
+    for (var i = 0; i < drugTotalsArray.length / 2; i++) {
+        drugCategPercent(drugTotalsArray[i][0], "Bad Trips");
     }
 
     var tuples = [];
@@ -256,10 +273,11 @@ function drugCategPercent(drug, categ) {
 
             if ($.inArray(categ, complete[ids[i]].categ) != -1) {
                 bothCount++;
+
             }
         }
     }
-    if (drugCount > 50)
-        dataxy[drug] = (Math.round((bothCount / drugCount) * 1000) / 10);
+    //    if (drugCount > 50)
+    dataxy[drug] = (Math.round((bothCount / drugCount) * 1000) / 10);
 
 }
