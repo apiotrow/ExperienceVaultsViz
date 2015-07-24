@@ -47,37 +47,26 @@ function fillInDataStructure(result) {
         //find where drug list begins
         var entryBegin = reports[i].indexOf(",");
 
-        //create an array where every entry is the drug(s) a report has,
-        //accounting for entries with multiple drugs, which have lists
-        //that are wrapped in quotes
-        //
-        //if report entry has multiple drugs, change the delimiter between them to be
+        //if report entries has multiple drugs, change the delimiter between them to be
         //a chracter besides a comma, which would cause parsing issues
         if (reports[i].charAt(entryBegin + 1) == '"') {
             var firstQuote = entryBegin + 1;
-            var temp = reports[i].substring(entryBegin + 2); //new string with first quote chopped off
+            
+            //new string with first quote removed
+            var temp = reports[i].substring(0, firstQuote) + reports[i].substring(firstQuote + 1);
             var secondQuote = temp.indexOf('"'); //get second quote
-            var entry = reports[i].substring(firstQuote, secondQuote);
-            var newEntry = entry.replace(/"/, ''); //get rid of quotes
-//            var newEntry = entry.splice(firstQuote, 1);
-//            newEntry = entry.splice(secondQuote, 1);
-            newEntry = entry.replace(/,/g, ';'); //replace commas with another character
-            reports[i] = reports[i].replace(entry, newEntry);
+            //new string with second quote removed
+            temp = temp.substring(0, secondQuote) + temp.substring(secondQuote + 1); 
+            
+            var tempsDrugEntry = temp.substring(firstQuote + 1, secondQuote + 1);
+//            var newEntry = entry.replace(/"/g, ""); //get rid of quotes
+            var newtempsDrugEntry = tempsDrugEntry.replace(/,/g, ';'); //replace commas with another character
+            reports[i] = temp.replace(tempsDrugEntry, newtempsDrugEntry);
             
 
-            
-            
+            console.log(reports[i]);
 
-            //            var drugsInThis = reports[i][1].replace(/['"]+/g, '');
-            //            var reportArray = drugsInThis.split(',');
-            //            drugsInThis = drugsInThis.substring(0, drugsInThis.indexOf('"'));
-            console.log(entry);
-        } //else {
-           // var drugsInThis = reports[i][2]
-                //            console.log(reports[i][1]);
-        //}
-       // reports[i] = reports[i].replace(/,/g, ';');
-        //        console.log(reports[i]);
+        }
     }
 
 
