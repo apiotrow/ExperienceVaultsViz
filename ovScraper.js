@@ -2,49 +2,49 @@
 
 function scrapeAllOptionValues(){
     fillOptionValueArrays();
-    for(var i = 0; i < optionValueArrays.length; i++){
-        scrapeOptionValues(optionValueArrays[i].begin, optionValueArrays[i].end, optionValueArrays[i].theArray);
+    for(var i = 0; i < scraperglobals.optionValueArrays.length; i++){
+        scrapeOptionValues(scraperglobals.optionValueArrays[i].begin, scraperglobals.optionValueArrays[i].end, scraperglobals.optionValueArrays[i].theArray);
     }
 }
 
 function fillOptionValueArrays() {
     var iter = -1;
     
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "drug",
         begin: "S1",
         end: "S2",
-        theArray: OptionValues_Drugs = []
+        theArray: scraperglobals.OptionValues_Drugs = []
     };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "category",
         begin: "C1",
         end: "S4",
-        theArray: OptionValues_Category = []
+        theArray: scraperglobals.OptionValues_Category = []
     };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "nonsubstance",
         begin: "S4",
         end: "GenderSelect",
-        theArray: OptionValues_NonSubstance = []
+        theArray: scraperglobals.OptionValues_NonSubstance = []
     };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "genderselect",
         begin: "GenderSelect",
         end: "Context",
-        theArray: OptionValues_Gender = []
+        theArray: scraperglobals.OptionValues_Gender = []
     };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "context",
         begin: "Context",
         end: "DoseMethodID",
-        theArray: OptionValues_Context = []
+        theArray: scraperglobals.OptionValues_Context = []
     };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "dosemethod",
         begin: "DoseMethodID",
         end: "A1",
-        theArray: OptionValues_DoseMethod = []
+        theArray: scraperglobals.OptionValues_DoseMethod = []
     };
 //    optionValueArrays[++iter] = {
     //    type: "author",
@@ -58,21 +58,21 @@ function fillOptionValueArrays() {
 //        end: "Group",
 //        theArray: OptionValues_Lang = []
 //    };
-    optionValueArrays[++iter] = {
+    scraperglobals.optionValueArrays[++iter] = {
         type: "intensity",
         begin: "Intensity",
         end: "I2",
-        theArray: OptionValues_Intensity = []
+        theArray: scraperglobals.OptionValues_Intensity = []
     };
 }
 
 
 function scrapeOptionValues(begin, end, dataDtructure) {
-    var text = URLSource; 
+    var text = scraperglobals.URLSource; 
 
     //get start and end of list
-    var startPos = URLSource.indexOf('select name="' + begin + '"');
-    var endPos = URLSource.indexOf('select name="' + end +  '"');
+    var startPos = scraperglobals.URLSource.indexOf('select name="' + begin + '"');
+    var endPos = scraperglobals.URLSource.indexOf('select name="' + end +  '"');
 
     //only want to search through this short interval
     text = text.substring(startPos, endPos);

@@ -1,8 +1,8 @@
 //handles printing of option values
 
 function printOptionValues() {
-    for(var i = 0; i < optionValueArrays.length; i++){
-        printLoop(optionValueArrays[i].theArray);
+    for(var i = 0; i < scraperglobals.optionValueArrays.length; i++){
+        printLoop(scraperglobals.optionValueArrays[i].theArray);
     }
 
 }

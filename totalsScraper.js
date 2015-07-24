@@ -1,59 +1,58 @@
-//scrape the reports using the option values
+function totalsScraper() {
 
-function scrapeTotals() {
-    var urlFields = []; //for constructing the URL
-    var reportAmt = 0; //storing so we can track progress of scraping
+    var urlFields = [], //for constructing the URL
+        reportAmt = 0, //storing so we can track progress of scraping
+        testMode = false,
+        allURLS = [], //holds all the URLs we construct using the option values
+        urlIter = 0,
 
-    var drugOne = 0;
-    var drugTwo = -1;
-    var drugThree = -1;
-    var category = -1;
-    var nonSubstance = -1;
-    var gender = -1;
-    var context = -1;
-    var doseMethod = -1;
-    var title = "";
-    var authorSearch = "";
-    var erowidAuthor = -1;
-    var language = 1;
-    var group = -1;
-    var strength = "";
-    var intensityMin = "";
-    var intensityMax = "";
+        drugOne = 0,
+        drugTwo = -1,
+        drugThree = -1,
+        category = -1,
+        nonSubstance = -1,
+        gender = -1,
+        context = -1,
+        doseMethod = -1,
+        title = "",
+        authorSearch = "",
+        erowidAuthor = -1,
+        language = 1,
+        group = -1,
+        strength = "",
+        intensityMin = "",
+        intensityMax = "";
 
-    var testMode = false;
+
 
     resetURL();
-
-    var allURLS = []; //holds all the URLs we construct using the option values
     fillURLArray();
 
     //iterate through each URL, parse it, and store the data from it
-    var urlIter = 0;
     getURL(urlIter);
 
 
     //iterate through option values, generating URLS which will later
     //be iterated through to get their source code
     function fillURLArray() {
-        for (var i = 0; i < optionValueArrays.length; i++) {
-            for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
+        for (var i = 0; i < scraperglobals.optionValueArrays.length; i++) {
+            for (var j = 0; j < scraperglobals.optionValueArrays[i].theArray.length; j++) {
                 if (testMode == true) {
                     if (j > 1) break; //uncomment this if we want to a do a quicker test
                 }
 
                 var url_Entry = {
-                    urlType: optionValueArrays[i].type,
+                    urlType: scraperglobals.optionValueArrays[i].type,
                     url: "",
                     itemName: "",
                 };
                 url_Entry.url = ""; //holds URL
-                url_Entry.itemName = optionValueArrays[i].theArray[j].item; //holds item name
+                url_Entry.itemName = scraperglobals.optionValueArrays[i].theArray[j].item; //holds item name
 
                 resetURL();
 
-                if (optionValueArrays[i].type == "drug") {
-                    drugOne = optionValueArrays[i].theArray[j].optionValue;
+                if (scraperglobals.optionValueArrays[i].type == "drug") {
+                    drugOne = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
                 }
 
                 setupURL(drugOne,
@@ -79,10 +78,10 @@ function scrapeTotals() {
                 //so we can achieve an end-state quicker
                 if (testMode == true) {
                     if ( /*optionValueArrays[i].type != "category" &&*/
-                        optionValueArrays[i].type != "nonsubstance" &&
-                        optionValueArrays[i].type != "context" &&
-                        optionValueArrays[i].type != "dosemethod" &&
-                        optionValueArrays[i].type != "genderselect") {
+                        scraperglobals.optionValueArrays[i].type != "nonsubstance" &&
+                        scraperglobals.optionValueArrays[i].type != "context" &&
+                        scraperglobals.optionValueArrays[i].type != "dosemethod" &&
+                        scraperglobals.optionValueArrays[i].type != "genderselect") {
                         for (var urlFields_index in urlFields) {
                             if (urlFields.hasOwnProperty(urlFields_index)) {
                                 url += urlFields[urlFields_index];
@@ -153,11 +152,10 @@ function scrapeTotals() {
 
     //go through the HTML source and extrapolate the various values we want, for each report in the source
     function parseSource(itemName, type) {
-        var text = URLSource;
+        var text = scraperglobals.URLSource;
         var pos = text.indexOf('<font size="2"><b>');
         var str = text.substring(pos + 19, text.indexOf(' Total)</b></font><br/><br/>'));
         console.log(str);
-
 
         $(document).ready(function () {
             $("#totalsTable").append("<tr><td>" + itemName + "</td><td>" + str + "</td></tr>");
@@ -186,6 +184,5 @@ function scrapeTotals() {
             getURL(urlIter);
 
         });
-
     }
 }
