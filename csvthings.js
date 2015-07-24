@@ -23,10 +23,15 @@ function optionValueToDataStructure(file) {
 }
 
 function fillInDrugList(result) {
-    drugList = result.split(/\s+/);
+    drugList = result.split(/\n/);
     $(document).ready(function () {
         $("#cdl").append("<br>Drug list created");
     });
+    
+    //remove escape characters from each drug name
+    for (var i = 0; i < drugList.length; i++) {
+        drugList[i] = drugList[i].replace(/(\r\n|\n|\r)/gm,"");
+    }
 }
 
 //reads a file and returns the text inside
@@ -84,8 +89,8 @@ function fillInDataStructure(result) {
     for (var i = 0; i < reportArray.length; i++) {
         //entry for one report
         var idEntry = {
-            drugArray: [], //these 4 arrays line up by their indexes
-            methodArray: [], //e.g. drugArray[1] used methodArray[1] method
+            drugArray: [], //the next 4 arrays line up by their indexes
+            methodArray: [], //e.g. drugArray[1] uses methodArray[1] method
             amountArray: [],
             formArray: [],
             drugs: [], //holds all the above info, but in an object
@@ -100,7 +105,6 @@ function fillInDataStructure(result) {
             views: ""
         }
 
-
         //insert identry into complete data structure
         complete[reportArray[i][0]] = idEntry;
 
@@ -114,11 +118,9 @@ function fillInDataStructure(result) {
 
         //insert drugs for this report
         var drugs = reportArray[i][1].split(";");
-//        if(reportArray[i][1].indexOf("Pharms") != -1)
-//        if($.inArray("Pharms", drugs) != -1)
-            console.log(drugs);
+        //        if(reportArray[i][1].indexOf("Pharms - Oxycodone") != -1)
+        //            console.log(drugs);
         for (var j = 0; j < drugs.length; j++) {
-
             //entry for the drug array in the completeEntry object ^
             var drugEntry = {
                 drug: "",
@@ -237,10 +239,9 @@ function findBadTrips() {
         var key = tuples[i][0];
         var value = tuples[i][1];
 
-//        console.log(key + ": " + value);
-//        $(document).ready(function () {
-//            $("#output").append("<br>" + key + " has a " + value + "% chance of bad trip");
-//        });
+        $(document).ready(function () {
+            $("#output").append("<br>" + key + " has a " + value + "% chance of bad trip");
+        });
 
     }
 }
@@ -249,7 +250,7 @@ function drugCategPercent(drug, categ) {
     var drugCount = 0;
     var bothCount = 0;
 
-    for (var i = 0; i < ids.length / 4; i++) {
+    for (var i = 0; i < ids.length; i++) {
         if ($.inArray(drug, complete[ids[i]].drugArray) != -1) {
             drugCount++;
 
