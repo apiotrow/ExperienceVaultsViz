@@ -1,4 +1,4 @@
-function totalsScraper() {
+function scrapeTotals() {
 
     var urlFields = [], //for constructing the URL
         reportAmt = 0, //storing so we can track progress of scraping
@@ -6,6 +6,7 @@ function totalsScraper() {
         allURLS = [], //holds all the URLs we construct using the option values
         urlIter = 0,
 
+        //url components
         drugOne = 0,
         drugTwo = -1,
         drugThree = -1,
@@ -37,9 +38,6 @@ function totalsScraper() {
     function fillURLArray() {
         for (var i = 0; i < scraperglobals.optionValueArrays.length; i++) {
             for (var j = 0; j < scraperglobals.optionValueArrays[i].theArray.length; j++) {
-                if (testMode == true) {
-                    if (j > 1) break; //uncomment this if we want to a do a quicker test
-                }
 
                 var url_Entry = {
                     urlType: scraperglobals.optionValueArrays[i].type,
@@ -155,7 +153,6 @@ function totalsScraper() {
         var text = scraperglobals.URLSource;
         var pos = text.indexOf('<font size="2"><b>');
         var str = text.substring(pos + 19, text.indexOf(' Total)</b></font><br/><br/>'));
-        console.log(str);
 
         $(document).ready(function () {
             $("#totalsTable").append("<tr><td>" + itemName + "</td><td>" + str + "</td></tr>");
@@ -168,21 +165,15 @@ function totalsScraper() {
     function getURL(iter) {
         //if we've iterated over all of them
         if (iter >= allURLS.length) {
-            //exportToCSV();
-            console.log("we done");
+            console.log("totals are scraped");
             return;
         }
 
-        //get the source for the search, count the reports, and shove them
-        //with their appropriate drug in the drugTotalsList array
+        //get the source for the search
         getSourceCode(allURLS[iter].url, function () {
-            //we're flipping through pages. don't parse the original URL again
-
             parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
-
             urlIter++;
             getURL(urlIter);
-
         });
     }
 }

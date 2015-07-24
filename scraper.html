@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="formatting.css">
+    <link rel="stylesheet" type="text/css" href="css/formatting.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="globals.js"></script>
     <script type="text/javascript" src="sourceGetter.js"></script>
@@ -60,7 +60,7 @@
 
     <div style="height:550px; width:20%; overflow-y: scroll; display: inline-block;">
         <button onclick="outputTotals()">
-            Scrape Total
+            Scrape Totals
         </button>
         <table id='totalsTable'></table>
     </div>
@@ -71,22 +71,19 @@
 
     <script type="text/javascript">
         function outputOptionValues() {
-
             $(document).ready(function () {
                 $("#outTable").html("<tr><td>Drug</td><td>Option Value</td></tr>");
             });
-
             getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
-                scrapeAllOptionValues();
-                printOptionValues();
+                scrapeOptionValues();
             });
         }
+
 
         function outputReports() {
             $(document).ready(function () {
                 $("#reportTable").html("<tr><td>Report ID</td><td>Drugs</td><td>Categories</td><td>Non-Substance</td><td>Context</td><td>Dose Method</td><td>Intensity</td><td>Gender</td><td>Title</td><td>Author</td><td>Date</td><td>Views</td></tr>");
             });
-
             scrapeReports();
         }
 
@@ -94,10 +91,18 @@
             $(document).ready(function () {
                 $("#totalsTable").html("<tr><td>Drugs</td><td>Totals</td></tr>");
             });
-
-            totalsScraper();
+            scrapeTotals();
         }
 
+
+
+
+
+
+
+
+
+         //not using right nah
         function exportToCSV() {
             var csvData = new Array();
             csvData.push('"reportid",drugs","categories","nonsubstance","context","dosemethod","intensity","gender"');

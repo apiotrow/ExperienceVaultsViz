@@ -40,37 +40,37 @@ function scrapeReports() {
     //iterate through option values, generating URLS which will later
     //be iterated through to get their source code
     function fillURLArray(){
-        for (var i = 0; i < optionValueArrays.length; i++) {
-            for (var j = 0; j < optionValueArrays[i].theArray.length; j++) {
+        for (var i = 0; i < scraperglobals.optionValueArrays.length; i++) {
+            for (var j = 0; j < scraperglobals.optionValueArrays[i].theArray.length; j++) {
                 if(testMode == true){
                     if (j > 1) break; //uncomment this if we want to a do a quicker test
                 }
 
                 var url_Entry = {
-                    urlType: optionValueArrays[i].type,
+                    urlType: scraperglobals.optionValueArrays[i].type,
                     url: "",
                     itemName: "",
                 };
                 url_Entry.url = ""; //holds URL
-                url_Entry.itemName = optionValueArrays[i].theArray[j].item; //holds item name
+                url_Entry.itemName = scraperglobals.optionValueArrays[i].theArray[j].item; //holds item name
 
                 resetURL();
 
-                if (optionValueArrays[i].type == "drug") {
-                    drugOne = optionValueArrays[i].theArray[j].optionValue;
-                }else if(optionValueArrays[i].type == "category"){
-                    category = optionValueArrays[i].theArray[j].optionValue;
-                } else if (optionValueArrays[i].type == "nonsubstance") {
-                    nonSubstance = optionValueArrays[i].theArray[j].optionValue;
-                }else if (optionValueArrays[i].type == "context") {
-                    context = optionValueArrays[i].theArray[j].optionValue;
-                }else if (optionValueArrays[i].type == "dosemethod") {
-                    doseMethod = optionValueArrays[i].theArray[j].optionValue;
-                }else if (optionValueArrays[i].type == "intensity") {
-                    intensityMin = optionValueArrays[i].theArray[j].optionValue;
-                    intensityMax = optionValueArrays[i].theArray[j].optionValue;
-                }else if (optionValueArrays[i].type == "genderselect") {
-                    gender = optionValueArrays[i].theArray[j].optionValue;
+                if (scraperglobals.optionValueArrays[i].type == "drug") {
+                    drugOne = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                }else if(scraperglobals.optionValueArrays[i].type == "category"){
+                    category = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                } else if (scraperglobals.optionValueArrays[i].type == "nonsubstance") {
+                    nonSubstance = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                }else if (scraperglobals.optionValueArrays[i].type == "context") {
+                    context = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                }else if (scraperglobals.optionValueArrays[i].type == "dosemethod") {
+                    doseMethod = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                }else if (scraperglobals.optionValueArrays[i].type == "intensity") {
+                    intensityMin = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                    intensityMax = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                }else if (scraperglobals.optionValueArrays[i].type == "genderselect") {
+                    gender = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
                 }
 
                 setupURL(drugOne,
@@ -96,10 +96,10 @@ function scrapeReports() {
                 //so we can achieve an end-state quicker
                 if(testMode == true){
                     if(/*optionValueArrays[i].type != "category" &&*/
-                      optionValueArrays[i].type != "nonsubstance" &&
-                      optionValueArrays[i].type != "context" &&
-                      optionValueArrays[i].type != "dosemethod" &&
-                      optionValueArrays[i].type != "genderselect"){
+                      scraperglobals.optionValueArrays[i].type != "nonsubstance" &&
+                      scraperglobals.optionValueArrays[i].type != "context" &&
+                      scraperglobals.optionValueArrays[i].type != "dosemethod" &&
+                      scraperglobals.optionValueArrays[i].type != "genderselect"){
                         for (var urlFields_index in urlFields) {
                             if (urlFields.hasOwnProperty(urlFields_index)) {
                                 url += urlFields[urlFields_index];
@@ -170,7 +170,7 @@ function scrapeReports() {
 
     //go through the HTML source and extrapolate the various values we want, for each report in the source
     function parseSource(itemName, type) {
-        var text = URLSource;
+        var text = scraperglobals.URLSource;
         var pos = text.indexOf('exp.php?ID');
 
         //move through HTML source by jumping from one report ID to the next
@@ -188,7 +188,7 @@ function scrapeReports() {
 
             //if the report we're looking at is new to the report array, add it.
             //author, title, date, and views are added only in this initial insertion.
-            if (!(idnum in reportArrays)) {
+            if (!(idnum in scraperglobals.reportArrays)) {
                 //all the data for one report
                 var reportArray_Entry = {
                     drugs: [],
@@ -229,34 +229,34 @@ function scrapeReports() {
                     reportArray_Entry.gender.push(itemName);
                 }
 
-                reportArrays[idnum] = reportArray_Entry;
+                scraperglobals.reportArrays[idnum] = reportArray_Entry;
                 
             //the report is already in the array. add whatever new information needs to be added.
             } else {
                 //the indexOf checks are required so we don't duplicate entries
                 //as we iterate through multiple pages
                 if (type == "drug") {
-                    if (reportArrays[idnum].drugs.indexOf(itemName) == -1){
-                        dataLoop(dataParams, reportArrays[idnum]);
+                    if (scraperglobals.reportArrays[idnum].drugs.indexOf(itemName) == -1){
+                        dataLoop(dataParams, scraperglobals.reportArrays[idnum]);
                     }
                 } else if (type == "category") {
-                    if (reportArrays[idnum].category.indexOf(itemName) == -1)
-                        reportArrays[idnum].category.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].category.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].category.push(itemName);
                 } else if (type == "nonsubstance") {
-                    if (reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
-                        reportArrays[idnum].nonSubstance.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].nonSubstance.push(itemName);
                 } else if (type == "context") {
-                    if (reportArrays[idnum].context.indexOf(itemName) == -1)
-                        reportArrays[idnum].context.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].context.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].context.push(itemName);
                 } else if (type == "dosemethod") {
-                    if (reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
-                        reportArrays[idnum].doseMethod.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].doseMethod.push(itemName);
                 } else if (type == "intensity") {
-                    if (reportArrays[idnum].intensity.indexOf(itemName) == -1)
-                        reportArrays[idnum].intensity.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].intensity.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].intensity.push(itemName);
                 } else if (type == "genderselect") {
-                    if (reportArrays[idnum].gender.indexOf(itemName) == -1)
-                        reportArrays[idnum].gender.push(itemName);
+                    if (scraperglobals.reportArrays[idnum].gender.indexOf(itemName) == -1)
+                        scraperglobals.reportArrays[idnum].gender.push(itemName);
                 }
             }
 
@@ -268,17 +268,17 @@ function scrapeReports() {
                 $("#reportTable").append('<tr id="' 
                                          + idnum + '"><td>' 
                                          + idnum + '</td><td>' 
-                                         + reportArrays[idnum].drugs + '</td><td>' 
-                                         + reportArrays[idnum].category + '</td><td>' 
-                                         + reportArrays[idnum].nonSubstance + '</td><td>' 
-                                         + reportArrays[idnum].context + '</td><td>' 
-                                         + reportArrays[idnum].doseMethod + '</td><td>' 
-                                         + reportArrays[idnum].intensity + '</td><td>' 
-                                         + reportArrays[idnum].gender + '</td><td>' 
-                                         + reportArrays[idnum].title + '</td><td>' 
-                                         + reportArrays[idnum].author + '</td><td>'
-                                         + reportArrays[idnum].date + '</td><td>'
-                                         + reportArrays[idnum].views + '</tr>');
+                                         + scraperglobals.reportArrays[idnum].drugs + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].category + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].nonSubstance + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].context + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].doseMethod + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].intensity + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].gender + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].title + '</td><td>' 
+                                         + scraperglobals.reportArrays[idnum].author + '</td><td>'
+                                         + scraperglobals.reportArrays[idnum].date + '</td><td>'
+                                         + scraperglobals.reportArrays[idnum].views + '</tr>');
 
             });
             
@@ -445,11 +445,11 @@ function scrapeReports() {
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
             nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
             getSourceCode(nextPage, function () {
-                var totalBegin = URLSource.indexOf("><b>(") + 5;
-                var totalEnd = URLSource.indexOf("Total");
-                reportAmt = Number(URLSource.substring(totalBegin, totalEnd));
+                var totalBegin = scraperglobals.URLSource.indexOf("><b>(") + 5;
+                var totalEnd = scraperglobals.URLSource.indexOf("Total");
+                reportAmt = Number(scraperglobals.URLSource.substring(totalBegin, totalEnd));
 
-                if (URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
+                if (scraperglobals.URLSource.indexOf("No Reports Found Matching") > -1 || reportAmt == 0) {
                     console.log("url " + iter + "/" + allURLS.length + ". " + allURLS[iter].urlType + " " + allURLS[iter].itemName + ": " + reportAmt + " of " + reportAmt);
                     
                     $(document).ready(function () {

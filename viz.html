@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="formatting.css">
+    <link rel="stylesheet" type="text/css" href="css/formatting.css">
     <script type="text/javascript" src="csvthings.js"></script>
     <script type="text/javascript" src="ovScraper.js"></script>
     <script type="text/javascript" src="globals.js"></script>
@@ -36,26 +36,31 @@
 
 
     <script type="text/javascript">
-        var csvFile = 'data-3-brackets.csv';
-        var drugListFile = 'druglist.txt';
+        var csvFile = 'csvs/data-3-brackets.csv';
+        var drugListFile = 'txts/druglist.txt';
     </script>
 
     <div id="cdl" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
-        <button onclick="optionValueToDataStructure(drugListFile)">
-            Create drug list
+        <!--        <button onclick="optionValueToDataStructure(drugListFile)">-->
+        <button onclick="csvThings()">
+            Do da stats
         </button>
     </div>
 
+    <!--
     <div id="cds" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <button onclick="csvToDatastructure(csvFile)">
             Create data structure
         </button>
     </div>
-    
-        <div id="output" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
+-->
+
+    <div id="output" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
+        <!--
         <button onclick="findBadTrips()">
             Find Bad Trips
         </button>
+-->
     </div>
 
 </body>
