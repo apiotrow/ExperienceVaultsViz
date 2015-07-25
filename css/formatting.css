@@ -19,6 +19,9 @@ body {
 #top-links{
     font-size: 25px;
 }
+div.list{
+    font-size: 15px;
+}
 
 a:link{
     font-size: 20px;
