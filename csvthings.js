@@ -1,7 +1,7 @@
 /*
 This file holds a lot of CSV parsing stuff
 */
-function csvThings() {
+eevv.csvThings = function () {
     var complete = {};
     var ids = [];
     var drugList = [];
@@ -9,7 +9,7 @@ function csvThings() {
     var drugTotalsHash = {}; //drug:total
     var dataxy = {};
     var iditer = 0;
-    
+
     optionValueToDataStructure("csvs/data-3-brackets.csv");
     csvToDatastructure("csvs/data-3-brackets.csv");
     findBadTrips();
@@ -31,7 +31,7 @@ function csvThings() {
         readTextFile(file, function (result) {
             fillInDrugTotals(result);
         });
-        
+
     }
 
     function fillInDrugTotals(result) {
@@ -243,11 +243,15 @@ function csvThings() {
     }
 
     function findBadTrips() {
-        for (var i = 0; i < drugTotalsArray.length / 2; i++) {
-            drugCategPercent(drugTotalsArray[i][0], "Bad Trips");
+        var tuples = [];
+
+        for (var i = 0; i < drugTotalsArray.length; i++) {
+            var drugName = drugTotalsArray[i][0];
+            var drugTotal = drugTotalsArray[i][1];
+            if(drugTotal > 1000)
+                dataxy[drugName] = drugCategPercent(drugName, eevv.categories.badTrip);
         }
 
-        var tuples = [];
         for (var key in dataxy) tuples.push([key, dataxy[key]]);
 
         tuples.sort(function (a, b) {
@@ -264,8 +268,11 @@ function csvThings() {
             $(document).ready(function () {
                 $("#output").append("<br>" + key + " has a " + value + "% chance of bad trip");
             });
-
         }
+    }
+    
+    function appendToHTML(){
+        
     }
 
     function drugCategPercent(drug, categ) {
@@ -282,8 +289,7 @@ function csvThings() {
                 }
             }
         }
-        //    if (drugCount > 50)
-        dataxy[drug] = (Math.round((bothCount / drugCount) * 1000) / 10);
 
+        return (Math.round((bothCount / drugCount) * 1000) / 10);
     }
 }

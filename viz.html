@@ -3,11 +3,12 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="css/formatting.css">
+    <script type="text/javascript" src="globals.js"></script>
     <script type="text/javascript" src="csvthings.js"></script>
     <script type="text/javascript" src="ovScraper.js"></script>
-    <script type="text/javascript" src="globals.js"></script>
     <script type="text/javascript" src="sourceGetter.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
 </head>
 
 <body>
@@ -42,7 +43,7 @@
 
     <div id="cdl" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <!--        <button onclick="optionValueToDataStructure(drugListFile)">-->
-        <button onclick="csvThings()">
+        <button onclick="eevv.csvThings()">
             Do da stats
         </button>
     </div>
