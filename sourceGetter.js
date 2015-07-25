@@ -90,8 +90,8 @@ function getSourceCode(your_url, callback) {
         success: function (res) {
             var text = res.responseText;
 
-            scraperglobals.URLSource = text;
-            callback(scraperglobals.URLSource);
+            eevv.URLSource = text;
+            callback(eevv.URLSource);
 
         },
         error: function (xhr, textStatus, errorThrown) {

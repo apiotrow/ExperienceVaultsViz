@@ -1,4 +1,4 @@
-function scrapeTotals() {
+eevv.scrapeTotals = function () {
 
     var urlFields = [], //for constructing the URL
         reportAmt = 0, //storing so we can track progress of scraping
@@ -24,8 +24,11 @@ function scrapeTotals() {
         intensityMin = "",
         intensityMax = "";
 
-
-
+    //create top row of chart
+    $(document).ready(function () {
+        $("#totalsTable").html("<tr><td>Drugs</td><td>Totals</td></tr>");
+    });
+    
     resetURL();
     fillURLArray();
 
@@ -36,21 +39,21 @@ function scrapeTotals() {
     //iterate through option values, generating URLS which will later
     //be iterated through to get their source code
     function fillURLArray() {
-        for (var i = 0; i < scraperglobals.optionValueArrays.length; i++) {
-            for (var j = 0; j < scraperglobals.optionValueArrays[i].theArray.length; j++) {
+        for (var i = 0; i < eevv.optionValueArrays.length; i++) {
+            for (var j = 0; j < eevv.optionValueArrays[i].theArray.length; j++) {
 
                 var url_Entry = {
-                    urlType: scraperglobals.optionValueArrays[i].type,
+                    urlType: eevv.optionValueArrays[i].type,
                     url: "",
                     itemName: "",
                 };
                 url_Entry.url = ""; //holds URL
-                url_Entry.itemName = scraperglobals.optionValueArrays[i].theArray[j].item; //holds item name
+                url_Entry.itemName = eevv.optionValueArrays[i].theArray[j].item; //holds item name
 
                 resetURL();
 
-                if (scraperglobals.optionValueArrays[i].type == "drug") {
-                    drugOne = scraperglobals.optionValueArrays[i].theArray[j].optionValue;
+                if (eevv.optionValueArrays[i].type == "drug") {
+                    drugOne = eevv.optionValueArrays[i].theArray[j].optionValue;
                 }
 
                 setupURL(drugOne,
@@ -76,10 +79,10 @@ function scrapeTotals() {
                 //so we can achieve an end-state quicker
                 if (testMode == true) {
                     if ( /*optionValueArrays[i].type != "category" &&*/
-                        scraperglobals.optionValueArrays[i].type != "nonsubstance" &&
-                        scraperglobals.optionValueArrays[i].type != "context" &&
-                        scraperglobals.optionValueArrays[i].type != "dosemethod" &&
-                        scraperglobals.optionValueArrays[i].type != "genderselect") {
+                        eevv.optionValueArrays[i].type != "nonsubstance" &&
+                        eevv.optionValueArrays[i].type != "context" &&
+                        eevv.optionValueArrays[i].type != "dosemethod" &&
+                        eevv.optionValueArrays[i].type != "genderselect") {
                         for (var urlFields_index in urlFields) {
                             if (urlFields.hasOwnProperty(urlFields_index)) {
                                 url += urlFields[urlFields_index];
@@ -150,7 +153,7 @@ function scrapeTotals() {
 
     //go through the HTML source and extrapolate the various values we want, for each report in the source
     function parseSource(itemName, type) {
-        var text = scraperglobals.URLSource;
+        var text = eevv.URLSource;
         var pos = text.indexOf('<font size="2"><b>');
         var str = text.substring(pos + 19, text.indexOf(' Total)</b></font><br/><br/>'));
 

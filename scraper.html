@@ -45,21 +45,21 @@
     <br>
 
     <div style="height:550px;  width:20%; overflow-y: scroll; display: inline-block;">
-        <button onclick="outputOptionValues()">
+        <button onclick="optionValues()">
             Scrape Option Values
         </button>
         <table id='outTable'></table>
     </div>
 
     <div style="height:550px; width:50%; overflow-y: scroll; display: inline-block;">
-        <button onclick="outputReports()">
+        <button onclick="eevv.scrapeReports()">
             Scrape Reports
         </button>
         <table id='reportTable'></table>
     </div>
 
     <div style="height:550px; width:20%; overflow-y: scroll; display: inline-block;">
-        <button onclick="outputTotals()">
+        <button onclick="eevv.scrapeTotals()">
             Scrape Totals
         </button>
         <table id='totalsTable'></table>
@@ -70,34 +70,6 @@
 
 
     <script type="text/javascript">
-        function outputOptionValues() {
-            $(document).ready(function () {
-                $("#outTable").html("<tr><td>Drug</td><td>Option Value</td></tr>");
-            });
-            getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
-                scrapeOptionValues();
-            });
-        }
-
-
-        function outputReports() {
-            $(document).ready(function () {
-                $("#reportTable").html("<tr><td>Report ID</td><td>Drugs</td><td>Categories</td><td>Non-Substance</td><td>Context</td><td>Dose Method</td><td>Intensity</td><td>Gender</td><td>Title</td><td>Author</td><td>Date</td><td>Views</td></tr>");
-            });
-            scrapeReports();
-        }
-
-        function outputTotals() {
-            $(document).ready(function () {
-                $("#totalsTable").html("<tr><td>Drugs</td><td>Totals</td></tr>");
-            });
-            scrapeTotals();
-        }
-
-
-
-
-
 
 
 
