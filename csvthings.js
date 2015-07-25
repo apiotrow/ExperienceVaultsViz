@@ -2,17 +2,16 @@
 This file holds a lot of CSV parsing stuff
 */
 eevv.csvThings = function () {
-    var complete = {};
-    var ids = [];
-    var drugList = [];
+    var complete = {}; //id: everything about the report with that id
+    var profiles = { //drug: everything about that drug
+
+    };
+    var drugList = []; //list of all drugs erowid has available
     var drugTotalsArray = []; //list of drugs and amounts in ascending order
     var drugTotalsHash = {}; //drug:total
-    var dataxy = {};
-    var iditer = 0;
 
-    optionValueToDataStructure("csvs/data-3-brackets.csv");
+    optionValueToDataStructure("txts/druglist.txt");
     csvToDatastructure("csvs/data-3-brackets.csv");
-//    findBadTrips();
     drugProfiles();
 
     //outputs the list of how frequent a drug shows up in the vault
@@ -111,10 +110,10 @@ eevv.csvThings = function () {
 
         for (var i = 0; i < reportArray.length; i++) {
             var id = reportArray[i][0];
-            
+
             //entry for one report
             var idEntry = {
-                drugs: {}, 
+                drugs: {},
                 categories: {},
                 nonsubstances: {},
                 context: "",
@@ -125,9 +124,6 @@ eevv.csvThings = function () {
                 date: "",
                 views: "",
             }
-
-            //insert identry into complete data structure
-            complete[id] = idEntry;
 
             //fix drug names that have commas in them, and so
             //had them replaced with semicolons
@@ -141,7 +137,7 @@ eevv.csvThings = function () {
             var drugs = reportArray[i][1].split(";");
             for (var j = 0; j < drugs.length; j++) {
                 var drugName = "";
-                
+
                 var drugEntry = {
                     method: "",
                     amount: "",
@@ -154,7 +150,7 @@ eevv.csvThings = function () {
                 } else {
                     drugName = drugs[j].substring(0);
                 }
-                
+
                 //get method of administration
                 if (drugs[j].indexOf("[method]") != -1) {
                     var name = "";
@@ -190,148 +186,94 @@ eevv.csvThings = function () {
                     }
                     drugEntry.form = name;
                 }
-                
-                complete[id].drugs[drugName] = drugEntry;
+
+                idEntry.drugs[drugName] = drugEntry;
             }
 
             //insert every other column for this report
-            for(var p in reportArray[i][2].split(";")){
-                complete[id].categories[p] = 0;
+            var arr = reportArray[i][2].split(";");
+            for (var f = 0; f < arr.length; f++) {
+                idEntry.categories[arr[f]] = 0;
             }
-            for(var p in reportArray[i][3].split(";")){
-                complete[id].nonsubstances[p] = 0;
+            arr = reportArray[i][3].split(";");
+            for (var f = 0; f < arr.length; f++) {
+                idEntry.nonsubstances[arr[f]] = 0;
             }
-            complete[id].context = reportArray[i][4];
-            complete[id].intensity = reportArray[i][6];
-            complete[id].gender = reportArray[i][7];
-            complete[id].title = reportArray[i][8];
-            complete[id].author = reportArray[i][9];
-            complete[id].date = reportArray[i][10];
-            complete[id].views = reportArray[i][11];
+            idEntry.context = reportArray[i][4];
+            idEntry.intensity = reportArray[i][6];
+            idEntry.gender = reportArray[i][7];
+            idEntry.title = reportArray[i][8];
+            idEntry.author = reportArray[i][9];
+            idEntry.date = reportArray[i][10];
+            idEntry.views = reportArray[i][11];
+
+            //insert identry into complete data structure
+            complete[id] = idEntry;
         }
-
-//        ids = [];
-//        var keyCount = 0;
-//        for (var key in complete) {
-//            if (complete.hasOwnProperty(key)) {
-//                keyCount++;
-//                ids.push(key);
-//            }
-//        }
-
-//        $(document).ready(function () {
-//            $("#cds").append("<br>Data structure filled. " + keyCount + " entries.");
-//        });
     }
 
+    //fills in profiles variable, which has key: drug, and value: all the stats about the drug
     function drugProfiles() {
-        var profiles = {
-            
-        }
         
-        var g = 0;
-        for (var id in complete){
-            console.log(complete[id].drugs);
-            g++;
-            if(g > 100) break;
-        }
-        
-//        for (var i = 0; i < ids.length; i++) {
-//            if ($.inArray(drug, complete[ids[i]].drugArray) != -1) {
-//                
-//            }
-//        }
-    }
-
-
-    function findBadTrips() {
-        var tuples = [];
-        var categ = eevv.categories.addiction;
-        var drugAndMethod = {};
-        var drugAndContext = {};
-
-        for (var i = 0; i < drugTotalsArray.length; i++) {
-            var drugName = drugTotalsArray[i][0];
-            var drugTotal = drugTotalsArray[i][1];
-            if (drugTotal > 100) {
-                dataxy[drugName]
-                //                dataxy[drugName] = drugCategPercent(drugName, categ);
-                var returnData = drugCategPercent(drugName, categ);
-                dataxy[drugName] = returnData.percent;
-                drugAndMethod[drugName] = returnData.method;
-                drugAndContext[drugName] = returnData.context;
+        //give profile its keys (drug names)
+        for (var d = 0; d < drugList.length; d++) {
+            var drug = drugList[d];
+            profiles[drug] = {};
+            for (var categ in eevv.categories) {
+                var category = eevv.categories[categ];
+                profiles[drug][category] = 0;
+                profiles[drug].total = 0;
             }
         }
 
-        for (var key in dataxy) tuples.push([key, dataxy[key]]);
-
-        tuples.sort(function (a, b) {
-            a = a[1];
-            b = b[1];
-
-            return a > b ? -1 : (a < b ? 1 : 0);
-        });
-
-        for (var i = 0; i < tuples.length; i++) {
-            var key = tuples[i][0];
-            var value = tuples[i][1];
-
-            $(document).ready(function () {
-                $("#cdl").append("<br>" + value + "% of the " + drugTotalsHash[key] + " " + key + " reports are categorized under " + categ + ". Most common method was: " + drugAndMethod[key] + ", common context was " + drugAndContext[key]);
-            });
-        }
-    }
-
-    function appendToHTML() {
-
-    }
-
-    function drugCategPercent(drug, categ) {
-        var drugCount = 0;
-        var bothCount = 0;
-        var methodHash = {};
-        var contextHash = {};
-        var method = "";
-        var context = "";
-        var index = 0;
-
-        for (var i = 0; i < ids.length; i++) {
-            if ($.inArray(drug, complete[ids[i]].drugArray) != -1) {
-                drugCount++;
-                index = $.inArray(drug, complete[ids[i]].drugArray);
-
-                if ($.inArray(categ, complete[ids[i]].categ) != -1) {
-                    bothCount++;
-
-                    //finding most common method
-                    if (complete[ids[i]].methodArray[index] != "") {
-                        if (complete[ids[i]].methodArray[index] in methodHash)
-                            methodHash[complete[ids[i]].methodArray[index]]++;
-                        else
-                            methodHash[complete[ids[i]].methodArray[index]] = 1;
+        //go through complete and increment counts in profiles
+        for (var id in complete) {
+            
+            //get category totals
+            for (var categ in eevv.categories) {
+                var category = eevv.categories[categ];
+                if (category in complete[id].categories) {
+                    for (var key in complete[id].drugs) {
+                        //this check shouldn't be necessary, as all drugs
+                        //should be in profiles, but at least 1 key is not in profiles
+                        if (key in profiles) {
+                            profiles[key][category]++;
+                        }
                     }
-
-                    //finding most common context
-                    if (complete[ids[i]].context != "" && complete[ids[i]].context != "Various" && complete[ids[i]].context != "Not Applicable") {
-                        if (complete[ids[i]].context in contextHash)
-                            contextHash[complete[ids[i]].context]++;
-                        else
-                            contextHash[complete[ids[i]].context] = 1;
-                    }
+                }
+            }
+            
+            //get grand totals
+            for (var key in complete[id].drugs) {
+                if (key in profiles) {
+                    profiles[key].total++;
                 }
             }
         }
 
-        method = maxKey(methodHash);
-        context = maxKey(contextHash);
+        console.log(profiles);
 
-
-        returnData = {
-            percent: (Math.round((bothCount / drugCount) * 1000) / 10),
-            method: method,
-            context: context,
+        //store what we want to output in 2D array
+        var bt = [[]];
+        var iter = 0;
+        for (var drug in profiles) {
+            var percent = Math.round((profiles[drug][eevv.categories.mystical] / drugTotalsHash[drug]) * 1000) / 10;
+            if (drugTotalsHash[drug] > 50 && percent > 0) {
+                var arr = [[drug], percent];
+                bt.push(arr);
+            }
         }
-        return returnData;
+        bt.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+        bt = bt.slice(1, bt.length); //first array entry is empty. don't know why. slice it off here
+        console.log(bt);
+
+        for (var i = 0; i < bt.length; i++) {
+            $(document).ready(function () {
+                $("#cdl").append("<br>" + bt[i][0] + ": " + bt[i][1] + "% chance of mysical experience");
+            });
+        }
     }
 
     //find key with max value in an associative array
@@ -343,7 +285,7 @@ eevv.csvThings = function () {
         }
         for (var key in hashTable) {
             if (hashTable[key] == max) {
-//                console.log(key + " had " + hashTable[key]);
+                //                console.log(key + " had " + hashTable[key]);
                 return key;
 
             }
