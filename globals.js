@@ -13,6 +13,15 @@ eevv = {
 
     //final scraped data for reportScraper
     reportArrays: {},
+    
+    groups: {
+        categories: "categories",
+        nonsubstances: "nonsubstances",
+        gender: "gender",
+        context: "context",
+        method: "method",
+        intensity: "intensity",
+    },
 
     categories: {
         firstTimes: "First Times",
@@ -25,7 +34,7 @@ eevv = {
         trainWreck: "Train Wrecks & Trip Disasters",
         addiction: "Addiction & Habituation",
         glowing: "Glowing Experiences",
-        mystical: "Mystical Experiences",
+        mysticalExperiences: "Mystical Experiences",
         healthBenefits: "Health Benefits",
         family: "Families",
         medicalUse: "Medical Use",
@@ -53,7 +62,7 @@ eevv = {
         sexDiscussion: "Sex Discussion",
     },
 
-    nonSubstances: {
+    nonsubstances: {
         breathing: "Breathing",
         chanting: "Chanting",
         conferences: "Conferences",
@@ -63,7 +72,6 @@ eevv = {
         dreams: "Dreams",
         drugTesting: "Drug Testing",
         endogenous: "Endogenous",
-        families: "Families",
         fasting: "Fasting",
         floatationTank: "Floatation Tank",
         guiding: "Guiding",
@@ -83,13 +91,13 @@ eevv = {
         yogaAndBodyWork: "Yoga / Bodywork",
     },
 
-    genders: {
+    gender: {
         male: "Male",
         female: "Female",
         notSpecified: "Not-Specified",
     },
 
-    contexts: {
+    context: {
         alone: "Alone",
         smallGroup: "Small Group (2-9)",
         largeGroup: "Large Group (10+)",
@@ -108,7 +116,7 @@ eevv = {
         notApplicable: "Not Applicable",
     },
 
-    methods: {
+    method: {
         oral: "oral",
         smoked: "smoked",
         inhaled: "inhaled",
@@ -124,11 +132,24 @@ eevv = {
         buccal: "buccal",
         ocular: "ocular",
     },
-    
-    intensities: {
+
+    intensity: {
         noEffect: "No Effect",
         medium: "Medium",
         strong: "Strong",
         extreme: "Extreme",
-    }
+    },
+
+    readTextFile: function  (file, callback) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4) {
+                if (rawFile.status === 200 || rawFile.status == 0) {
+                    callback(rawFile.responseText);
+                }
+            }
+        }
+        rawFile.send(null);
+    },
 };

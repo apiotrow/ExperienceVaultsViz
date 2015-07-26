@@ -1,6 +1,6 @@
 //get source code from a url
 //jquery.xdomainajax.js  ------ from padolsey
-function getSourceCode(your_url, callback) {
+eevv.getSourceCode = function(your_url, callback) {
     jQuery.ajax = (function (_ajax) {
 
         var protocol = location.protocol,

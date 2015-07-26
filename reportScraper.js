@@ -423,7 +423,7 @@ eevv.scrapeReports = function () {
 
         //get the source for the search, count the reports, and shove them
         //in the div
-        getSourceCode(allURLS[iter].url, function () {
+        eevv.getSourceCode(allURLS[iter].url, function () {
             //we're flipping through pages. don't parse the original URL again
             if (onPageOne == true) {
                 parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
@@ -434,7 +434,7 @@ eevv.scrapeReports = function () {
             currStart += pageSize;
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
             nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
-            getSourceCode(nextPage, function () {
+            eevv.getSourceCode(nextPage, function () {
                 var totalBegin = eevv.URLSource.indexOf("><b>(") + 5;
                 var totalEnd = eevv.URLSource.indexOf("Total");
                 reportAmt = Number(eevv.URLSource.substring(totalBegin, totalEnd));

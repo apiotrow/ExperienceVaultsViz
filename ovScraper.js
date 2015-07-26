@@ -1,4 +1,4 @@
-function optionValues() {
+eevv.optionValues = function() {
 
     outputOptionValues();
     
@@ -6,7 +6,7 @@ function optionValues() {
         $(document).ready(function () {
             $("#outTable").html("<tr><td>Drug</td><td>Option Value</td></tr>");
         });
-        getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
+        eevv.getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
             scrapeOptionValues();
         });
     }

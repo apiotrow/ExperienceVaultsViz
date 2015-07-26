@@ -173,7 +173,7 @@ eevv.scrapeTotals = function () {
         }
 
         //get the source for the search
-        getSourceCode(allURLS[iter].url, function () {
+        eevv.getSourceCode(allURLS[iter].url, function () {
             parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
             urlIter++;
             getURL(urlIter);

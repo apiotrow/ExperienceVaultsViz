@@ -12,9 +12,11 @@ body {
 }
 #top-heading{
     font-size: 40px;
+    margin: 0;
 }
 #top-subheading{
     font-size: 30px;
+    margin: 0;
 }
 #top-links{
     font-size: 25px;
