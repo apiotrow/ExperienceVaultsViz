@@ -11,9 +11,9 @@ eevv = {
     //as their starting and ending points in the source code
     optionValueArrays: [],
 
-    //final scraped data for reportScraper
+    //final scraped data for reportScraper.js
     reportArrays: {},
-    
+
     groups: {
         categories: "categories",
         nonsubstances: "nonsubstances",
@@ -140,7 +140,7 @@ eevv = {
         extreme: "Extreme",
     },
 
-    readTextFile: function  (file, callback) {
+    readTextFile: function (file, callback) {
         var rawFile = new XMLHttpRequest();
         rawFile.open("GET", file, false);
         rawFile.onreadystatechange = function () {

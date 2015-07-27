@@ -5,7 +5,7 @@ eevv.csvThings = function () {
     var complete = {}; //id: everything about the report with that id
     var profiles = {}; //drug: everything about that drug
     var drugList = []; //list of all drugs erowid has available
-    var drugTotalsArray = []; //list of drugs and amounts in ascending order
+    var drugTotalsArray = []; //list of drugs and amounts in ascending order [[mushrooms, 1233],[cannabis,553]...]
     var drugTotalsHash = {}; //drug:total
 
 
@@ -191,7 +191,6 @@ eevv.csvThings = function () {
                 complete[id] = idEntry;
             }
         }
-//        console.log(complete[28870]);
     }
 
 
@@ -208,11 +207,14 @@ eevv.csvThings = function () {
                             //this check shouldn't be necessary, as all drugs
                             //should be in profiles, but at least 1 key is not in profiles
                             if (key in profiles) {
-                                if(groupItem in profiles[key])
+                                if (groupItem in profiles[key]) {
                                     profiles[key][groupItem]++;
-                                else
+                                } else {
                                     profiles[key][groupItem] = 1;
-                            }else{
+                                    //                                    profiles[key] = {};
+                                    //                                    profiles[key].
+                                }
+                            } else {
                                 profiles[key] = {};
                                 profiles[key][groupItem] = 1;
                             }
@@ -222,35 +224,37 @@ eevv.csvThings = function () {
             }
             addGroupToProfiles(eevv.groups.categories);
             addGroupToProfiles(eevv.groups.context);
+            addGroupToProfiles(eevv.groups.gender);
+            addGroupToProfiles(eevv.groups.intensity);
+            addGroupToProfiles(eevv.groups.nonsubstances);
 
             //get grand totals
             for (var key in complete[id].drugs) {
                 if (key in profiles) {
-                    if(profiles[key].hasOwnProperty("total"))
-                       profiles[key].total++;
+                    if (profiles[key].hasOwnProperty("total"))
+                        profiles[key].total++;
                     else
                         profiles[key].total = 1;
                 }
             }
         }
 
-        function profileAddLoop(filter, compLoc) {
-
-        }
-
         console.log(profiles);
 
-        oneCateg(eevv.categories.entities);
+        //        oneGroup(eevv.context.largeGroup);
+
+        
+        eevv.vizzer(profiles, drugTotalsArray, 100);
+
+
     }
 
-
-    function oneCateg(category) {
+    function groupProportions(group) {
         //store what we want to output in 2D array
         var bt = [[]];
         var iter = 0;
-        var categ = category;
         for (var drug in profiles) {
-            var percent = Math.round((profiles[drug][categ] / drugTotalsHash[drug]) * 1000) / 10;
+            var percent = Math.round((profiles[drug][group] / drugTotalsHash[drug]) * 1000) / 10;
             if (drugTotalsHash[drug] > 100 && percent > 0) {
                 var arr = [[drug], percent];
                 bt.push(arr);
@@ -264,11 +268,41 @@ eevv.csvThings = function () {
 
         for (var i = 0; i < bt.length; i++) {
             $(document).ready(function () {
-                var categAmount = profiles[bt[i][0]][categ];
+                var categAmount = profiles[bt[i][0]][group];
                 var drugTotal = drugTotalsHash[bt[i][0]];
                 var drugName = bt[i][0];
                 var percent = bt[i][1];
-                var outputString = drugName + ": (" + categAmount + " of " + drugTotal + ") " + percent + "% under " + categ;
+                var outputString = drugName + ": (" + categAmount + " of " + drugTotal + ") " + percent + "% under " + group;
+                $("#out").append("<br>" + outputString);
+            });
+        }
+    }
+
+
+    function oneGroup(group) {
+        //store what we want to output in 2D array
+        var bt = [[]];
+        var iter = 0;
+        for (var drug in profiles) {
+            var percent = Math.round((profiles[drug][group] / drugTotalsHash[drug]) * 1000) / 10;
+            if (drugTotalsHash[drug] > 100 && percent > 0) {
+                var arr = [[drug], percent];
+                bt.push(arr);
+            }
+        }
+        bt.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+        bt = bt.slice(1, bt.length); //first array entry is empty. don't know why. slice it off here
+        console.log(bt);
+
+        for (var i = 0; i < bt.length; i++) {
+            $(document).ready(function () {
+                var categAmount = profiles[bt[i][0]][group];
+                var drugTotal = drugTotalsHash[bt[i][0]];
+                var drugName = bt[i][0];
+                var percent = bt[i][1];
+                var outputString = drugName + ": (" + categAmount + " of " + drugTotal + ") " + percent + "% under " + group;
                 $("#out").append("<br>" + outputString);
             });
         }
