@@ -62,6 +62,21 @@ eevv = {
         sexDiscussion: "Sex Discussion",
     },
 
+    categoriesTrimmed: {
+        difficultExp: "Difficult Experiences",
+        badTrip: "Bad Trips",
+        healthProb: "Health Problems",
+        trainWreck: "Train Wrecks & Trip Disasters",
+        addiction: "Addiction & Habituation",
+        glowing: "Glowing Experiences",
+        mysticalExperiences: "Mystical Experiences",
+        healthBenefits: "Health Benefits",
+        medicalUse: "Medical Use",
+        entities: "Entities / Beings",
+        therapeutic: "Therapeutic Intent or Outcome",
+        postTripProblems: "Post Trip Problems",
+    },
+
     nonsubstances: {
         breathing: "Breathing",
         chanting: "Chanting",
