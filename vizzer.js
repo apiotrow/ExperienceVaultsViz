@@ -19,6 +19,7 @@ eevv.vizzer = function (eevvType, theDrug, profiles, drugTotalsArray, threshold)
     }
 
 
+    d3.select("#cdl").style("border", "5px darkgray dashed");
     var vis = d3.select("body")
         .append("svg:svg") //create the SVG element inside the <body>
         .data([data]) //associate our data with the document
@@ -53,7 +54,12 @@ eevv.vizzer = function (eevvType, theDrug, profiles, drugTotalsArray, threshold)
     .text(function (d, i) {
         return data[i].label;
     }); //get the label from our original data array
-
+    
+//    vis.selectAll("g.slice").transition().duration(2000).attr("transform", function (d) { 
+//        d.innerRadius = 0;
+//        d.outerRadius = r;
+//        return "translate(" + arc.centroid(d) + ")"; //this gives us a pair of coordinates like [50, 50]
+//    })
 
     /*
     //make chart

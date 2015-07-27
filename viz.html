@@ -1,19 +1,50 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
 
 <head>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/formatting.css">
+    <script src="d3/d3.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="d3tests.js"></script>
     <script type="text/javascript" src="globals.js"></script>
     <script type="text/javascript" src="vizzer.js"></script>
     <script type="text/javascript" src="csvthings.js"></script>
     <script type="text/javascript" src="ovScraper.js"></script>
     <script type="text/javascript" src="sourceGetter.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+
+
 </head>
 
+<style>
+    .inactive,
+    .tentative {
+        stroke: darkgray;
+        stroke-width: 2px;
+        stroke-dasharray: 5 5;
+    }
+    .tentative {
+        opacity: .5;
+    }
+    .active {
+        stroke: black;
+        stroke-width: 4px;
+        stroke-dasharray: 1;
+    }
+    circle {
+        fill: red;
+    }
+    rect {
+        fill: darkgray;
+        Using HTML5 27
+    }
+</style>
+
 <body>
+
     <center>
         <p id="top-heading">
             Erowid Experience Vaults Visualization
@@ -54,8 +85,11 @@
     <div id="out" class="list" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <table id='outTable'></table>
     </div>
-
-
+<br>
+    <div id="infovizDiv">
+        <svg id="hey" style="width:500px;height:500px;border:1px lightgray solid;">
+        </svg>
+    </div>
 
 
 </body>
