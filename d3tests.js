@@ -3,45 +3,52 @@ window.onload = function () {
 
     d3.csv("csvs/categprofilestrimmed.csv", function (error, data) {
         console.log(data);
+        data = data.sort(function (a, b) {
+            return b["Mystical Experiences"] - a["Mystical Experiences"];
+        });
         dataViz(data);
     });
 
     function dataViz(incomingData) {
-//        d3.select("body").selectAll("div.drug")
-//            .data(incomingData)
-//            .enter()
-//            .append("div")
-//            .attr("class", "drug")
-//            .html(function (d, i) {
-//                //                console.log(d["Mystical Experiences"]);
-//                return d["Mystical Experiences"];
-//            });
-
         var maxPopulation = d3.max(incomingData, function (el) {
             return parseInt(el["Mystical Experiences"]);
         });
 
+        
+        var wid = 20;
         var yScale = d3.scale.linear().domain([0, maxPopulation]).range([0, 460]);
-        d3.select("svg").attr("style", "height: 480px; width: 600px;");
+        d3.select("svg").attr("style", "height: 480px; width: 900px;");
         d3.select("svg")
             .selectAll("rect")
             .data(incomingData)
             .enter()
             .append("rect")
-            .attr("width", 10)
+            .attr("id", "re")
+            .attr("width", wid)
             .attr("height", function (d) {
-                return yScale(parseInt(d["Mystical Experiences"]));
+                return 0;
             })
             .attr("x", function (d, i) {
-                return i * 10;
+                return i * wid;
             })
             .attr("y", function (d) {
-                return 480 - yScale(parseInt(d["Mystical Experiences"]));
+                return 480;
             })
-            .style("fill", "blue")
+            .style("fill", "black")
             .style("stroke", "red")
             .style("stroke-width", "1px")
-            .style("opacity", .25);
+            .style("opacity", 1);
+
+        
+        d3.selectAll("rect")
+            .transition().duration(function (d) {
+                return yScale(parseInt(d["Mystical Experiences"])) * 5;
+            })
+            .attr("height", function (d) {
+                return yScale(parseInt(d["Mystical Experiences"]));
+            }).attr("y", function (d) {
+                return 480 - yScale(parseInt(d["Mystical Experiences"]));
+            });
     }
 
 
@@ -49,6 +56,8 @@ window.onload = function () {
 
 
 
+    
+    //         //simple bar chart thing
     //        var yScale = d3.scale.linear()
     //            .domain([0, 100, 6000])
     //            .range([0, 100, 200])
@@ -79,6 +88,11 @@ window.onload = function () {
 
 
 
+    
+    
+    
+    
+    //circle moving to center thing
 
     //        d3.csv("csvs/categprofilestrimmed.csv", function (d) {
     //            console.log(d)
