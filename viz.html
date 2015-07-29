@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/formatting.css">
     <script src="d3/d3.min.js" charset="utf-8"></script>
 
-    
+
     <script type="text/javascript" src="globals.js"></script>
     <script type="text/javascript" src="d3tests.js"></script>
     <script type="text/javascript" src="vizzer.js"></script>
@@ -74,6 +74,9 @@
         var csvFile = 'csvs/data-3-brackets.csv';
         var drugListFile = 'txts/druglist.txt';
     </script>
+    
+    <div id="selectorDiv" style="display: inline-block; height: 100; width: 50;">
+    </div>
 
     <div class="list" id="cdl" style="display: inline-block; height: 100; width: 50;">
         <!--        <button onclick="optionValueToDataStructure(drugListFile)">-->
@@ -89,7 +92,7 @@
     <div id="out" class="list" style="display: inline-block; height: 100; width: 50; overflow-y: scroll;">
         <table id='outTable'></table>
     </div>
-<br>
+    <br>
     <div id="infovizDiv">
         <svg id="hey" style="width:500px;height:500px;border:1px lightgray solid;">
         </svg>

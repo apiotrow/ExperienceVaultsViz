@@ -1,5 +1,7 @@
-eevv.changeText = function() {
-    d3.selectAll("g").select("text").text(function(d) {return "sdf"});
+eevv.changeText = function () {
+    d3.selectAll("g").select("text").text(function (d) {
+        return "sdf"
+    });
 }
 
 window.onload = function () {
@@ -7,37 +9,69 @@ window.onload = function () {
 
     var cat = eevv.categoriesTrimmed.badTrip;
     d3.csv("csvs/categprofilestrimmed.csv", function (error, data) {
-        console.log(data);
+        console.log(data[0]);
         data = data.sort(function (a, b) {
             return b[cat] - a[cat];
         });
-        dataViz(data);
+        selectorSetup(data);
+        //        dataViz(data);
+
     });
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+    function selectorSetup(incomingData) {
+        d3.select("#selectorDiv").append("svg").attr("id", "selectors").attr("style", "height: 200px; width: 1000px;");
+
+        //        d3.select("#selectors").selectAll("#selector").data(incomingData).enter()
+        //            .append("rect").attr("id", "selector").attr("width", 40)
+        //            .attr("height", 20).style("fill", "red").attr("transform", "translate(10, 10)").append("text")
+        //            .text(function (d) {
+        //                return d["Drug"];
+        //            }).attr("transform", "translate(10, 20)").style("font-size", "30px");
+        //
+        //        d3.selectAll("#selector").selectAll("g").data(incomingData).enter().append("g").attr("transform", "translate(40, 30)")
+        //        .append("text").text(function(d){return d["Drug"];});
+        console.log(eevv.categoriesTrimmed);
+
+        d3.select("#selectors").selectAll("g").data(incomingData).enter().append("g").attr("id", "button")
+        /*.attr("transform", "translate(40, 30)")
+        .append("text").text(function(d){return d["Drug"];}).attr("font-size", "10px")*/
+        ;
+
+        var cats = [];
+        for (var i in eevv.categoriesTrimmed) {
+            //            console.log(eevv.categoriesTrimmed[i]);
+            cats.push(eevv.categoriesTrimmed[i]);
+        }
+        var btnW = 100,
+            btnH = 10;
+
+
+        d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
+            .attr("transform", function (d, i) {
+                return ("translate(40," + (i * btnH * 2) + ")");
+            });
+
+        d3.selectAll("#button").data(cats).append("text").text(function (d) {
+            return d;
+        })
+            .attr("transform", function (d, i) {
+                return ("translate(40," + (i * btnH * 2) + ")");
+            }).attr("font-size", "10px");
+
+
+
+
+    }
+
+
+
     //bar graphs
     function dataViz(incomingData) {
         var maxPopulation = d3.max(incomingData, function (el) {
             return parseFloat(el[cat]);
         });
-
 
         var wid = 20;
         var hei = 600;
@@ -62,11 +96,9 @@ window.onload = function () {
             .style("fill", "black")
             .style("stroke", "red")
             .style("stroke-width", "1px")
-            .style("opacity", 1);
-
-
-        d3.selectAll("rect")
-            .transition().duration(function (d) {
+            .style("opacity", 1)
+            .transition()
+            .duration(function (d) {
                 return yScale(parseFloat(d[cat])) * 2;
             })
             .attr("height", function (d) {
@@ -74,6 +106,8 @@ window.onload = function () {
             }).attr("y", function (d) {
                 return hei - yScale(parseFloat(d[cat]));
             });
+
+
 
         var barG = d3.selectAll("svg").selectAll("g").data(incomingData).enter().append("g").attr("transform", function (d, i) {
             return "translate(" +
@@ -91,13 +125,8 @@ window.onload = function () {
 
 
 
-    
-    
-    
-    
-    
-    
-    
+
+
 
 
     //         //simple bar chart thing
@@ -184,5 +213,3 @@ window.onload = function () {
     //            console.log("sdfsdf");
     //        });
 }
-
-
