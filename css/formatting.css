@@ -35,4 +35,14 @@ a:visited {
 a:active {
     color: red;
 }
+div{
+    width:160px;
+    border:1px solid grey;
+    text-align:center;
+    min-height:150px;
+    height:auto;
+    vertical-align:middle;
+    padding:8px;
+    float:left
+}
 

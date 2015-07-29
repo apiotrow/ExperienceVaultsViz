@@ -14,84 +14,77 @@ window.onload = function () {
             return b[cat] - a[cat];
         });
         selectorSetup(data);
-        //        dataViz(data);
+        dataViz(data);
 
     });
 
 
 
     function selectorSetup(incomingData) {
-        d3.select("#selectorDiv").append("svg").attr("id", "selectors").attr("style", "height: 200px; width: 1000px;");
+        var selSetupW = 200;
+        var selSetupH = 600;
+        var topPadding = 0;
+        var spacing = 1.4;
+        d3.select("#selectorDiv").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
+        
+        d3.select("#selectorDiv").append("svg").attr("id", "selectors").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
 
-        //        d3.select("#selectors").selectAll("#selector").data(incomingData).enter()
-        //            .append("rect").attr("id", "selector").attr("width", 40)
-        //            .attr("height", 20).style("fill", "red").attr("transform", "translate(10, 10)").append("text")
-        //            .text(function (d) {
-        //                return d["Drug"];
-        //            }).attr("transform", "translate(10, 20)").style("font-size", "30px");
-        //
-        //        d3.selectAll("#selector").selectAll("g").data(incomingData).enter().append("g").attr("transform", "translate(40, 30)")
-        //        .append("text").text(function(d){return d["Drug"];});
         console.log(eevv.categoriesTrimmed);
 
-        d3.select("#selectors").selectAll("g").data(incomingData).enter().append("g").attr("id", "button")
-        /*.attr("transform", "translate(40, 30)")
-        .append("text").text(function(d){return d["Drug"];}).attr("font-size", "10px")*/
-        ;
+        d3.select("#selectors").selectAll("g").data(incomingData).enter().append("g").attr("id", "button");
 
         var cats = [];
         for (var i in eevv.categoriesTrimmed) {
-            //            console.log(eevv.categoriesTrimmed[i]);
             cats.push(eevv.categoriesTrimmed[i]);
         }
-        var btnW = 100,
-            btnH = 10;
+        var btnW = 200,
+            btnH = 35;
 
 
         d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
             .attr("transform", function (d, i) {
-                return ("translate(40," + (i * btnH * 2) + ")");
+                return ("translate(0," + (i * btnH * spacing + topPadding) + ")");
             });
 
         d3.selectAll("#button").data(cats).append("text").text(function (d) {
             return d;
         })
             .attr("transform", function (d, i) {
-                return ("translate(40," + (i * btnH * 2) + ")");
-            }).attr("font-size", "10px");
-
-
-
-
+                return ("translate(0," + (i * btnH * spacing + topPadding + (btnH / 2)) + ")");
+            }).attr("font-size", "20px");
     }
+
 
 
 
     //bar graphs
     function dataViz(incomingData) {
+        var barW = 20;
+        var divH = 600;
+        
         var maxPopulation = d3.max(incomingData, function (el) {
             return parseFloat(el[cat]);
         });
-
-        var wid = 20;
-        var hei = 600;
+        
         var yScale = d3.scale.linear().domain([0, maxPopulation]).range([0, 460]);
-        d3.select("svg").attr("style", "height: " + hei + "px; width: 1000px;");
-        d3.select("svg")
+        d3.select("#infovizDiv").attr("style", "height: " + divH + "px; width: 1000px;");
+        d3.select("#infovizDiv").append("svg").attr("id", "infoVizSVG").attr("style", "height: " + divH + "px; width: 1000px;");
+
+        d3.select("#infoVizSVG")
             .selectAll("rect")
             .data(incomingData)
             .enter()
             .append("rect")
             .attr("id", "re")
-            .attr("width", wid)
+            .attr("width", barW)
             .attr("height", function (d) {
                 return 0;
             })
             .attr("x", function (d, i) {
-                return i * wid;
+                return i * barW;
             })
             .attr("y", function (d) {
-                return hei;
+                return divH;
             })
             .style("fill", "black")
             .style("stroke", "red")
@@ -104,22 +97,81 @@ window.onload = function () {
             .attr("height", function (d) {
                 return yScale(parseFloat(d[cat]));
             }).attr("y", function (d) {
-                return hei - yScale(parseFloat(d[cat]));
+                return divH - yScale(parseFloat(d[cat]));
             });
 
 
 
-        var barG = d3.selectAll("svg").selectAll("g").data(incomingData).enter().append("g").attr("transform", function (d, i) {
-            return "translate(" +
-                i * wid + "," + (hei - yScale(d[cat])) + ")rotate(-45)";
-        });
+        var barG = d3.select("#infoVizSVG").selectAll("g").data(incomingData).enter()
+            .append("g").attr("transform", function (d, i) {
+                return "translate(" +
+                    i * barW + "," + (divH - yScale(d[cat])) + ")rotate(-45)";
+            });
 
         barG.append("text").text(function (d) {
             return d["Drug"];
         }).attr("transform", "translate(10, 0)");
 
+
+
         //        d3.selectAll("svg").attr("transform", "rotate(2)");
     }
+
+
+
+    //    //bar graphs
+    //    function dataViz(incomingData) {
+    //        var maxPopulation = d3.max(incomingData, function (el) {
+    //            return parseFloat(el[cat]);
+    //        });
+    //
+    //        var wid = 20;
+    //        var hei = 600;
+    //        var yScale = d3.scale.linear().domain([0, maxPopulation]).range([0, 460]);
+    //        d3.select("svg").attr("style", "height: " + hei + "px; width: 1000px;");
+    //        d3.select("svg")
+    //            .selectAll("rect")
+    //            .data(incomingData)
+    //            .enter()
+    //            .append("rect")
+    //            .attr("id", "re")
+    //            .attr("width", wid)
+    //            .attr("height", function (d) {
+    //                return 0;
+    //            })
+    //            .attr("x", function (d, i) {
+    //                return i * wid;
+    //            })
+    //            .attr("y", function (d) {
+    //                return hei;
+    //            })
+    //            .style("fill", "black")
+    //            .style("stroke", "red")
+    //            .style("stroke-width", "1px")
+    //            .style("opacity", 1)
+    //            .transition()
+    //            .duration(function (d) {
+    //                return yScale(parseFloat(d[cat])) * 2;
+    //            })
+    //            .attr("height", function (d) {
+    //                return yScale(parseFloat(d[cat]));
+    //            }).attr("y", function (d) {
+    //                return hei - yScale(parseFloat(d[cat]));
+    //            });
+    //
+    //
+    //
+    //        var barG = d3.selectAll("svg").selectAll("g").data(incomingData).enter().append("g").attr("transform", function (d, i) {
+    //            return "translate(" +
+    //                i * wid + "," + (hei - yScale(d[cat])) + ")rotate(-45)";
+    //        });
+    //
+    //        barG.append("text").text(function (d) {
+    //            return d["Drug"];
+    //        }).attr("transform", "translate(10, 0)");
+    //
+    //        //        d3.selectAll("svg").attr("transform", "rotate(2)");
+    //    }
 
 
 
