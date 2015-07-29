@@ -6,30 +6,43 @@ eevv.changeText = function () {
 
 window.onload = function () {
 
-
+    //initial graph
     var cat = eevv.categoriesTrimmed.badTrip;
     d3.csv("csvs/categprofilestrimmed.csv", function (error, data) {
-        console.log(data[0]);
         data = data.sort(function (a, b) {
             return b[cat] - a[cat];
         });
-        selectorSetup(data);
-        dataViz(data);
+        eevv.selectorSetup(data, cat);
+        eevv.dataViz(data, cat);
 
     });
 
+    //reloading the graph with new data
+    eevv.reloadData = function (dat) {
+        d3.selectAll("#infoVizSVG").remove(); //get rid of old bar graph
+        var cat = dat;
+        d3.csv("csvs/categprofilestrimmed.csv", function (error, data) {
+            //            console.log(data[0]);
+            data = data.sort(function (a, b) {
+                return b[cat] - a[cat];
+            });
+            eevv.selectorSetup(data, cat);
+            eevv.dataViz(data, cat);
+
+        });
+    }
 
 
-    function selectorSetup(incomingData) {
+    eevv.selectorSetup = function (incomingData, cat) {
         var selSetupW = 200;
         var selSetupH = 600;
         var topPadding = 0;
         var spacing = 1.4;
         d3.select("#selectorDiv").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
-        
+
         d3.select("#selectorDiv").append("svg").attr("id", "selectors").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
 
-        console.log(eevv.categoriesTrimmed);
+        //        console.log(eevv.categoriesTrimmed);
 
         d3.select("#selectors").selectAll("g").data(incomingData).enter().append("g").attr("id", "button");
 
@@ -44,7 +57,10 @@ window.onload = function () {
         d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
             .attr("transform", function (d, i) {
                 return ("translate(0," + (i * btnH * spacing + topPadding) + ")");
+            }).on("click", eevv.reloadData).html(function (d) {
+                return d;
             });
+        //        .attr("onclick", "eevv.reloadData(eevv.categoriesTrimmed.addiction)");
 
         d3.selectAll("#button").data(cats).append("text").text(function (d) {
             return d;
@@ -58,14 +74,14 @@ window.onload = function () {
 
 
     //bar graphs
-    function dataViz(incomingData) {
+    eevv.dataViz = function (incomingData, cat) {
         var barW = 20;
         var divH = 600;
-        
+
         var maxPopulation = d3.max(incomingData, function (el) {
             return parseFloat(el[cat]);
         });
-        
+
         var yScale = d3.scale.linear().domain([0, maxPopulation]).range([0, 460]);
         d3.select("#infovizDiv").attr("style", "height: " + divH + "px; width: 1000px;");
         d3.select("#infovizDiv").append("svg").attr("id", "infoVizSVG").attr("style", "height: " + divH + "px; width: 1000px;");
