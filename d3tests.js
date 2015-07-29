@@ -1,23 +1,48 @@
+eevv.changeText = function() {
+    d3.selectAll("g").select("text").text(function(d) {return "sdf"});
+}
+
 window.onload = function () {
 
 
+    var cat = eevv.categoriesTrimmed.badTrip;
     d3.csv("csvs/categprofilestrimmed.csv", function (error, data) {
         console.log(data);
         data = data.sort(function (a, b) {
-            return b["Mystical Experiences"] - a["Mystical Experiences"];
+            return b[cat] - a[cat];
         });
         dataViz(data);
     });
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //bar graphs
     function dataViz(incomingData) {
         var maxPopulation = d3.max(incomingData, function (el) {
-            return parseInt(el["Mystical Experiences"]);
+            return parseFloat(el[cat]);
         });
 
-        
+
         var wid = 20;
+        var hei = 600;
         var yScale = d3.scale.linear().domain([0, maxPopulation]).range([0, 460]);
-        d3.select("svg").attr("style", "height: 480px; width: 900px;");
+        d3.select("svg").attr("style", "height: " + hei + "px; width: 1000px;");
         d3.select("svg")
             .selectAll("rect")
             .data(incomingData)
@@ -32,31 +57,49 @@ window.onload = function () {
                 return i * wid;
             })
             .attr("y", function (d) {
-                return 480;
+                return hei;
             })
             .style("fill", "black")
             .style("stroke", "red")
             .style("stroke-width", "1px")
             .style("opacity", 1);
 
-        
+
         d3.selectAll("rect")
             .transition().duration(function (d) {
-                return yScale(parseInt(d["Mystical Experiences"])) * 5;
+                return yScale(parseFloat(d[cat])) * 2;
             })
             .attr("height", function (d) {
-                return yScale(parseInt(d["Mystical Experiences"]));
+                return yScale(parseFloat(d[cat]));
             }).attr("y", function (d) {
-                return 480 - yScale(parseInt(d["Mystical Experiences"]));
+                return hei - yScale(parseFloat(d[cat]));
             });
+
+        var barG = d3.selectAll("svg").selectAll("g").data(incomingData).enter().append("g").attr("transform", function (d, i) {
+            return "translate(" +
+                i * wid + "," + (hei - yScale(d[cat])) + ")rotate(-45)";
+        });
+
+        barG.append("text").text(function (d) {
+            return d["Drug"];
+        }).attr("transform", "translate(10, 0)");
+
+        //        d3.selectAll("svg").attr("transform", "rotate(2)");
     }
 
 
 
 
 
-
     
+    
+    
+    
+    
+    
+    
+
+
     //         //simple bar chart thing
     //        var yScale = d3.scale.linear()
     //            .domain([0, 100, 6000])
@@ -88,10 +131,10 @@ window.onload = function () {
 
 
 
-    
-    
-    
-    
+
+
+
+
     //circle moving to center thing
 
     //        d3.csv("csvs/categprofilestrimmed.csv", function (d) {
@@ -141,3 +184,5 @@ window.onload = function () {
     //            console.log("sdfsdf");
     //        });
 }
+
+

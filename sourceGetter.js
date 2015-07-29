@@ -1,6 +1,25 @@
 //get source code from a url
 //jquery.xdomainajax.js  ------ from padolsey
-eevv.getSourceCode = function(your_url, callback) {
+eevv.getSourceCode = function (your_url, callback) {
+
+    //    document.domain = 'http://0.0.0.0:8911/e/http80/www.erowid.org';
+    //    var jsonFile = new XMLHttpRequest({mozSystem: true});
+    //    
+    //    jsonFile.open("GET", your_url, true);
+    ////    jsonFile.setRequestHeader("Access-Control-Allow-Origin", "*");
+    ////    jsonFile.setRequestHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //    jsonFile.send();
+    //    
+    //
+    //    jsonFile.onreadystatechange = function () {
+    //        if (jsonFile.readyState == 4 && jsonFile.status == 200) {
+    //            document.getElementById("id-of-element").innerHTML = jsonFile.responseText;
+    //        }
+    //    }
+
+
+
+
     jQuery.ajax = (function (_ajax) {
 
         var protocol = location.protocol,
@@ -44,7 +63,7 @@ eevv.getSourceCode = function(your_url, callback) {
                         if (_success) {
                             // Fake XHR callback.
                             _success.call(this, {
-                                
+
                                 responseText: data.results[0]
                                 // YQL screws with <script>s
                                 // Get rid of them

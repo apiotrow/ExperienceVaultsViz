@@ -121,8 +121,10 @@ eevv.scrapeReports = function () {
                     url += "&SP=1&ShowViews=1&Start=0&Max=" + pageSize;
                 }
 
+                
                 url_Entry.url = url;
                 allURLS.push(url_Entry);
+//                console.log(url_Entry);
             }
         }
     }
@@ -152,6 +154,7 @@ eevv.scrapeReports = function () {
     function setupURL(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16) {
         urlFields = {
             init: "https://www.erowid.org/experiences/exp.cgi?A=Search",
+//            init: "file:///Volumes/erowid_may_1_201/e/http80/www.erowid.org/experiences/exp.cgi.html?A=Search",
             drugOne: "&S1=" + f1,
             drugTwo: "&S2=" + f2,
             drugThree: "&S3=" + f3,
@@ -173,6 +176,7 @@ eevv.scrapeReports = function () {
 
     //go through the HTML source and extrapolate the various values we want, for each report in the source
     function parseSource(itemName, type) {
+        
         var text = eevv.URLSource;
         var pos = text.indexOf('exp.php?ID');
 

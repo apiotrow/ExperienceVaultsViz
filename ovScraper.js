@@ -9,6 +9,9 @@ eevv.optionValues = function() {
         eevv.getSourceCode("https://www.erowid.org/experiences/exp_search.cgi", function () {
             scrapeOptionValues();
         });
+//        eevv.getSourceCode("http://0.0.0.0:8911/e/http80/www.erowid.org/experiences/exp_search.cgi.html", function () {
+//            scrapeOptionValues();
+//        });
     }
 
     //option value scraping
