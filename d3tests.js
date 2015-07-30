@@ -26,7 +26,6 @@ window.onload = function () {
             data = data.sort(function (a, b) {
                 return b[cat] - a[cat];
             });
-            eevv.selectorSetup(data, cat);
             eevv.dataViz(data, cat);
 
         });
@@ -53,21 +52,24 @@ window.onload = function () {
         var btnW = 200,
             btnH = 35;
 
-
-        d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
-            .attr("transform", function (d, i) {
-                return ("translate(0," + (i * btnH * spacing + topPadding) + ")");
-            }).on("click", eevv.reloadData).html(function (d) {
-                return d;
-            });
-        //        .attr("onclick", "eevv.reloadData(eevv.categoriesTrimmed.addiction)");
-
         d3.selectAll("#button").data(cats).append("text").text(function (d) {
             return d;
         })
             .attr("transform", function (d, i) {
                 return ("translate(0," + (i * btnH * spacing + topPadding + (btnH / 2)) + ")");
             }).attr("font-size", "20px");
+
+        d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
+            .attr("transform", function (d, i) {
+                return ("translate(0," + (i * btnH * spacing + topPadding) + ")");
+            })
+            .attr("opacity", 0.4)
+            .on("click", eevv.reloadData).html(function (d) {
+                return d;
+            });
+        //        .attr("onclick", "eevv.reloadData(eevv.categoriesTrimmed.addiction)");
+
+
     }
 
 
@@ -86,12 +88,12 @@ window.onload = function () {
         d3.select("#infovizDiv").attr("style", "height: " + divH + "px; width: 1000px;");
         d3.select("#infovizDiv").append("svg").attr("id", "infoVizSVG").attr("style", "height: " + divH + "px; width: 1000px;");
 
-        d3.select("#infoVizSVG")
+        var rec = d3.select("#infoVizSVG").append("g").attr("id", "bars")
             .selectAll("rect")
             .data(incomingData)
             .enter()
             .append("rect")
-            .attr("id", "re")
+            .attr("class", "bar")
             .attr("width", barW)
             .attr("height", function (d) {
                 return 0;
@@ -105,8 +107,9 @@ window.onload = function () {
             .style("fill", "black")
             .style("stroke", "red")
             .style("stroke-width", "1px")
-            .style("opacity", 1)
-            .transition()
+            .style("opacity", 1);
+
+        rec.transition()
             .duration(function (d) {
                 return yScale(parseFloat(d[cat])) * 2;
             })
@@ -115,6 +118,23 @@ window.onload = function () {
             }).attr("y", function (d) {
                 return divH - yScale(parseFloat(d[cat]));
             });
+
+        d3.selectAll(".bar").on("mouseover", function change(d) {
+            rec.style("fill", function (p) {
+//                console.log(p["Drug"] + ", " + d["Drug"]);
+                return p["Drug"] == d["Drug"] ? "red" : "gray";
+            });
+        });
+
+        //        rec.on("mouseover", function change(d) {
+        //            rec.style("fill", function(p){
+        //                return p.region == d.region ? "red" : "gray";
+        //            });
+        //        });
+
+        rec.on("mouseout", function change(d) {
+            return d3.selectAll("#re").style("fill", "black");
+        });
 
 
 
