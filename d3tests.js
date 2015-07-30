@@ -37,12 +37,27 @@ window.onload = function () {
         var selSetupH = 600;
         var topPadding = 0;
         var spacing = 1.4;
-        d3.select("#selectorDiv").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
 
+        //create color ramp
+        var numCatIter = 0;
+        var catRange = [];
+        for (var i in eevv.categoriesTrimmed) {
+            catRange.push(numCatIter++);
+        }
+        var colorDivider = Math.round(360 / catRange.length);
+
+        var colorRange = [];
+        for (var i = 0; i < 360; i += colorDivider) {
+            colorRange.push(d3.hcl("hsl(" + i + ", 50%, 50%)"));
+        }
+        var colorRamp = d3.scale.linear().domain(catRange).range(colorRange);
+        var buttonOpacity = .5;
+
+        //set up div and svg for selectors
+        d3.select("#selectorDiv").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
         d3.select("#selectorDiv").append("svg").attr("id", "selectors").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
 
-        //        console.log(eevv.categoriesTrimmed);
-
+        //create g's for buttons
         d3.select("#selectors").selectAll("g").data(incomingData).enter().append("g").attr("id", "button");
 
         var cats = [];
@@ -52,6 +67,7 @@ window.onload = function () {
         var btnW = 200,
             btnH = 35;
 
+        //create category text for button
         d3.selectAll("#button").data(cats).append("text").text(function (d) {
             return d;
         })
@@ -59,11 +75,14 @@ window.onload = function () {
                 return ("translate(0," + (i * btnH * spacing + topPadding + (btnH / 2)) + ")");
             }).attr("font-size", "20px");
 
+        //create rectangle for button
         d3.selectAll("#button").data(cats).append("rect").attr("width", btnW).attr("height", btnH)
             .attr("transform", function (d, i) {
                 return ("translate(0," + (i * btnH * spacing + topPadding) + ")");
+            }).style("fill", function (d, i) {
+                return colorRamp(i)
             })
-            .attr("opacity", 0.4)
+            .attr("opacity", buttonOpacity)
             .on("click", eevv.reloadData).html(function (d) {
                 return d;
             });
@@ -79,6 +98,7 @@ window.onload = function () {
     eevv.dataViz = function (incomingData, cat) {
         var barW = 20;
         var divH = 600;
+        var barColor = d3.rgb("orange");
 
         var maxPopulation = d3.max(incomingData, function (el) {
             return parseFloat(el[cat]);
@@ -88,7 +108,7 @@ window.onload = function () {
         d3.select("#infovizDiv").attr("style", "height: " + divH + "px; width: 1000px;");
         d3.select("#infovizDiv").append("svg").attr("id", "infoVizSVG").attr("style", "height: " + divH + "px; width: 1000px;");
 
-        var rec = d3.select("#infoVizSVG").append("g").attr("id", "bars")
+        var rec = d3.select("#infoVizSVG")
             .selectAll("rect")
             .data(incomingData)
             .enter()
@@ -104,7 +124,7 @@ window.onload = function () {
             .attr("y", function (d) {
                 return divH;
             })
-            .style("fill", "black")
+            .style("fill", barColor)
             .style("stroke", "red")
             .style("stroke-width", "1px")
             .style("opacity", 1);
@@ -119,38 +139,44 @@ window.onload = function () {
                 return divH - yScale(parseFloat(d[cat]));
             });
 
+        //fill selected bar as red
         d3.selectAll(".bar").on("mouseover", function change(d) {
             rec.style("fill", function (p) {
-//                console.log(p["Drug"] + ", " + d["Drug"]);
-                return p["Drug"] == d["Drug"] ? "red" : "gray";
+                if (p["Drug"] == d["Drug"]) {
+                    this.parentElement.appendChild(this); //moves the element (to top i think)
+                    //                    console.log(this);
+                }
+                return p["Drug"] == d["Drug"] ? barColor.brighter(.75) : barColor;
             });
         });
 
-        //        rec.on("mouseover", function change(d) {
-        //            rec.style("fill", function(p){
-        //                return p.region == d.region ? "red" : "gray";
-        //            });
-        //        });
-
-        rec.on("mouseout", function change(d) {
-            return d3.selectAll("#re").style("fill", "black");
+        //set everything back to black
+        d3.selectAll(".bar").on("mouseout", function change(d) {
+            return rec.style("fill", barColor); //classed("highlighted", true);
         });
 
 
-
+        //set position for each text's <g>, rotate it 45, and assign it to barG
         var barG = d3.select("#infoVizSVG").selectAll("g").data(incomingData).enter()
             .append("g").attr("transform", function (d, i) {
                 return "translate(" +
                     i * barW + "," + (divH - yScale(d[cat])) + ")rotate(-45)";
             });
 
+        //create text and append them to each bar
         barG.append("text").text(function (d) {
             return d["Drug"];
         }).attr("transform", "translate(10, 0)");
 
+        //        d3.select(".bar").each(function (d, i) {
+        //            console.log(d);
+        //            console.log(i);
+        //            console.log(this);
+        //        });
+
+        //        d3.select(".bar").node();
 
 
-        //        d3.selectAll("svg").attr("transform", "rotate(2)");
     }
 
 
