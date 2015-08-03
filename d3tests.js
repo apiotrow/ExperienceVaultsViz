@@ -156,12 +156,12 @@ window.onload = function () {
                 return divH - yScale(parseFloat(d[cat]));
             });
 
-        //make bar mouse is hovering over be brighter
+        //make bar mouse is hovering over be brighter, and move the bar to be on top of everything else
+        //(re-appending it the parent element so it moves to bottom of list of DOM elements, so drawn on top)
         d3.selectAll(".bar").on("mouseover", function change(d) {
             rec.style("fill", function (p) {
                 if (p["Drug"] == d["Drug"]) {
                     this.parentElement.appendChild(this); //moves the element (to top i think)
-                    //                    console.log(this);
                 }
                 return p["Drug"] == d["Drug"] ? barColor.brighter(.75) : barColor;
             });
@@ -196,37 +196,58 @@ window.onload = function () {
 
         //on-click behavior for bars
         //makes a floating html table from modal.html and populated it with data
-        d3.text("modal.html", function (d) {
-            d3.select("body").append("div").attr("id", "modal").html(d)
-        });
-
-        d3.selectAll(".bar").on("click", clickBar);
-
-        function clickBar(d) {
-
-            d3.selectAll("td.data")
-                .data(d3.values(d)) //get the values for item d (which is the data bound to the rect we're clicking)
-            .html(function (p) {
-                return drugTotalsHash[p];
-            });
-        }
+//        d3.text("modal.html", function (d) {
+//            d3.select("body").append("div").attr("id", "modal").html(d)
+//        });
+//
+//        d3.selectAll(".bar").on("click", clickBar);
+//
+//        function clickBar(d) {
+//
+//            d3.selectAll("td.data")
+//                .data(d3.values(d)) //get the values for item d (which is the data bound to the rect we're clicking)
+//            .html(function (p) {
+//                return drugTotalsHash[p];
+//            });
+//        }
 
 
 
 
         ///adding an SVG
-        d3.html("stimul.svg", function (data) {
-            while (!d3.select(data).selectAll("path").empty()) {
-                d3.select("svg")
-                    .node()
-                    .appendChild(d3.select(data)
-                        .select("path")
-                        .node());
-            }
-            d3.selectAll("path").attr("transform", "translate(50, 50)");
+        d3.html("stimul.svg", function (data) { //data is the SVG data
+            //loop goes into svg and removes all stuff that isn't path, because
+            //svgs have extraneous data that we don't need
+            //            while (!d3.select(data).selectAll("path").empty()) {
+            //                d3.select("svg")
+            //                    .node()
+            //                    .appendChild(d3.select(data)
+            //                        .select("path")
+            //                        .node());
+            //            }
+
+            //append a g with id "stimulantIcon" to left hand selectors divs, then give it the path
+            //from the coffee SVG
+            d3.select("#selectors").append("g").attr("id", "stimulantIcon").each(function () {
+                var divParent = this; //"this" is the <g id "stimulantIcon">
+                //more efficient than the while loop above.
+                d3.select(data).selectAll("path").each(function () {
+                    divParent.appendChild(this.cloneNode(true)); //"this" is the path from the SVG
+                });
+            });
+
+            d3.selectAll("path").attr("transform", "translate(0, 0)").style("fill", "darkred").style("stroke", "black").style("stroke-width", "1px");
         });
-
-
+        
+        //this will bind data to the paths, so we can make it so when you click any part of the SVG, it can
+        //do something with data thats bound to it
+//        d3.select("#stimulantIcon").each(function(d){
+//            console.log(d3.select(this).selectAll("path"));
+//            d3.select(this).selectAll("path").datum(d);
+//        });
+        
+        //moves it, but then it moves back to 0,0. don't know why
+//         d3.select("#stimulantIcon").selectAll("path").attr("transform", "translate(50, 50)");
 
 
 
