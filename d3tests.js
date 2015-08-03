@@ -44,14 +44,29 @@ window.onload = function () {
         for (var i in eevv.categoriesTrimmed) {
             catRange.push(numCatIter++);
         }
-        var colorDivider = Math.round(360 / catRange.length);
+        //        var colorDivider = Math.round(360 / catRange.length);
+        //
+        //        var colorRange = [];
+        //        for (var i = 0; i < 360; i += colorDivider) {
+        //            colorRange.push(d3.hcl("hsl(" + i + ", 100%, 50%)"));
+        //        }
+        //        var colorRamp = d3.scale.linear().domain(catRange).range(colorRange);
+        var buttonOpacity = .6;
 
-        var colorRange = [];
-        for (var i = 0; i < 360; i += colorDivider) {
-            colorRange.push(d3.hcl("hsl(" + i + ", 50%, 50%)"));
-        }
-        var colorRamp = d3.scale.linear().domain(catRange).range(colorRange);
-        var buttonOpacity = .5;
+        //another way to color ramp
+        //        var colorRamp = d3.scale.linear()
+        //            .interpolate(d3.interpolateHcl)
+        //            .domain([0, numCatIter]).range(["yellow", "blue"]);
+
+        //and another way
+        //        var colorRamp = d3.scale.linear()
+        //            .interpolate(d3.interpolateLab)
+        //            .domain([0, numCatIter]).range(["yellow", "blue"]);
+
+        //another another way
+        var col = d3.scale.category20();
+        col.domain(catRange);
+        var colorRamp = d3.scale.linear().domain(col.domain()).range(col.range());
 
         //set up div and svg for selectors
         d3.select("#selectorDiv").attr("style", "height: " + selSetupH + "px; width:" + selSetupW + "px;");
@@ -108,6 +123,7 @@ window.onload = function () {
         d3.select("#infovizDiv").attr("style", "height: " + divH + "px; width: 1000px;");
         d3.select("#infovizDiv").append("svg").attr("id", "infoVizSVG").attr("style", "height: " + divH + "px; width: 1000px;");
 
+        //set up bars for bar graph
         var rec = d3.select("#infoVizSVG")
             .selectAll("rect")
             .data(incomingData)
@@ -129,6 +145,7 @@ window.onload = function () {
             .style("stroke-width", "1px")
             .style("opacity", 1);
 
+        //make bars shoot upward when graph loads
         rec.transition()
             .duration(function (d) {
                 return yScale(parseFloat(d[cat])) * 2;
@@ -139,7 +156,7 @@ window.onload = function () {
                 return divH - yScale(parseFloat(d[cat]));
             });
 
-        //fill selected bar as red
+        //make bar mouse is hovering over be brighter
         d3.selectAll(".bar").on("mouseover", function change(d) {
             rec.style("fill", function (p) {
                 if (p["Drug"] == d["Drug"]) {
@@ -150,10 +167,67 @@ window.onload = function () {
             });
         });
 
-        //set everything back to black
+        //set bars back to normal color when not hovering over
         d3.selectAll(".bar").on("mouseout", function change(d) {
             return rec.style("fill", barColor); //classed("highlighted", true);
         });
+
+
+        /*
+        on click functionality
+        */
+        //make a version of drugTotalsHash just for this d3 test file
+        drugTotalsArray = [];
+        drugTotalsHash = {};
+        //fill drugTotalsArray and drugTotalsHash
+        //fill drugTotalsArray and drugTotalsHash
+        eevv.readTextFile("txts/drugtotals.txt", function (result) {
+            drugTotalsArray = result.split(/\n/);
+
+            //remove escape characters from each drug name
+            for (var i = 0; i < drugTotalsArray.length; i++) {
+                drugTotalsArray[i] = drugTotalsArray[i].replace(/(\r\n|\n|\r)/gm, "");
+                drugTotalsArray[i] = drugTotalsArray[i].split(/\t/);
+                drugTotalsHash[drugTotalsArray[i][0]] = drugTotalsArray[i][1];
+            }
+        });
+
+        //        console.log(incomingData);
+
+        //on-click behavior for bars
+        //makes a floating html table from modal.html and populated it with data
+        d3.text("modal.html", function (d) {
+            d3.select("body").append("div").attr("id", "modal").html(d)
+        });
+
+        d3.selectAll(".bar").on("click", clickBar);
+
+        function clickBar(d) {
+
+            d3.selectAll("td.data")
+                .data(d3.values(d)) //get the values for item d (which is the data bound to the rect we're clicking)
+            .html(function (p) {
+                return drugTotalsHash[p];
+            });
+        }
+
+
+
+
+        ///adding an SVG
+        d3.html("stimul.svg", function (data) {
+            while (!d3.select(data).selectAll("path").empty()) {
+                d3.select("svg")
+                    .node()
+                    .appendChild(d3.select(data)
+                        .select("path")
+                        .node());
+            }
+            d3.selectAll("path").attr("transform", "translate(50, 50)");
+        });
+
+
+
 
 
         //set position for each text's <g>, rotate it 45, and assign it to barG
@@ -176,6 +250,11 @@ window.onload = function () {
 
         //        d3.select(".bar").node();
 
+        //inserting image. must set height and width or image won't render
+        //        barG.insert("image", "text").attr("xlink:href", function (d) {
+        //            return "neder.png";
+        //        }).attr("width", "50px").attr("height", "50px").attr("x", "0")
+        //            .attr("y", "0");
 
     }
 

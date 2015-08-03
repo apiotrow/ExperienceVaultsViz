@@ -11,6 +11,7 @@ eevv.csvThings = function () {
 
     init();
     drugProfiles();
+    
 
 
     function init() {
@@ -245,6 +246,7 @@ eevv.csvThings = function () {
 
         
 //        eevv.vizzer(eevv.categories, drugTotalsArray[0][0], profiles, drugTotalsArray, 100);
+        
         eevv.vizzer(eevv.categoriesTrimmed, drugTotalsArray[1][0], profiles, drugTotalsArray, 100);
 
     }
