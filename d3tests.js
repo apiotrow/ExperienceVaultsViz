@@ -31,7 +31,7 @@ window.onload = function () {
         });
     }
 
-
+    //buttons on left side of screen
     eevv.selectorSetup = function (incomingData, cat) {
         var selSetupW = 200;
         var selSetupH = 600;
@@ -127,7 +127,7 @@ window.onload = function () {
         var rec = d3.select("#infoVizSVG")
             .selectAll("rect")
             .data(incomingData)
-            .enter()
+            .enter() //return a selection whose array contains the data the rect elements will use
             .append("rect")
             .attr("class", "bar")
             .attr("width", barW)
