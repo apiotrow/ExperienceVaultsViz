@@ -12,11 +12,24 @@ define("ErowidCategories", function() {
 	        addiction: "Addiction & Habituation",
 	        glowing: "Glowing Experiences",
 	        mysticalExperiences: "Mystical Experiences",
+	        family: "Families",
 	        healthBenefits: "Health Benefits",
 	        medicalUse: "Medical Use",
 	        entities: "Entities / Beings",
 	        therapeutic: "Therapeutic Intent or Outcome",
 	        postTripProblems: "Post Trip Problems",
+	        preggoBaby: "Pregnancy / Baby",
+	        hppd: "HPPD / Lasting Visuals",
+	        overdose: "Overdose",
+	        lossOfMagic: "Loss of Magic",
+	        depression: "Depression",
+	        nature: "Nature / Outdoors",
+	        cultivationSynthesis: "Cultivation / Synthesis",
+	        multidayExperience: "Multi-Day Experience",
+	        poetry: "Poetry",
+	        personalPrep: "Personal Preparation",
+	        relationships: "Relationships",
+	        sexDiscussion: "Sex Discussion",
 	    };
 
 	    this.groups = {
@@ -156,6 +169,56 @@ define("ErowidCategories", function() {
 	        }
 	        rawFile.send(null);
     	};
+
+    	this.setCookie = function(cname, cvalue, exdays) {
+		    var d = new Date();
+		    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+		    var expires = "expires="+d.toUTCString();
+		    document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+
+		this.getCookie = function (cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0)==' ') c = c.substring(1);
+		        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+		    }
+		    return "";
+		} 	 
+
+		//sorts an object by a particular numeric property of the object
+		this.sortObjByProperty = function(obj, property)
+		{
+		  	//convert object into array
+			var sortable=[];
+			for(var key in obj)
+				if(obj.hasOwnProperty(key))
+			   		sortable.push([key, obj[key][property]]); // each item is an array in format [key, value]
+
+			//sort items by value
+			sortable.sort(function(a, b){
+				return b[1]-a[1]; // compare numbers
+			});
+			return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+		}
+
+		//sorts an object by a particular numeric property of the object
+		this.sortObj = function(obj)
+		{
+		  	//convert object into array
+			var sortable=[];
+			for(var key in obj)
+				if(obj.hasOwnProperty(key))
+			   		sortable.push([key, obj[key]]); // each item is an array in format [key, value]
+
+			//sort items by value
+			sortable.sort(function(a, b){
+				return b[1]-a[1]; // compare numbers
+			});
+			return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+		}
 
 	};
 });

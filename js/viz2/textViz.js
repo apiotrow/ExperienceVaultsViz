@@ -4,12 +4,15 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 	var eevv = new ErowidCategories();
 	var complete = {}; //id: everything about the report with that id. for nitty gritty
 	var profiles = {}; //drug: everything about that drug. for top-level info
+	var totalReports = 0;
 
 	eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
-		fillInDataStructure(result);
-		drugProfiles();
-		console.log(complete[9972]);
-		console.log(profiles['Cannabis']);
+		fillInComplete(result);
+		fillInProfiles();
+		// console.log(complete[9972]);
+		// console.log(profiles['Cannabis']);
+
+		localStorage.setItem('profiles', JSON.stringify(profiles));
 
 		badTripContexts();
 
@@ -29,7 +32,7 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 		var drugContext = {};
 
 		
-
+		/*
 		for(var id in complete){
 			if(complete[id]['categories'].hasOwnProperty('Bad Trips')){
 
@@ -66,75 +69,78 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 				}
 			}
 		}
+		*/
 
+		var sortedProfiles = eevv.sortObjByProperty(profiles, 'total');
 
-		//sort from highest to lowest, put in array
-		// var sorted = sortProperties(drugBadTrips);
-
-
-		var sortedProfiles = sortProperties(profiles, 'total');
+		$("#textViz").append(
+			"<center><tr><td>" + 
+			totalReports + 
+			" total reports" + 
+			"</td></tr></center>");
+			
 
 		for(var i = 0; i < sortedProfiles.length; i++){
-			$("#textViz").append("<tr><td>" + 
-				"<a href=''>" + sortedProfiles[i][0] + "</a>" + 
-				"</td><td> " + 
+			var percent = (Math.round((sortedProfiles[i][1] / totalReports) * 1000) / 10);
+			var periodBar = "";
+
+			for(var j = 0; j < percent * 10; j++){
+				periodBar += ".";
+			}
+
+			//append line to table with drug, raw report count, percentage, and a bar of periods indicating its size
+			$("#textViz").append(
+				"<tr><td>" + 
+				"<a href='vizChar.html?drug=" + sortedProfiles[i][0] +/* "?profiles=" + encodeURIComponent(profiles) +*/ "' id='link'>" + sortedProfiles[i][0] + "</a>" + 
+				"</td><td>" + 
 				sortedProfiles[i][1] + 
+				"</td><td>" + 
+				percent + "%" + 
+				"</td><td>" + 
+				periodBar + 
 				"</td></tr>");
+
 		}
 	}
 
 
-	function sortProperties(obj, property)
-	{
-	  // convert object into array
-	  var sortable=[];
-	  for(var key in obj)
-	  	if(obj.hasOwnProperty(key))
-	            sortable.push([key, obj[key][property]]); // each item is an array in format [key, value]
-
-	    // sort items by value
-	    sortable.sort(function(a, b)
-	    {
-	      return b[1]-a[1]; // compare numbers
-	  });
-	    return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
-	}
 
 
-	    //fills in profiles variable, which has key: drug, and value: all the stats about the drug
-	    function drugProfiles() {
-	    	for (var id in complete) {
+	//fills in profiles variable, which has key: drug, and value: all the stats about the drug
+  	function fillInProfiles() {
+    	for (var id in complete) {
+    		totalReports++;
 
-	    		function addGroupToProfiles(group) {
-                //get category totals
-                //e.g. eevv[group] is like eevv['categories'] or eevv['nonsubstances']
-                for (var s in eevv[group]) {
-                	var groupItem = eevv[group][s];
-                	if (groupItem in complete[id].stuff) {
-                		for (var key in complete[id].drugs) {
-                            //this check shouldn't be necessary, as all drugs
-                            //should be in profiles, but at least 1 key is not in profiles
-                            if (key in profiles) {
-                            	if (groupItem in profiles[key]) {
-                            		profiles[key][groupItem]++;
-                            	} else {
-                            		profiles[key][groupItem] = 1;
-                                    //                                    profiles[key] = {};
-                                    //                                    profiles[key].
-                                }
-                            } else {
-                            	profiles[key] = {};
-                            	profiles[key][groupItem] = 1;
-                            }
-                        }
-                    }
-                }
-            }
-            addGroupToProfiles(eevv.groups.categories);
-            addGroupToProfiles(eevv.groups.context);
-            addGroupToProfiles(eevv.groups.gender);
-            addGroupToProfiles(eevv.groups.intensity);
-            addGroupToProfiles(eevv.groups.nonsubstances);
+    		function addGroupToProfiles(group) {
+	            //get category totals
+	            //e.g. eevv[group] is like eevv['categories'] or eevv['nonsubstances']
+	            for (var s in eevv[group]) {
+	            	var groupItem = eevv[group][s];
+	            	if (groupItem in complete[id].stuff) {
+	            		for (var key in complete[id].drugs) {
+	                        //this check shouldn't be necessary, as all drugs
+	                        //should be in profiles, but at least 1 key is not in profiles
+	                        if (key in profiles) {
+	                        	if (groupItem in profiles[key]) {
+	                        		profiles[key][groupItem]++;
+	                        	} else {
+	                        		profiles[key][groupItem] = 1;
+	                                //                                    profiles[key] = {};
+	                                //                                    profiles[key].
+	                            }
+	                        } else {
+	                        	profiles[key] = {};
+	                        	profiles[key][groupItem] = 1;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        addGroupToProfiles(eevv.groups.categories);
+	        addGroupToProfiles(eevv.groups.context);
+	        addGroupToProfiles(eevv.groups.gender);
+	        addGroupToProfiles(eevv.groups.intensity);
+	        addGroupToProfiles(eevv.groups.nonsubstances);
 
             //get grand totals and dosage info
             //
@@ -184,21 +190,11 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
                 }
             }
 	    }
-
-        // console.log(profiles);
-
-        //        oneGroup(eevv.context.largeGroup);
-
-        
-//        eevv.vizzer(eevv.categories, drugTotalsArray[0][0], profiles, drugTotalsArray, 100);
-
-        // eevv.vizzer(eevv.categoriesTrimmed, drugTotalsArray[1][0], profiles, drugTotalsArray, 100);
-
-    }
+	}
 
 
 	//the printing portion of outputting drug frequency
-	function fillInDataStructure(result) {
+	function fillInComplete(result) {
 		var csvText = result;
         var reports = csvText.split(/\r/); //array where each entry is a single report
         var reportArray = [];
@@ -349,11 +345,4 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
         }
 
     }
-
-
-
-	// var d = csvJSON("csvs/categprofilestrimmed.csv");
-	// console.log(d);
-
-	
 });
