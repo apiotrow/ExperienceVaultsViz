@@ -2,15 +2,16 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 	
 
 	var eevv = new ErowidCategories();
-	var complete = {}; //id: everything about the report with that id
-	var profiles = {};
+	var complete = {}; //id: everything about the report with that id. for nitty gritty
+	var profiles = {}; //drug: everything about that drug. for top-level info
 
 	eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
-        fillInDataStructure(result);
-        drugProfiles();
-        console.log(complete[56581]);
+		fillInDataStructure(result);
+		drugProfiles();
+		console.log(complete[9972]);
+		console.log(profiles['Cannabis']);
 
-        badTripContexts();
+		badTripContexts();
 
         // for(var id in complete){
         // 	$("#textViz").append("<tr><td>" + id + "</td></tr>");
@@ -19,17 +20,21 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
     	// for (var key in profiles) {
     	// 	$("#textViz").append("<tr><td>" + key + "</td></tr>");
    		// }
-    });
+   	});
 
 
 
 	function badTripContexts(){
 		var drugBadTrips = {};
+		var drugContext = {};
+
+		
+
 		for(var id in complete){
 			if(complete[id]['categories'].hasOwnProperty('Bad Trips')){
 
 				//filter by only having 1 drug (no combinations of drugs)
-				if(Object.keys(complete[id]['drugs']).length == 1){
+				if(Object.keys(complete[id]['drugs']).length >= 1){
 
 					//get the drug in the report
 					for(var drug in complete[id]['drugs']){
@@ -41,39 +46,160 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 							drugBadTrips[drug] = 1;
 						}
 					}
+
+					//get the contexts
+					//check if any contexts exist
+					if(complete[id]['context'].length > 0){
+
+						//add drug in druContext if not in
+						if(!(drug in drugContext)){
+							drugContext[drug] = {};
+						}
+
+						//put context in
+						if(complete[id]['context'] in drugContext[drug]){
+							drugContext[drug][complete[id]['context']]++;
+						}else{
+							drugContext[drug][complete[id]['context']] = 1;
+						}
+					}
 				}
 			}
 		}
-		console.log(drugBadTrips);
 
-		var sorted = sortProperties(drugBadTrips);
 
-		for(var i = 0; i < sorted.length; i++){
-			$("#textViz").append("<tr><td>" + sorted[i][0] + "</td><td> " + sorted[i][1] + "</td></tr>");
+		//sort from highest to lowest, put in array
+		// var sorted = sortProperties(drugBadTrips);
+
+
+		var sortedProfiles = sortProperties(profiles, 'total');
+
+		for(var i = 0; i < sortedProfiles.length; i++){
+			$("#textViz").append("<tr><td>" + 
+				"<a href=''>" + sortedProfiles[i][0] + "</a>" + 
+				"</td><td> " + 
+				sortedProfiles[i][1] + 
+				"</td></tr>");
 		}
 	}
 
 
-	function sortProperties(obj)
+	function sortProperties(obj, property)
 	{
 	  // convert object into array
-	    var sortable=[];
-	    for(var key in obj)
-	        if(obj.hasOwnProperty(key))
-	            sortable.push([key, obj[key]]); // each item is an array in format [key, value]
+	  var sortable=[];
+	  for(var key in obj)
+	  	if(obj.hasOwnProperty(key))
+	            sortable.push([key, obj[key][property]]); // each item is an array in format [key, value]
 
 	    // sort items by value
 	    sortable.sort(function(a, b)
 	    {
 	      return b[1]-a[1]; // compare numbers
-	    });
+	  });
 	    return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
 	}
 
 
+	    //fills in profiles variable, which has key: drug, and value: all the stats about the drug
+	    function drugProfiles() {
+	    	for (var id in complete) {
+
+	    		function addGroupToProfiles(group) {
+                //get category totals
+                //e.g. eevv[group] is like eevv['categories'] or eevv['nonsubstances']
+                for (var s in eevv[group]) {
+                	var groupItem = eevv[group][s];
+                	if (groupItem in complete[id].stuff) {
+                		for (var key in complete[id].drugs) {
+                            //this check shouldn't be necessary, as all drugs
+                            //should be in profiles, but at least 1 key is not in profiles
+                            if (key in profiles) {
+                            	if (groupItem in profiles[key]) {
+                            		profiles[key][groupItem]++;
+                            	} else {
+                            		profiles[key][groupItem] = 1;
+                                    //                                    profiles[key] = {};
+                                    //                                    profiles[key].
+                                }
+                            } else {
+                            	profiles[key] = {};
+                            	profiles[key][groupItem] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            addGroupToProfiles(eevv.groups.categories);
+            addGroupToProfiles(eevv.groups.context);
+            addGroupToProfiles(eevv.groups.gender);
+            addGroupToProfiles(eevv.groups.intensity);
+            addGroupToProfiles(eevv.groups.nonsubstances);
+
+            //get grand totals and dosage info
+            //
+            //for this report...
+            for (var drug in complete[id].drugs) {
+
+            	//if profiles has an entry for it (which it should)
+            	if (drug in profiles) {
+
+                	//increment total
+                	if (profiles[drug].hasOwnProperty("total")){
+                		profiles[drug].total++;
+                	}
+                	else{
+                		profiles[drug].total = 1;
+                	}
+
+
+                    //add admin property if it doesn't already have it
+                    if(!profiles[drug].hasOwnProperty("dose")){
+                    	profiles[drug]['dose'] = {};
+                    }
+
+
+					var doseItems = ['amount', 'form', 'method'];
+
+					//add the three admin properties to admin if it doesn't have them
+					for(var i = 0; i < doseItems.length; i++){
+						if(!profiles[drug]['dose'].hasOwnProperty(doseItems[i])){
+                    		profiles[drug]['dose'][doseItems[i]] = {};
+                   	 	}
+					}
+
+                    //add the dose item to profiles
+                    for(var i = 0; i < doseItems.length; i++){
+						var doseItem = complete[id].drugs[drug][doseItems[i]];
+
+	 					//make sure a drug amount is even specified
+	                    if(doseItem != ""){
+	                    	if(profiles[drug]['dose'][doseItems[i]].hasOwnProperty(doseItem)){
+	                    		profiles[drug]['dose'][doseItems[i]][doseItem]++;
+	                    	}else{
+	                    		profiles[drug]['dose'][doseItems[i]][doseItem] = 1;
+	                    	}
+	                    }
+                    }
+                }
+            }
+	    }
+
+        // console.log(profiles);
+
+        //        oneGroup(eevv.context.largeGroup);
+
+        
+//        eevv.vizzer(eevv.categories, drugTotalsArray[0][0], profiles, drugTotalsArray, 100);
+
+        // eevv.vizzer(eevv.categoriesTrimmed, drugTotalsArray[1][0], profiles, drugTotalsArray, 100);
+
+    }
+
+
 	//the printing portion of outputting drug frequency
-   	function fillInDataStructure(result) {
-        var csvText = result;
+	function fillInDataStructure(result) {
+		var csvText = result;
         var reports = csvText.split(/\r/); //array where each entry is a single report
         var reportArray = [];
 
@@ -110,20 +236,20 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
         }
 
         for (var i = 0; i < reportArray.length; i++) {
-            var id = reportArray[i][0];
+        	var id = reportArray[i][0];
 
             //entry for one report
             var idEntry = {
-                drugs: {},
-                categories: {},
-                nonsubstances: {},
-                context: "",
-                intensity: "",
-                gender: "",
-                title: "",
-                author: "",
-                date: "",
-                views: "",
+            	drugs: {},
+            	categories: {},
+            	nonsubstances: {},
+            	context: "",
+            	intensity: "",
+            	gender: "",
+            	title: "",
+            	author: "",
+            	date: "",
+            	views: "",
                 stuff: {}, //holds drugs, cats, nonsubs, contexts, intensities, and gender
             }
 
@@ -138,55 +264,55 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
             //insert drugs for this report
             var drugs = reportArray[i][1].split(";");
             for (var j = 0; j < drugs.length; j++) {
-                var drugName = "";
+            	var drugName = "";
 
-                var drugEntry = {
-                    method: "",
-                    amount: "",
-                    form: ""
-                }
+            	var drugEntry = {
+            		method: "",
+            		amount: "",
+            		form: ""
+            	}
 
                 //get drug name
                 if (drugs[j].indexOf("[") != -1) {
-                    drugName = drugs[j].substring(0, drugs[j].indexOf("["));
+                	drugName = drugs[j].substring(0, drugs[j].indexOf("["));
                 } else {
-                    drugName = drugs[j].substring(0);
+                	drugName = drugs[j].substring(0);
                 }
 
                 //get method of administration
                 if (drugs[j].indexOf("[method]") != -1) {
-                    var name = "";
-                    var text = drugs[j].substring(drugs[j].indexOf("[method]") + 8);
-                    if (text.indexOf("[") != -1) {
-                        name = text.substring(0, text.indexOf("["));
-                    } else {
-                        name = text.substring(0);
-                    }
-                    drugEntry.method = name;
+                	var name = "";
+                	var text = drugs[j].substring(drugs[j].indexOf("[method]") + 8);
+                	if (text.indexOf("[") != -1) {
+                		name = text.substring(0, text.indexOf("["));
+                	} else {
+                		name = text.substring(0);
+                	}
+                	drugEntry.method = name;
                 }
 
                 //get amount of drug
                 if (drugs[j].indexOf("[amount]") != -1) {
-                    var name = "";
-                    var text = drugs[j].substring(drugs[j].indexOf("[amount]") + 8);
-                    if (text.indexOf("[") != -1) {
-                        name = text.substring(0, text.indexOf("["));
-                    } else {
-                        name = text.substring(0);
-                    }
-                    drugEntry.amount = name;
+                	var name = "";
+                	var text = drugs[j].substring(drugs[j].indexOf("[amount]") + 8);
+                	if (text.indexOf("[") != -1) {
+                		name = text.substring(0, text.indexOf("["));
+                	} else {
+                		name = text.substring(0);
+                	}
+                	drugEntry.amount = name;
                 }
 
                 //get form of drug
                 if (drugs[j].indexOf("[form]") != -1) {
-                    var name = "";
-                    var text = drugs[j].substring(drugs[j].indexOf("[form]") + 6);
-                    if (text.indexOf("[") != -1) {
-                        name = text.substring(0, text.indexOf("["));
-                    } else {
-                        name = text.substring(0);
-                    }
-                    drugEntry.form = name;
+                	var name = "";
+                	var text = drugs[j].substring(drugs[j].indexOf("[form]") + 6);
+                	if (text.indexOf("[") != -1) {
+                		name = text.substring(0, text.indexOf("["));
+                	} else {
+                		name = text.substring(0);
+                	}
+                	drugEntry.form = name;
                 }
 
                 idEntry.drugs[drugName] = drugEntry;
@@ -196,13 +322,13 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
             //insert every other column for this report
             var arr = reportArray[i][2].split(";");
             for (var f = 0; f < arr.length; f++) {
-                idEntry.categories[arr[f]] = 0;
-                idEntry.stuff[arr[f]] = 0;
+            	idEntry.categories[arr[f]] = 0;
+            	idEntry.stuff[arr[f]] = 0;
             }
             arr = reportArray[i][3].split(";");
             for (var f = 0; f < arr.length; f++) {
-                idEntry.nonsubstances[arr[f]] = 0;
-                idEntry.stuff[arr[f]] = 0;
+            	idEntry.nonsubstances[arr[f]] = 0;
+            	idEntry.stuff[arr[f]] = 0;
             }
             idEntry.context = reportArray[i][4];
             idEntry.stuff[reportArray[i][4]] = 0;
@@ -224,61 +350,7 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 
     }
 
-    //fills in profiles variable, which has key: drug, and value: all the stats about the drug
-    function drugProfiles() {
-        for (var id in complete) {
 
-            function addGroupToProfiles(group) {
-                //get category totals
-                for (var s in eevv[group]) {
-                    var groupItem = eevv[group][s];
-                    if (groupItem in complete[id].stuff) {
-                        for (var key in complete[id].drugs) {
-                            //this check shouldn't be necessary, as all drugs
-                            //should be in profiles, but at least 1 key is not in profiles
-                            if (key in profiles) {
-                                if (groupItem in profiles[key]) {
-                                    profiles[key][groupItem]++;
-                                } else {
-                                    profiles[key][groupItem] = 1;
-                                    //                                    profiles[key] = {};
-                                    //                                    profiles[key].
-                                }
-                            } else {
-                                profiles[key] = {};
-                                profiles[key][groupItem] = 1;
-                            }
-                        }
-                    }
-                }
-            }
-            addGroupToProfiles(eevv.groups.categories);
-            addGroupToProfiles(eevv.groups.context);
-            addGroupToProfiles(eevv.groups.gender);
-            addGroupToProfiles(eevv.groups.intensity);
-            addGroupToProfiles(eevv.groups.nonsubstances);
-
-            //get grand totals
-            for (var key in complete[id].drugs) {
-                if (key in profiles) {
-                    if (profiles[key].hasOwnProperty("total"))
-                        profiles[key].total++;
-                    else
-                        profiles[key].total = 1;
-                }
-            }
-        }
-
-        // console.log(profiles);
-
-        //        oneGroup(eevv.context.largeGroup);
-
-        
-//        eevv.vizzer(eevv.categories, drugTotalsArray[0][0], profiles, drugTotalsArray, 100);
-        
-        // eevv.vizzer(eevv.categoriesTrimmed, drugTotalsArray[1][0], profiles, drugTotalsArray, 100);
-
-    }
 
 	// var d = csvJSON("csvs/categprofilestrimmed.csv");
 	// console.log(d);
