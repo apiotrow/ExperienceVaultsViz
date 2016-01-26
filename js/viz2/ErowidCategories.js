@@ -1,6 +1,8 @@
-define("Cats", function() {
+//holds names of categories
 
-	return function Cats(){
+define("ErowidCategories", function() {
+
+	return function ErowidCategories(){
 
 		this.categoriesTrimmed = {
 	        difficultExp: "Difficult Experiences",
@@ -64,7 +66,7 @@ define("Cats", function() {
 	        hangover: "Hangover / Days After",
 	        sexDiscussion: "Sex Discussion",
     	};
-    	nonsubstances = {
+    	this.nonsubstances = {
 	        breathing: "Breathing",
 	        chanting: "Chanting",
 	        conferences: "Conferences",
@@ -93,13 +95,13 @@ define("Cats", function() {
 	        yogaAndBodyWork: "Yoga / Bodywork",
     	};
 
-	    gender = {
+	    this.gender = {
 	        male: "Male",
 	        female: "Female",
 	        notSpecified: "Not-Specified",
 	    };
 
-	    context = {
+	    this.context = {
 	        alone: "Alone",
 	        smallGroup: "Small Group (2-9)",
 	        largeGroup: "Large Group (10+)",
@@ -118,7 +120,7 @@ define("Cats", function() {
 	        notApplicable: "Not Applicable",
 	    };
 
-	    method = {
+	    this.method = {
 	        oral: "oral",
 	        smoked: "smoked",
 	        inhaled: "inhaled",
@@ -135,11 +137,25 @@ define("Cats", function() {
 	        ocular: "ocular",
 	    };
 
-	    intensity = {
+	    this.intensity = {
 	        noEffect: "No Effect",
 	        medium: "Medium",
 	        strong: "Strong",
 	        extreme: "Extreme",
 	    };
+
+	    this.readTextFile = function (file, callback) {
+	        var rawFile = new XMLHttpRequest();
+	        rawFile.open("GET", file, false);
+	        rawFile.onreadystatechange = function () {
+	            if (rawFile.readyState === 4) {
+	                if (rawFile.status === 200 || rawFile.status == 0) {
+	                    callback(rawFile.responseText);
+	                }
+	            }
+	        }
+	        rawFile.send(null);
+    	};
+
 	};
 });
