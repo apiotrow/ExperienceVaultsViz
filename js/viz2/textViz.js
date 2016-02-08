@@ -1,4 +1,4 @@
-define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
+define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3) {
 	
 
 	var eevv = new ErowidCategories();
@@ -14,25 +14,21 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 
 		localStorage.setItem('profiles', JSON.stringify(profiles));
 
-		badTripContexts();
+		renderTotalsList();
 
-        // for(var id in complete){
-        // 	$("#textViz").append("<tr><td>" + id + "</td></tr>");
-        // }
 
-    	// for (var key in profiles) {
-    	// 	$("#textViz").append("<tr><td>" + key + "</td></tr>");
-   		// }
    	});
 
 
 
-	function badTripContexts(){
+
+	function renderTotalsList(){
 		var drugBadTrips = {};
 		var drugContext = {};
 
 		
 		/*
+		//cat -> drug amounts
 		for(var id in complete){
 			if(complete[id]['categories'].hasOwnProperty('Bad Trips')){
 
@@ -54,7 +50,7 @@ define(['ErowidCategories','jquery'], function(ErowidCategories, $) {
 					//check if any contexts exist
 					if(complete[id]['context'].length > 0){
 
-						//add drug in druContext if not in
+						//add drug in drugContext if not in
 						if(!(drug in drugContext)){
 							drugContext[drug] = {};
 						}

@@ -175,7 +175,7 @@ define("ErowidCategories", function() {
 		    d.setTime(d.getTime() + (exdays*24*60*60*1000));
 		    var expires = "expires="+d.toUTCString();
 		    document.cookie = cname + "=" + cvalue + "; " + expires;
-		}
+		};
 
 		this.getCookie = function (cname) {
 		    var name = cname + "=";
@@ -186,7 +186,7 @@ define("ErowidCategories", function() {
 		        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
 		    }
 		    return "";
-		} 	 
+		};
 
 		//sorts an object by a particular numeric property of the object
 		this.sortObjByProperty = function(obj, property)
@@ -202,7 +202,7 @@ define("ErowidCategories", function() {
 				return b[1]-a[1]; // compare numbers
 			});
 			return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
-		}
+		};
 
 		//sorts an object by a particular numeric property of the object
 		this.sortObj = function(obj)
@@ -218,7 +218,23 @@ define("ErowidCategories", function() {
 				return b[1]-a[1]; // compare numbers
 			});
 			return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
-		}
+		};
+
+		//get a ?blah = bluh variable from the URL
+		this.getUrlParameter = function getUrlParameter(sParam) {
+		    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		        sURLVariables = sPageURL.split('&'),
+		        sParameterName,
+		        i;
+
+		    for (i = 0; i < sURLVariables.length; i++) {
+		        sParameterName = sURLVariables[i].split('=');
+
+	        if (sParameterName[0] === sParam) {
+	            return sParameterName[1] === undefined ? true : sParameterName[1];
+	        }
+    	}
+	};
 
 	};
 });
