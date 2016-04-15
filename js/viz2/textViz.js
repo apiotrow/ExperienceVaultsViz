@@ -96,7 +96,6 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
 
         //period bar for amounts of drugs
 		for(var i = 0; i < sortedProfiles.length; i++){
-
 			var percent = (Math.round((sortedProfiles[i][1] / totalReports) * 1000) / 10);
 			var periodBar = "";
 
@@ -108,68 +107,127 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             whitespaceUnderscore[sortedProfiles[i][0]] = underscored;
             underscoreWhitespace[underscored] = sortedProfiles[i][0];
 
-
-            
-            // $("#textViz").append(
-            //     "<tr><td>" + 
-            //     // "<a href='vizChar.html?drug=" + sortedProfiles[i][0] +/* "?profiles=" + encodeURIComponent(profiles) +*/ "' id='link'>" + sortedProfiles[i][0] + "</a>" + 
-            //     // "<a href=# id=" + count + ">"  + sortedProfiles[i][0] +  "</a>" + 
-            //     // "<button id=" + count + " onclick='console.log(" + '"' + sortedProfiles[i][0] + '"' + ");'>"   + sortedProfiles[i][0] +  "</a>" +
-            //     "<button id=" + count + " data-drug=" + underscored + ">" + sortedProfiles[i][0] +  "</a>" +
-            //     "</td><td>" + 
-            //     sortedProfiles[i][1] + 
-            //     "</td><td>" + 
-            //     percent + "%" + 
-            //     "</td><td>" + 
-            //     periodBar + 
-            //     "</td></tr>");
-
-
-            //loop method of making rows
-            // var textToAppend = [];
-            // textToAppend.push($("<tr></tr>"));
-            // textToAppend.push($("<td></td>"));
-            // textToAppend.push($("<button>", {"data-drug": sortedProfiles[i][0]}).text(sortedProfiles[i][0]));
-            // textToAppend.push($("<td></td>").text(percent + "%"));
-
-            // var app = textToAppend[0];
-            // $("#textViz").append(app);
-            // for(var g = 1; g < textToAppend.length; g++){
-            //     // var hey = $(appendy[g]);
-            //     app.append(textToAppend[g]);
-            //     app = textToAppend[g];
-            // }
-
             var row = $("<tr></tr>");
             var buttonTd = $("<td></td>");
             var button = $("<button>", {"data-drug": sortedProfiles[i][0]}).text(sortedProfiles[i][0]).click(
                 function(){
-                    // var attributes = document.getElementById('#' + count).attributes;
-                    // var drug = underscoreWhitespace[$(this).attr('data-drug')];
-                    // $(this).attr('data-drug', drug);
-                    printy($(this).attr('data-drug')); 
+                    catsForThisDrug($(this).attr('data-drug')); 
                     return false; 
-            });;
+            });
             var numberTd = $("<td></td>").text(sortedProfiles[i][1] + ", " + percent + "%" + ", " + periodBar);
 
             $("#textViz").append(row);
             row.append(buttonTd);
             buttonTd.append(button);
             row.append(numberTd);
-
-
-
 		}
-        // $("#textViz").append('<button>', {id: "sdsd"});
-        console.log(underscoreWhitespace);
-
-        // $("#textViz").empty();
 	}
 
-    function printy(s){
-        console.log(s);
+    function catsForThisDrug(s){
+        $("#textViz").empty();
+
+        var drugSel = s;
+        var catNums = {};
+
+        //loop over categories
+        for(var cat in eevv.categoriesTrimmed){
+            var catName = eevv.categoriesTrimmed[cat]; //e.g. "First Times"
+
+            //if category is in profiles
+            if(profiles[drugSel].hasOwnProperty(catName)){
+
+                //add the number to caNums
+                catNums[catName] = profiles[drugSel][catName];
+            }
+        }
+
+        var sorted = eevv.sortObj(catNums, 'total');
+
+        //title
+        $("#textViz").append(
+            "<center><tr><td>" + 
+            drugSel + 
+            "</td></tr></center>");
+
+        for(var i = 0; i < sorted.length; i++){
+            var row = $("<tr></tr>");
+            var buttonTd = $("<td></td>");
+            var button = $("<button>", {
+                "data-drug": s, 
+                "data-cat": sorted[i][0]})
+            .text(sorted[i][0])
+            .click(
+                function(){
+                    contexts($(this).attr('data-drug'), $(this).attr('data-cat')); 
+                    return false; 
+            });
+            var numberTd = $("<td></td>").text(sorted[i][1]);
+
+            $("#textViz").append(row);
+            row.append(buttonTd);
+            buttonTd.append(button);
+            row.append(numberTd);
+        }
     }
 
+    function contexts(drug, cat){
+        $("#textViz").empty();
+
+        contextAmts = {};
+        // contextAmts["contet1"] = 43;
+
+        for (var id in complete) {
+            if(drug in complete[id]["drugs"] && cat in complete[id]["categories"]){
+                if(complete[id]["context"] in contextAmts){
+                    contextAmts[complete[id]["context"]]++;
+                    // console.log("ssdf");
+                }
+                else{
+                    contextAmts[complete[id]["context"]] = 0;
+                    // console.log("ss");
+                }
+            }
+        }
+
+        var sorted = Object.keys(contextAmts).sort(function(a,b){return contextAmts[b]-contextAmts[a]});
+
+        console.log(contextAmts);
+
+        //title
+        $("#textViz").append(
+            "<center><tr><td>" + 
+            drug + " - " + cat +
+            "</td></tr></center>");
+
+        for(var i = 0; i < sorted.length; i++){
+            var row = $("<tr></tr>");
+            var buttonTd = $("<td></td>");
+            var button = $("<button>", {
+                "data-drug": drug, 
+                "data-cat": cat,
+                "data-context": sorted[i]})
+            .text(sorted[i])
+            .click(
+                function(){
+                    contexts($(this).attr('data-drug'), $(this).attr('data-cat')); 
+                    return false; 
+            });
+            var numberTd = $("<td></td>").text(contextAmts[sorted[i]]);
+
+            $("#textViz").append(row);
+            row.append(buttonTd);
+            buttonTd.append(button);
+            row.append(numberTd);
+        }
+    }
+
+
+
+    //
+    //
+    //filler inners
+    //
+    //
 
 
 	//complete is key: [report id], value: [all things about that report]
