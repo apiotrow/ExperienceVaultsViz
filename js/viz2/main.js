@@ -14,3 +14,7 @@
 require(['textViz'],function(textViz){
 
 });
+
+// require(['common'], function () {
+//     require(['textViz']);
+// });

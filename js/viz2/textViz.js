@@ -1,27 +1,42 @@
+
+/*
+Main viz file
+*/
 define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3) {
 	
 
-	var eevv = new ErowidCategories();
+	var eevv = new ErowidCategories(); //some utilities and globals
 	var complete = {}; //id: everything about the report with that id. for nitty gritty
 	var profiles = {}; //drug: everything about that drug. for top-level info
 	var totalReports = 0;
+    var underscoreWhitespace = {};
+    var whitespaceUnderscore = {};
+    var go = {};
+
 
 	eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
-		fillInComplete(result);
-		fillInProfiles();
-		// console.log(complete[9972]);
-		// console.log(profiles['Cannabis']);
+		
+        //fill in complete from a json file
+        // $.getJSON("csvs/complete.json", function(json) {
+        //         complete = json; // this will show the info it in firebug console
+        //         fillInProfiles();
+        //         renderTotalsList();
+        // });
 
+        fillInComplete(result);
+		fillInProfiles();
+        renderTotalsList();
+        // console.log(JSON.stringify(complete));
+
+
+        //store profile for use in other pages
 		localStorage.setItem('profiles', JSON.stringify(profiles));
 
-		renderTotalsList();
-
-
+        //store complete for use in other pages
+        // localStorage.setItem('complete', JSON.stringify(complete));
    	});
 
-
-
-
+    //render totals descending
 	function renderTotalsList(){
 		var drugBadTrips = {};
 		var drugContext = {};
@@ -67,16 +82,21 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
 		}
 		*/
 
+        //drugs sorted by amount
 		var sortedProfiles = eevv.sortObjByProperty(profiles, 'total');
 
+        //"# total reports" title
 		$("#textViz").append(
 			"<center><tr><td>" + 
 			totalReports + 
 			" total reports" + 
 			"</td></tr></center>");
-			
 
+        $("#textViz").append("<tbody>");
+
+        //period bar for amounts of drugs
 		for(var i = 0; i < sortedProfiles.length; i++){
+
 			var percent = (Math.round((sortedProfiles[i][1] / totalReports) * 1000) / 10);
 			var periodBar = "";
 
@@ -84,112 +104,75 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
 				periodBar += ".";
 			}
 
-			//append line to table with drug, raw report count, percentage, and a bar of periods indicating its size
-			$("#textViz").append(
-				"<tr><td>" + 
-				"<a href='vizChar.html?drug=" + sortedProfiles[i][0] +/* "?profiles=" + encodeURIComponent(profiles) +*/ "' id='link'>" + sortedProfiles[i][0] + "</a>" + 
-				"</td><td>" + 
-				sortedProfiles[i][1] + 
-				"</td><td>" + 
-				percent + "%" + 
-				"</td><td>" + 
-				periodBar + 
-				"</td></tr>");
+            var underscored = sortedProfiles[i][0].replace(/ /g,'_');
+            whitespaceUnderscore[sortedProfiles[i][0]] = underscored;
+            underscoreWhitespace[underscored] = sortedProfiles[i][0];
+
+
+            
+            // $("#textViz").append(
+            //     "<tr><td>" + 
+            //     // "<a href='vizChar.html?drug=" + sortedProfiles[i][0] +/* "?profiles=" + encodeURIComponent(profiles) +*/ "' id='link'>" + sortedProfiles[i][0] + "</a>" + 
+            //     // "<a href=# id=" + count + ">"  + sortedProfiles[i][0] +  "</a>" + 
+            //     // "<button id=" + count + " onclick='console.log(" + '"' + sortedProfiles[i][0] + '"' + ");'>"   + sortedProfiles[i][0] +  "</a>" +
+            //     "<button id=" + count + " data-drug=" + underscored + ">" + sortedProfiles[i][0] +  "</a>" +
+            //     "</td><td>" + 
+            //     sortedProfiles[i][1] + 
+            //     "</td><td>" + 
+            //     percent + "%" + 
+            //     "</td><td>" + 
+            //     periodBar + 
+            //     "</td></tr>");
+
+
+            //loop method of making rows
+            // var textToAppend = [];
+            // textToAppend.push($("<tr></tr>"));
+            // textToAppend.push($("<td></td>"));
+            // textToAppend.push($("<button>", {"data-drug": sortedProfiles[i][0]}).text(sortedProfiles[i][0]));
+            // textToAppend.push($("<td></td>").text(percent + "%"));
+
+            // var app = textToAppend[0];
+            // $("#textViz").append(app);
+            // for(var g = 1; g < textToAppend.length; g++){
+            //     // var hey = $(appendy[g]);
+            //     app.append(textToAppend[g]);
+            //     app = textToAppend[g];
+            // }
+
+            var row = $("<tr></tr>");
+            var buttonTd = $("<td></td>");
+            var button = $("<button>", {"data-drug": sortedProfiles[i][0]}).text(sortedProfiles[i][0]).click(
+                function(){
+                    // var attributes = document.getElementById('#' + count).attributes;
+                    // var drug = underscoreWhitespace[$(this).attr('data-drug')];
+                    // $(this).attr('data-drug', drug);
+                    printy($(this).attr('data-drug')); 
+                    return false; 
+            });;
+            var numberTd = $("<td></td>").text(sortedProfiles[i][1] + ", " + percent + "%" + ", " + periodBar);
+
+            $("#textViz").append(row);
+            row.append(buttonTd);
+            buttonTd.append(button);
+            row.append(numberTd);
+
+
 
 		}
+        // $("#textViz").append('<button>', {id: "sdsd"});
+        console.log(underscoreWhitespace);
+
+        // $("#textViz").empty();
 	}
 
+    function printy(s){
+        console.log(s);
+    }
 
 
 
-	//fills in profiles variable, which has key: drug, and value: all the stats about the drug
-  	function fillInProfiles() {
-    	for (var id in complete) {
-    		totalReports++;
-
-    		function addGroupToProfiles(group) {
-	            //get category totals
-	            //e.g. eevv[group] is like eevv['categories'] or eevv['nonsubstances']
-	            for (var s in eevv[group]) {
-	            	var groupItem = eevv[group][s];
-	            	if (groupItem in complete[id].stuff) {
-	            		for (var key in complete[id].drugs) {
-	                        //this check shouldn't be necessary, as all drugs
-	                        //should be in profiles, but at least 1 key is not in profiles
-	                        if (key in profiles) {
-	                        	if (groupItem in profiles[key]) {
-	                        		profiles[key][groupItem]++;
-	                        	} else {
-	                        		profiles[key][groupItem] = 1;
-	                                //                                    profiles[key] = {};
-	                                //                                    profiles[key].
-	                            }
-	                        } else {
-	                        	profiles[key] = {};
-	                        	profiles[key][groupItem] = 1;
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        addGroupToProfiles(eevv.groups.categories);
-	        addGroupToProfiles(eevv.groups.context);
-	        addGroupToProfiles(eevv.groups.gender);
-	        addGroupToProfiles(eevv.groups.intensity);
-	        addGroupToProfiles(eevv.groups.nonsubstances);
-
-            //get grand totals and dosage info
-            //
-            //for this report...
-            for (var drug in complete[id].drugs) {
-
-            	//if profiles has an entry for it (which it should)
-            	if (drug in profiles) {
-
-                	//increment total
-                	if (profiles[drug].hasOwnProperty("total")){
-                		profiles[drug].total++;
-                	}
-                	else{
-                		profiles[drug].total = 1;
-                	}
-
-
-                    //add admin property if it doesn't already have it
-                    if(!profiles[drug].hasOwnProperty("dose")){
-                    	profiles[drug]['dose'] = {};
-                    }
-
-
-					var doseItems = ['amount', 'form', 'method'];
-
-					//add the three admin properties to admin if it doesn't have them
-					for(var i = 0; i < doseItems.length; i++){
-						if(!profiles[drug]['dose'].hasOwnProperty(doseItems[i])){
-                    		profiles[drug]['dose'][doseItems[i]] = {};
-                   	 	}
-					}
-
-                    //add the dose item to profiles
-                    for(var i = 0; i < doseItems.length; i++){
-						var doseItem = complete[id].drugs[drug][doseItems[i]];
-
-	 					//make sure a drug amount is even specified
-	                    if(doseItem != ""){
-	                    	if(profiles[drug]['dose'][doseItems[i]].hasOwnProperty(doseItem)){
-	                    		profiles[drug]['dose'][doseItems[i]][doseItem]++;
-	                    	}else{
-	                    		profiles[drug]['dose'][doseItems[i]][doseItem] = 1;
-	                    	}
-	                    }
-                    }
-                }
-            }
-	    }
-	}
-
-
-	//the printing portion of outputting drug frequency
+	//complete is key: [report id], value: [all things about that report]
 	function fillInComplete(result) {
 		var csvText = result;
         var reports = csvText.split(/\r/); //array where each entry is a single report
@@ -339,6 +322,101 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             //insert identry into complete data structure
             complete[id] = idEntry;
         }
+        console.log(complete[id]);
+    }
 
+
+
+
+    //fills in profiles from complete, which has key: [drug] and value: [all stats about the drug]
+    function fillInProfiles() {
+        for (var id in complete) {
+            totalReports++;
+
+            function addGroupToProfiles(group) {
+                //get category totals
+                //e.g. eevv[group] is like eevv['categories'] or eevv['nonsubstances']
+                for (var s in eevv[group]) {
+                    var groupItem = eevv[group][s];
+                    if (groupItem in complete[id].stuff) {
+                        for (var key in complete[id].drugs) {
+                            //this check shouldn't be necessary, as all drugs
+                            //should be in profiles, but at least 1 key is not in profiles
+                            if (key in profiles) {
+                                if (groupItem in profiles[key]) {
+                                    profiles[key][groupItem]++;
+                                } else {
+                                    profiles[key][groupItem] = 1;
+                                    //                                    profiles[key] = {};
+                                    //                                    profiles[key].
+                                }
+                            } else {
+                                profiles[key] = {};
+                                profiles[key][groupItem] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            addGroupToProfiles(eevv.groups.categories);
+            addGroupToProfiles(eevv.groups.context);
+            addGroupToProfiles(eevv.groups.gender);
+            addGroupToProfiles(eevv.groups.intensity);
+            addGroupToProfiles(eevv.groups.nonsubstances);
+
+            //get grand totals and dosage info
+            //
+            //for this report...
+            for (var drug in complete[id].drugs) {
+
+                //there's a drug that's a blank string
+                //don't know what it is
+                //breaking for now
+                if(drug == "") break;
+
+                //if profiles has an entry for it (which it should)
+                if (drug in profiles) {
+
+                    //increment total
+                    if (profiles[drug].hasOwnProperty("total")){
+                        profiles[drug].total++;
+                    }
+                    else{
+                        profiles[drug].total = 1;
+                    }
+
+
+                    //add admin property if it doesn't already have it
+                    if(!profiles[drug].hasOwnProperty("dose")){
+                        profiles[drug]['dose'] = {};
+                    }
+
+
+                    var doseItems = ['amount', 'form', 'method'];
+
+                    //add the three admin properties to admin if it doesn't have them
+                    for(var i = 0; i < doseItems.length; i++){
+                        if(!profiles[drug]['dose'].hasOwnProperty(doseItems[i])){
+                            profiles[drug]['dose'][doseItems[i]] = {};
+                        }
+                    }
+
+                    //add the dose item to profiles
+                    for(var i = 0; i < doseItems.length; i++){
+                        var doseItem = complete[id].drugs[drug][doseItems[i]];
+
+                        //make sure a drug amount is even specified
+                        if(doseItem != ""){
+                            if(profiles[drug]['dose'][doseItems[i]].hasOwnProperty(doseItem)){
+                                profiles[drug]['dose'][doseItems[i]][doseItem]++;
+                            }else{
+                                profiles[drug]['dose'][doseItems[i]][doseItem] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.log(profiles);
     }
 });

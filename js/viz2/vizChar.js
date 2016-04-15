@@ -1,9 +1,13 @@
+/*
+Viz for categories
+*/
 require(['ErowidCategories','jquery'], function(ErowidCategories, $){
 
 	var eevv = new ErowidCategories();
 
 	var drugSel = eevv.getUrlParameter('drug');
 	var profiles = JSON.parse(localStorage.getItem('profiles'));
+	// var complete = JSON.parse(localStorage.getItem('complete'));
 
 	var catNums = {};
 	console.log(profiles[drugSel]);	
