@@ -34,24 +34,22 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
         //store complete for use in other pages
         // localStorage.setItem('complete', JSON.stringify(complete));
 
-        var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender];
+        var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender, eevv.groups.author];
+        // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender,];
+        // var dig = [eevv.groups.context, eevv.groups.intensity];
+        // var dig = [eevv.groups.context];
         var digResults = {};
 
         function grabData(group, iter){
-            // console.log(group[iter] + " " + iter);
              //if entry is non-empty object
             if(eevv.isObject(complete[id][group[iter]]) && !$.isEmptyObject(complete[id][group[iter]])){
                 //if we haven't reach max depth
                 if(iter < group.length - 1){
                     for (d in complete[id][group[iter]]){
                         grabData(group, ++iter);
-                        // counter++;
-                        // if (counter > counterMax) break;
                     }
                 }else{
                     console.log(complete[id][group[iter]]);
-                    // counter++;
-                    // if (counter > counterMax) break;
                 }
             //if entry is non-empty value
             }else if(!eevv.isObject(complete[id][group[iter]]) && complete[id][group[iter]] != ""){
@@ -63,65 +61,56 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
                         if(i == 0){
                             //if depth is greater than 1, make obj
                             if(i != group.length - 1){
-                                if(!digResults.hasOwnProperty(complete[id][group[i]]))
-                                    digResults[complete[id][group[i]]] = {};
+                                var path = [complete[id][group[i]]];
+
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, {});
+                                }
                             }
                             //if not, dig only had length 1, so increment
                             else{
-                                if(!digResults.hasOwnProperty(complete[id][group[i]]))
-                                    digResults[complete[id][group[i]]] = 0;
-                                else
-                                    digResults[complete[id][group[i]]]++;
+                                var path = [complete[id][group[i]]];
+
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, 1);
+                                }else{
+                                    var val = _.get(digResults, path);
+                                    val++;
+                                    _.set(digResults, path, val);
+                                }
                             }
                         //if not on first
                         }else{
                             //if not on last, add obj to previous iter's entry
                             if(i != group.length - 1){
                                 //if haven't made object it yet, add
-                                if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = {};
+                                var path = [];
+                                for(var k = 0; k < iter; k++){
+                                    path.push(complete[id][group[k]]);
+                                }
+
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, {});
+                                }
                             //if on last, increment
                             }else{
-                                // if(!digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
-                                // else
-                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]]++;
-
-                                // if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                //     digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
-                                // else
-                                //     digResults[complete[id][group[i - 1]]][complete[id][group[i]]]++;
-
-
                                 var path = [];
                                 for(var k = 0; k < group.length; k++){
                                     path.push(complete[id][group[k]]);
                                 }
-                                
-
-                                // var path = [complete[id][group[i - 2]], complete[id][group[i - 1]], complete[id][group[i]]];
+                            
                                 if(!_.has(digResults, path)){
-                                    _.set(digResults, path, 0);
+                                    _.set(digResults, path, 1);
                                 }else{
                                     var val = _.get(digResults, path);
                                     val++;
                                     _.set(digResults, path, val);
                                 }
-
-                                // if(!digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
-                                // else
-                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]]++;
                             }
                         }
-                        // resultString += ": " + complete[id][group[i]];
                     }
-                    
-                    // counter++;
-                    // if (counter > counterMax) break;
                 }
             }
-            // if (counter > counterMax) break;
         }
 
         for(id in complete){
