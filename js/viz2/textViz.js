@@ -14,6 +14,9 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
     var go = {};
 
 
+
+
+
 	eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
 		
         //fill in complete from a json file
@@ -34,7 +37,84 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
 
         //store complete for use in other pages
         // localStorage.setItem('complete', JSON.stringify(complete));
+
+        // var counter = 0;
+        // var counterMax = 10;
+        var dig = [eevv.groups.context, eevv.groups.intensity];
+        // var digIter = 0;
+        var field = eevv.groups.drugs;
+        var field2 = eevv.groups.categories;
+        var digResults = {};
+
+        function grabData(group, iter){
+            // console.log(group[iter] + " " + iter);
+             //if entry is non-empty object
+            if(eevv.isObject(complete[id][group[iter]]) && !$.isEmptyObject(complete[id][group[iter]])){
+                //if we haven't reach max depth
+                if(iter < group.length - 1){
+                    for (d in complete[id][group[iter]]){
+                        grabData(group, ++iter);
+                        // counter++;
+                        // if (counter > counterMax) break;
+                    }
+                }else{
+                    console.log(complete[id][group[iter]]);
+                    // counter++;
+                    // if (counter > counterMax) break;
+                }
+            //if entry is non-empty value
+            }else if(!eevv.isObject(complete[id][group[iter]]) && complete[id][group[iter]] != ""){
+                if(iter < group.length - 1){
+                    grabData(group, ++iter);
+                }else{
+                    for(var i = 0; i < group.length; i++){
+                        //if on first iteration
+                        if(i == 0){
+                            //if depth is greater than 1, make obj
+                            if(i != group.length - 1){
+                                if(!digResults.hasOwnProperty(complete[id][group[i]]))
+                                    digResults[complete[id][group[i]]] = {};
+                            }
+                            //if not, dig only had length 1, so increment
+                            else{
+                                if(!digResults.hasOwnProperty(complete[id][group[i]]))
+                                    digResults[complete[id][group[i]]] = 0;
+                                else
+                                    digResults[complete[id][group[i]]]++;
+                            }
+                        //if not on first
+                        }else{
+                            //if not on last, add obj to previous iter's entry
+                            if(i != group.length - 1){
+                                //if haven't made object it yet, add
+                                if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
+                                    digResults[complete[id][group[i]]] = {};
+                            //if on last, increment
+                            }else{
+                                if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
+                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
+                                else
+                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]]++;
+                            }
+                        }
+                        // resultString += ": " + complete[id][group[i]];
+                    }
+                    
+                    // counter++;
+                    // if (counter > counterMax) break;
+                }
+            }
+            // if (counter > counterMax) break;
+        }
+
+        for(id in complete){
+            grabData(dig, 0);
+            
+        }
+        console.log(digResults);
    	});
+
+
 
     //render totals descending
 	function renderTotalsList(){
@@ -154,11 +234,12 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             var buttonTd = $("<td></td>");
             var button = $("<button>", {
                 "data-drug": s, 
-                "data-cat": sorted[i][0]})
+                "data-cat": sorted[i][0],
+                "data-catnum": sorted[i][1]})
             .text(sorted[i][0])
             .click(
                 function(){
-                    contexts($(this).attr('data-drug'), $(this).attr('data-cat')); 
+                    contexts($(this).attr('data-drug'), $(this).attr('data-cat'), $(this).attr('data-catnum')); 
                     return false; 
             });
             var numberTd = $("<td></td>").text(sorted[i][1]);
@@ -170,7 +251,7 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
         }
     }
 
-    function contexts(drug, cat){
+    function contexts(drug, cat, catnum){
         $("#textViz").empty();
 
         contextAmts = {};
@@ -212,7 +293,14 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
                     contexts($(this).attr('data-drug'), $(this).attr('data-cat')); 
                     return false; 
             });
-            var numberTd = $("<td></td>").text(contextAmts[sorted[i]]);
+
+            var catPercent = (contextAmts[sorted[i]] / catnum) * 100;
+            var drugPercent = (profiles[drug][sorted[i]] / profiles[drug]["total"]) * 100;
+
+            var numberTd = $("<td></td>").text(contextAmts[sorted[i]] + ", " + catPercent.toFixed(2) 
+                + "% of this cat, " 
+                + /*catPercent + "-" + drugPercent + " = " + */(catPercent - drugPercent).toFixed(2) 
+                + "% difference from the average for this drug");
 
             $("#textViz").append(row);
             row.append(buttonTd);
@@ -221,7 +309,9 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
         }
     }
 
-
+    function truncateDecimals (n) {
+        return Math[n > 0 ? "floor" : "ceil"](n);
+    }
 
     //
     //
@@ -360,9 +450,14 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             }
             arr = reportArray[i][3].split(";");
             for (var f = 0; f < arr.length; f++) {
-            	idEntry.nonsubstances[arr[f]] = 0;
-            	idEntry.stuff[arr[f]] = 0;
+                //if there are none, don't enter anything
+                if(arr[f] != ""){
+                	idEntry.nonsubstances[arr[f]] = 0;
+                	idEntry.stuff[arr[f]] = 0;
+                }
             }
+
+            //note: these will be empty strings if no entry
             idEntry.context = reportArray[i][4];
             idEntry.stuff[reportArray[i][4]] = 0;
 
@@ -380,7 +475,7 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             //insert identry into complete data structure
             complete[id] = idEntry;
         }
-        console.log(complete[id]);
+        console.log(complete[80334]);
     }
 
 

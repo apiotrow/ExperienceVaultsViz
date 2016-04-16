@@ -39,6 +39,11 @@ define("ErowidCategories", function() {
 	        context: "context",
 	        method: "method",
 	        intensity: "intensity",
+	        author: "author",
+	        date: "date",
+	        drugs: "drugs",
+	        title: "title",
+	        views: "views"
     	};
 
     	this.categories = {
@@ -235,5 +240,10 @@ define("ErowidCategories", function() {
 		        }
 	    	}
 		};
+
+		//check if thing is an object or just a value
+	    this.isObject = function(obj) {
+	        return obj === Object(obj);
+	    }
 	};
 });
