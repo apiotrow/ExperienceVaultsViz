@@ -2,7 +2,7 @@
 /*
 Main viz file
 */
-define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3) {
+define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategories, $, d3, _) {
 	
 
 	var eevv = new ErowidCategories(); //some utilities and globals
@@ -12,10 +12,6 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
     var underscoreWhitespace = {};
     var whitespaceUnderscore = {};
     var go = {};
-
-
-
-
 
 	eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
 		
@@ -38,12 +34,7 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
         //store complete for use in other pages
         // localStorage.setItem('complete', JSON.stringify(complete));
 
-        // var counter = 0;
-        // var counterMax = 10;
-        var dig = [eevv.groups.context, eevv.groups.intensity];
-        // var digIter = 0;
-        var field = eevv.groups.drugs;
-        var field2 = eevv.groups.categories;
+        var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender];
         var digResults = {};
 
         function grabData(group, iter){
@@ -88,13 +79,39 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
                             if(i != group.length - 1){
                                 //if haven't made object it yet, add
                                 if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                    digResults[complete[id][group[i]]] = {};
+                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = {};
                             //if on last, increment
                             }else{
-                                if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
-                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
-                                else
-                                    digResults[complete[id][group[i - 1]]][complete[id][group[i]]]++;
+                                // if(!digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
+                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
+                                // else
+                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]]++;
+
+                                // if(!digResults[complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
+                                //     digResults[complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
+                                // else
+                                //     digResults[complete[id][group[i - 1]]][complete[id][group[i]]]++;
+
+
+                                var path = [];
+                                for(var k = 0; k < group.length; k++){
+                                    path.push(complete[id][group[k]]);
+                                }
+                                
+
+                                // var path = [complete[id][group[i - 2]], complete[id][group[i - 1]], complete[id][group[i]]];
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, 0);
+                                }else{
+                                    var val = _.get(digResults, path);
+                                    val++;
+                                    _.set(digResults, path, val);
+                                }
+
+                                // if(!digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]].hasOwnProperty(complete[id][group[i]]))
+                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]] = 0;
+                                // else
+                                //     digResults[complete[id][group[i - 2]]][complete[id][group[i - 1]]][complete[id][group[i]]]++;
                             }
                         }
                         // resultString += ": " + complete[id][group[i]];
@@ -112,6 +129,8 @@ define(['ErowidCategories','jquery', 'd3.min'], function(ErowidCategories, $, d3
             
         }
         console.log(digResults);
+        // console.log(_.has(digResults, ['Alone', 'Extreme']));
+        // console.log(_.has(digResults, ['Alone', 'Bitts']));
    	});
 
 
