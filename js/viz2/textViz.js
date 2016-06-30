@@ -102,7 +102,8 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
                                     path.push(complete[id][group[k]]);
                                 }
 
-                                var poppedPath = path.pop();
+                                // var poppedPath = path.pop();
+                                var poppedPath = path;
                                 if(_.isObject(_.get(digResults, poppedPath))){
                                     // console.log("sdf");
                                     // console.log(digResults[poppedPath]);
@@ -134,6 +135,7 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
                                         path.push(complete[id][group[k]]);
                                     }
 
+                                    // path.push(key);
                                     if(!_.has(digResults, path)){
                                         _.set(digResults, path, 1);
                                     }else{
@@ -173,9 +175,10 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
 
         // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender, eevv.groups.author];
         // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender];
-        var dig = [eevv.groups.context, eevv.groups.intensity];
+        // var dig = [eevv.groups.context];
+        
         // var dig = [eevv.groups.intensity];
-        // var dig = [eevv.groups.context, eevv.groups.intensity];
+        var dig = [eevv.groups.context, eevv.groups.intensity];
         var digResults = {};
 
         for(id in complete){
@@ -184,12 +187,12 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
         console.log(digResults);
 
 
-        // dig = [eevv.groups.drugsAlone, eevv.groups.context];
-        // digResults = {};
-        // for(id in complete){
-        //     grabData(dig, 0);
-        // }
-        // console.log(digResults);
+        var dig = [eevv.groups.context, eevv.groups.categories];
+        digResults = {};
+        for(id in complete){
+            grabData(dig, 0);
+        }
+        console.log(digResults);
 
     });
 
