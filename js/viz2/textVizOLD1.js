@@ -7,7 +7,6 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
 
 	var eevv = new ErowidCategories(); //some utilities and globals
 	var complete = {}; //id: everything about the report with that id. for nitty gritty
-    var counter = 0;
 
     eevv.readTextFile("csvs/data-3-brackets.csv", function (result) {
 
@@ -23,70 +22,45 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
                     //if on first group item
                     if(i == 0){
                         //if depth is greater than 1, make obj
-                        
                         if(i != group.length - 1){
+                            if(_.isString(complete[id][group[i]]) && complete[id][group[i]] != ""){
+                                var path = [complete[id][group[i]]];
+                                
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, {});
+                                }
+                            }else if(_.isObject(complete[id][group[i]]) && !$.isEmptyObject(complete[id][group[i]])){
+                                for(key in complete[id][group[i]]){
 
-                            
-
-                            //if complete has group
-                            if(complete[id].hasOwnProperty(group[i])){
-                                //if group is cat/nonsub/gender/intensity/context
-                                if(_.isNumber(complete[id][group[i]])){
-
-                                    //set name for object
-                                    var path = group[i];
-                                    
-                                    //make object
-                                    if(!_.has(digResults, path)){
-                                        _.set(digResults, path, {});
+                                    if(!_.has(digResults, key)){
+                                        _.set(digResults, key, {});
                                     }
-                                //if group is a drug
-                                }else if(_.isObject(complete[id][group[i]]) && !$.isEmptyObject(complete[id][group[i]])){
-                                    //TODO: should be asking if group is empty above^?
-                                    for(key in complete[id][group[i]]){
-
-                                        if(!_.has(digResults, key)){
-                                            _.set(digResults, key, {});
-                                        }
-                                    }
-                                }else if(_.isString(complete[id][group[i]])){
-                                    //TODO: this
                                 }
                             }
                         }
                         //if not, dig only had length 1, so increment
                         else{
+                            if(_.isString(complete[id][group[i]]) && complete[id][group[i]] != ""){
+                                var path = [complete[id][group[i]]];
 
-                            
-                            for(var b in group[i]){
-                                if(counter < 50){
-                                counter++;
-                                console.log(b);
-                            }
-                                //if complete has group
-                                if(complete[id].hasOwnProperty(b)){
+                                if(!_.has(digResults, path)){
+                                    _.set(digResults, path, 1);
+                                }else{
+                                    var val = _.get(digResults, path);
+                                    val++;
+                                    _.set(digResults, path, val);
+                                }
+                            }else if(_.isObject(complete[id][group[i]]) && !$.isEmptyObject(complete[id][group[i]])){
+                                for(key in complete[id][group[i]]){
+                                    // var path = [complete[id][group[i]]];
+                                    var path = key;
 
-                                    //if group is cat/nonsub/gender/intensity/context
-                                    if(_.isNumber(complete[id][b])){
-
-                                        //set name for object
-                                        var path = b;
-                                        
-                                        //make object
-                                        if(!_.has(digResults, path)){
-                                            _.set(digResults, path, 1);
-                                        }
-                                    //if group is a drug
-                                    }else if(_.isObject(complete[id][b]) && !$.isEmptyObject(complete[id][b])){
-                                        //TODO: should be asking if group is empty above^?
-                                        for(key in complete[id][b]){
-
-                                            if(!_.has(digResults, key)){
-                                                _.set(digResults, key, {});
-                                            }
-                                        }
-                                    }else if(_.isString(complete[id][b])){
-                                        //TODO: this
+                                    if(!_.has(digResults, path)){
+                                        _.set(digResults, path, 1);
+                                    }else{
+                                        var val = _.get(digResults, path);
+                                        val++;
+                                        _.set(digResults, path, val);
                                     }
                                 }
                             }
@@ -176,107 +150,28 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
 
 
 
-        // // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender, eevv.groups.author];
-        // // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender];
-        // var dig = [eevv.groups.context];
-        
-        // // var dig = [eevv.groups.intensity];
-        // // var dig = [eevv.groups.context, eevv.groups.intensity];
-        // var digResults = {};
-
-        // for(id in complete){
-        //     grabData(dig, 0);
-        // }
-        // console.log(digResults);
-
-
-        // var dig = [eevv.groups.context, eevv.groups.categories, eevv.groups.intensity];
-        // digResults = {};
-        // for(id in complete){
-        //     grabData(dig, 0);
-        // }
-        // console.log(digResults);
-
-
-
-        
-        // var dig = [eevv.groups.context];
-        // var dig = [eevv.groups.context, eevv.groups.intensity];
+        // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender, eevv.groups.author];
         // var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender];
-        var dig = [eevv.groups.context, eevv.groups.intensity, eevv.groups.gender, eevv.groups.categories];
+        var dig = [eevv.groups.context];
+        
+        // var dig = [eevv.groups.intensity];
+        // var dig = [eevv.groups.context, eevv.groups.intensity];
+        var digResults = {};
 
-        //creates 2d array of this format:
-        // var digPathItems = [
-        //     ["First Times", "Mystical Experience",...],
-        //     ["Male","Female","Not-Specified"],
-        //     ["Alone", "Club / Bar", "Large Party", "Military"]
-        // ]
-        var digPathItems = [];
-        for(var i = 0; i < dig.length; i++){
-            var arr = [];
-            for(groupItem in eevv[dig[i]]){
-                arr.push(eevv[dig[i]][groupItem]);
-            }
-            digPathItems.push(arr);
+        for(id in complete){
+            grabData(dig, 0);
         }
-        console.log(digPathItems);
-
-        var diggyResults = {};
-        digGroups(digPathItems, diggyResults)
-
-        console.log(diggyResults);
+        console.log(digResults);
 
 
-
-
-
-        // var digPath = [];
-        // for(id in complete){
-        //     digGroups(dig, 0);
-        // }
+        var dig = [eevv.groups.context, eevv.groups.categories, eevv.groups.intensity];
+        digResults = {};
+        for(id in complete){
+            grabData(dig, 0);
+        }
+        console.log(digResults);
 
     });
-
-    //set up JSON for holding statistic for a particular search
-    function digGroups(digPathItems, diggyResults){
-        if(digPathItems.length == 4){
-            for(var i = 0; i < digPathItems[0].length; i++){
-                for(var j = 0; j < digPathItems[1].length; j++){
-                    for(var k = 0; k < digPathItems[2].length; k++){
-                        for(var h = 0; h < digPathItems[3].length; h++){
-                            var path = [];
-                            path.push(digPathItems[0][i], digPathItems[1][j], digPathItems[2][k], digPathItems[3][h])
-                            _.set(diggyResults, path, 0);
-                        }
-                    }
-                }
-            }
-        }else if(digPathItems.length == 3){
-            for(var i = 0; i < digPathItems[0].length; i++){
-                for(var j = 0; j < digPathItems[1].length; j++){
-                    for(var k = 0; k < digPathItems[2].length; k++){
-                        var path = [];
-                        path.push(digPathItems[0][i], digPathItems[1][j], digPathItems[2][k])
-                        _.set(diggyResults, path, 0);
-                    }
-                }
-            }
-        }else if(digPathItems.length == 2){
-            for(var i = 0; i < digPathItems[0].length; i++){
-                for(var j = 0; j < digPathItems[1].length; j++){
-                    var path = [];
-                    path.push(digPathItems[0][i], digPathItems[1][j])
-                    _.set(diggyResults, path, 0);
-                }
-            }
-        }else if(digPathItems.length == 1){
-            for(var i = 0; i < digPathItems[0].length; i++){
-                var path = [];
-                path.push(digPathItems[0][i])
-                _.set(diggyResults, path, 0);
-            }
-        }
-    }
 
 
 
@@ -336,7 +231,6 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
 
             //insert drugs for this report
             var drugs = reportArray[i][1].split(";");
-            idEntry["drugDetails"] = {};
             for (var j = 0; j < drugs.length; j++) {
             	var drugName = "";
 
@@ -389,9 +283,7 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
                 	drugEntry.form = name;
                 }
 
-
-                idEntry["drugDetails"][drugName] = drugEntry;
-                idEntry[drugName] = 0;
+                idEntry[drugName] = drugEntry;
             }
 
             //insert every other column for this report
@@ -433,7 +325,6 @@ define(['ErowidCategories','jquery', 'd3.min', 'lodash'], function(ErowidCategor
         }
         console.log(complete[48983]);
         console.log(complete[80334]);
-        console.log(complete[86136]);
     }
 
 
