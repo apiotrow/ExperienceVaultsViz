@@ -42,6 +42,7 @@ define("ErowidCategories", function() {
 	        author: "author",
 	        date: "date",
 	        drugs: "drugs",
+	        drugsAlone: "drugsAlone",
 	        title: "title",
 	        views: "views"
     	};
