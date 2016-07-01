@@ -16765,9 +16765,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function (result) {
         fillInComplete(result); //turn CSV of report data into a JSON
 
-        // var dig = [eevv.groups.intensity, eevv.groups.gender];
+        var dig = [eevv.groups.intensity, eevv.groups.gender];
         // var dig = [eevv.groups.gender];
-        var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+        // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
         var digResults = performDig(dig);
         
@@ -16851,25 +16851,28 @@ document.addEventListener('DOMContentLoaded', function () {
                         for(var three in digResults[one][two]){
                             if(complete[id].hasOwnProperty(one) && complete[id].hasOwnProperty(two) && complete[id].hasOwnProperty(three)){
                                 digResults[one][two][three]["raw"]++;
-
-                                if(baseResults !== undefined){
-                                    // we must be on digResults. calculate deviation too.
-                                    // console.log("ssg");
-                                    // var dev = digResults[one][two][three]["raw"] / baseResults[two][three]["raw"]; 
-                                    // digResults[one][two][three]["dev"] = dev;
-                                }
                             }
                         }
                     }
                 }
             }
             //get total for this category and insert it in data structure
+            var total = 0;
             for(var one in digResults){
                 for(var two in digResults[one]){
-                    var total = 0;
+                    total = 0;
                     for(var i = 0; i < digPathItems[digPathItems.length - 1].length; i++){
                         total += digResults[one][two][digPathItems[digPathItems.length - 1][i]]["raw"];
-                        digResults[one][two]["total"] = total;
+                        
+                    }
+                    digResults[one][two]["total"] = total;
+                }
+            }
+            //get percent of total for each category and put it in
+            for(var one in digResults){
+                for(var two in digResults[one]){
+                    for(var three in digResults[one][two]){
+                        digResults[one][two][three]["perc"] = digResults[one][two][three]["raw"] / digResults[one][two]["total"];
                     }
                 }
             }
@@ -16882,12 +16885,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             }
+            var total = 0;
             //get total for this category and insert it in data structure
             for(var one in digResults){
-                var total = 0;
+                total = 0;
                 for(var i = 0; i < digPathItems[digPathItems.length - 1].length; i++){
                     total += digResults[one][digPathItems[digPathItems.length - 1][i]]["raw"];
-                    digResults[one]["total"] = total;
+                }
+                digResults[one]["total"] = total;
+            }
+            //get percent of total for each category and put it in
+            for(var one in digResults){
+                for(var two in digResults[one]){
+                    digResults[one][two]["perc"] = digResults[one][two]["raw"] / digResults[one]["total"];
                 }
             }
         }else if(digPathItems.length == 1){
@@ -16898,12 +16908,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             //get total for this category and insert it in data structure
+            var total = 0;
             for(var one in digResults){
-                var total = 0;
+                total = 0;
                 for(var i = 0; i < digPathItems[digPathItems.length - 1].length; i++){
                     total += digResults[digPathItems[digPathItems.length - 1][i]]["raw"];
-                    digResults["total"] = total;
                 }
+                digResults["total"] = total;
+            }
+            //get percent of total for each category and put it in
+            for(var one in digResults){
+                digResults[one]["perc"] = digResults[one]["raw"] / digResults["total"];
             }
         }
     }
