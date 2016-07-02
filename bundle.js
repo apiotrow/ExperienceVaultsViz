@@ -20,6 +20,203 @@ module.exports = {
 
 	eevvStuff: function(){
 		
+	    this.groups = {
+	        categories: "categories",
+	        nonsubstances: "nonsubstances",
+	        gender: "gender",
+	        context: "context",
+	        method: "method",
+	        intensity: "intensity",
+	        drugsto50: "drugsto50",
+	        drugsto100: "drugsto100",
+	        categoriesTrimmed: "categoriesTrimmed"
+    	};
+
+    	this.drugsto100 = {
+    		mushrooms: "Mushrooms",
+    		Cannabis: "Cannabis",
+			Salvia: "Salvia divinorum",
+			MDMA: "MDMA",
+			LSD: "LSD",
+			DXM: "DXM",
+			Opiates: "Opiates",
+			Pharmaceuticals: "Pharmaceuticals",
+			Opioids: "Opioids",
+			Alcohol: "Alcohol",
+			Cocaine: "Cocaine",
+			Morning: "Morning Glory",
+			ci: "2C-I",
+			Harmala: "Harmala Alkaloids",
+			Amphetamines: "Amphetamines",
+			DMT: "DMT",
+			Methamphetamine: "Methamphetamine",
+			Syrian: "Syrian Rue",
+			Woodrose: "H.B. Woodrose",
+			meo: "5-MeO-DMT",
+			Ketamine: "Ketamine",
+			ce: "2C-E",
+			meo: "5-MeO-DiPT",
+			SSRIs: "SSRIs",
+			Cacti: "Cacti",
+			Nitrous: "Nitrous Oxide",
+			AMT: "AMT",
+			NBOMe: "NBOMe Series",
+			Nutmeg: "Nutmeg",
+			Kratom: "Kratom",
+			cb: "2C-B",
+			Datura: "Datura",
+			Diphenhydramine: "Diphenhydramine",
+			Benzodiazepines: "Benzodiazepines",
+			Oxycodone: "Pharms - Oxycodone",
+			ct: "2C-T-7",
+			Tramadol: "Pharms - Tramadol",
+			Ayahuasca: "Ayahuasca",
+			Amanitas: "Amanitas",
+			Caffeine: "Caffeine",
+			DPT: "DPT",
+			Dimenhydrinate: "Dimenhydrinate",
+			Heroin: "Heroin",
+			Hydrocodone: "Hydrocodone",
+			Kava: "Kava",
+			cttwo: "2C-T-2",
+			Inhalants: "Inhalants",
+			GHB: "GHB",
+			Zolpidem: "Pharms - Zolpidem",
+			Codeine: "Codeine",
+			Mimosa: "Mimosa spp.",
+			iNBOMe: "25I-NBOMe",
+			Tobacco: "Tobacco",
+			FUBINACA: "AB-FUBINACA",
+			Methylone: "Methylone",
+			CannabinoidReceptorAgonists: "Cannabinoid Receptor Agonists",
+			Spice: "Products - Spice and Synthetic Cannabinoids",
+			Methylphenidate: "Pharms - Methylphenidate",
+			Alprazolam: "Pharms - Alprazolam",
+			Methoxetamine: "Methoxetamine",
+			meoamt: "5-MeO-AMT",
+			Venlafaxine: "Pharms - Venlafaxine",
+			Bupropion: "Pharms - Bupropion",
+			Anadenanthera: "Anadenanthera spp.",
+			Paroxetine: "Pharms - Paroxetine",
+			Modafinil: "Modafinil",
+			acodmt: "4-AcO-DMT",
+    	};
+
+    	this.drugsto50 = {
+    		mushrooms: "Mushrooms",
+    		Cannabis: "Cannabis",
+			Salvia: "Salvia divinorum",
+			MDMA: "MDMA",
+			LSD: "LSD",
+			DXM: "DXM",
+			Opiates: "Opiates",
+			Pharmaceuticals: "Pharmaceuticals",
+			Opioids: "Opioids",
+			Alcohol: "Alcohol",
+			Cocaine: "Cocaine",
+			Morning: "Morning Glory",
+			ci: "2C-I",
+			Harmala: "Harmala Alkaloids",
+			Amphetamines: "Amphetamines",
+			DMT: "DMT",
+			Methamphetamine: "Methamphetamine",
+			Syrian: "Syrian Rue",
+			Woodrose: "H.B. Woodrose",
+			meo: "5-MeO-DMT",
+			Ketamine: "Ketamine",
+			ce: "2C-E",
+			meo: "5-MeO-DiPT",
+			SSRIs: "SSRIs",
+			Cacti: "Cacti",
+			Nitrous: "Nitrous Oxide",
+			AMT: "AMT",
+			NBOMe: "NBOMe Series",
+			Nutmeg: "Nutmeg",
+			Kratom: "Kratom",
+			cb: "2C-B",
+			Datura: "Datura",
+			Diphenhydramine: "Diphenhydramine",
+			Benzodiazepines: "Benzodiazepines",
+			Oxycodone: "Pharms - Oxycodone",
+			ct: "2C-T-7",
+			Tramadol: "Pharms - Tramadol",
+			Ayahuasca: "Ayahuasca",
+			Amanitas: "Amanitas",
+			Caffeine: "Caffeine",
+			DPT: "DPT",
+			Dimenhydrinate: "Dimenhydrinate",
+			Heroin: "Heroin",
+			Hydrocodone: "Hydrocodone",
+			Kava: "Kava",
+			cttwo: "2C-T-2",
+			Inhalants: "Inhalants",
+			GHB: "GHB",
+			Zolpidem: "Pharms - Zolpidem",
+			Codeine: "Codeine",
+			Mimosa: "Mimosa spp.",
+			iNBOMe: "25I-NBOMe",
+			Tobacco: "Tobacco",
+			FUBINACA: "AB-FUBINACA",
+			Methylone: "Methylone",
+			CannabinoidReceptorAgonists: "Cannabinoid Receptor Agonists",
+			Spice: "Products - Spice and Synthetic Cannabinoids",
+			Methylphenidate: "Pharms - Methylphenidate",
+			Alprazolam: "Pharms - Alprazolam",
+			Methoxetamine: "Methoxetamine",
+			meoamt: "5-MeO-AMT",
+			Venlafaxine: "Pharms - Venlafaxine",
+			Bupropion: "Pharms - Bupropion",
+			Anadenanthera: "Anadenanthera spp.",
+			Paroxetine: "Pharms - Paroxetine",
+			Modafinil: "Modafinil",
+			acodmt: "4-AcO-DMT",
+			Melatonin: "Melatonin",
+			Piperazines: "Piperazines",
+			Methylmethcathinone: "4-Methylmethcathinone",
+			Buprenorphine: "Pharms - Buprenorphine",
+			Absinthe: "Absinthe",
+			zacatechichi: "Calea zacatechichi",
+			Tryptophan: "Tryptophan",
+			Valerian: "Valerian",
+			cNBOMe: "25C-NBOMe",
+			cc: "2C-C",
+			JWH: "JWH-018",
+			Lotus: "Lotus/Lily",
+			Clonazepam: "Pharms - Clonazepam",
+			Diazepam: "Pharms - Diazepam",
+			Gabapentin: "Pharms - Gabapentin",
+			Wormwood: "Wormwood",
+			Quetiapine: "Pharms - Quetiapine",
+			Piracetam: "Piracetam",
+			PoppiesOpium: "Poppies - Opium",
+			MDA: "MDA",
+			Methadone: "Methadone",
+			Banisteriopsiscaapi: "Banisteriopsis caapi",
+			Brugmansia: "Brugmansia",
+			GBL: "GBL",
+			PCP: "PCP",
+			Catnip: "Catnip",
+			MDPV: "MDPV",
+			Morphine: "Morphine",
+			Damiana: "Damiana",
+			DiPT: "DiPT",
+			Ephedrine: "Ephedrine",
+			Leonotis: "Leonotis leonurus",
+			cd: "2C-D",
+			DOC: "DOC",
+			Sertraline: "Pharms - Sertraline",
+			cp: "2C-P",
+			Fentanyl: "Pharms - Fentanyl",
+			Yohimbe: "Yohimbe",
+			Acetoxy: "4-Acetoxy-DiPT",
+			Sceletium: "Sceletium tortuosum",
+			hodipt: "4-HO-DiPT",
+			apb: "6-APB",
+			PassionFlower: "Passion Flower",
+			Carisoprodol: "Pharms - Carisoprodol",
+			// unknown: "Unknown",
+			Opium: "Opium",
+		}
 
 		this.categoriesTrimmed = {
 	        difficultExp: "Difficult Experiences",
@@ -48,21 +245,6 @@ module.exports = {
 	        relationships: "Relationships",
 	        sexDiscussion: "Sex Discussion",
 	    };
-
-	    this.groups = {
-	        categories: "categories",
-	        nonsubstances: "nonsubstances",
-	        gender: "gender",
-	        context: "context",
-	        method: "method",
-	        intensity: "intensity",
-	        author: "author",
-	        date: "date",
-	        drugs: "drugs",
-	        drugsAlone: "drugsAlone",
-	        title: "title",
-	        views: "views"
-    	};
 
     	this.categories = {
 	        firstTimes: "First Times",
@@ -102,6 +284,7 @@ module.exports = {
 	        hangover: "Hangover / Days After",
 	        sexDiscussion: "Sex Discussion",
     	};
+
     	this.nonsubstances = {
 	        breathing: "Breathing",
 	        chanting: "Chanting",
@@ -16765,7 +16948,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function (result) {
         fillInComplete(result); //turn CSV of report data into a JSON
 
-        var dig = [eevv.groups.intensity, eevv.groups.gender];
+        var dig = [eevv.groups.drugsto100, eevv.groups.gender];
         // var dig = [eevv.groups.gender];
         // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
@@ -16844,6 +17027,12 @@ document.addEventListener('DOMContentLoaded', function () {
             //         }
             //     }
             // }
+
+        //  _____ 
+        // |___ / 
+        //   |_ \ 
+        //  ___) |
+        // |____/ 
         }else if(digPathItems.length == 3){
             for(id in complete){
                 for(var one in digResults){
@@ -16872,10 +17061,17 @@ document.addEventListener('DOMContentLoaded', function () {
             for(var one in digResults){
                 for(var two in digResults[one]){
                     for(var three in digResults[one][two]){
-                        digResults[one][two][three]["perc"] = digResults[one][two][three]["raw"] / digResults[one][two]["total"];
+                        var perc = _.round((digResults[one][two][three]["raw"] / digResults[one][two]["total"] * 100), 2);
+                        digResults[one][two][three]["perc"] = perc;
                     }
                 }
             }
+
+        //  ____  
+        // |___ \ 
+        //   __) |
+        //  / __/ 
+        // |_____|
         }else if(digPathItems.length == 2){
             for(id in complete){
                 for(var one in digResults){
@@ -16897,9 +17093,30 @@ document.addEventListener('DOMContentLoaded', function () {
             //get percent of total for each category and put it in
             for(var one in digResults){
                 for(var two in digResults[one]){
-                    digResults[one][two]["perc"] = digResults[one][two]["raw"] / digResults[one]["total"];
+                    var perc = _.round((digResults[one][two]["raw"] / digResults[one]["total"] * 100), 2);
+                    digResults[one][two]["perc"] = perc;
                 }
             }
+            //for when we're doing digResults, and so want to compute deviation
+            if(baseResults !== undefined){
+                for(var one in digResults){
+                    for(var two in digResults[one]){
+                        var observed = digResults[one][two]["perc"];
+                        var expected = baseResults[two]["perc"];
+                        var rawdev = _.round((observed - expected), 2); //raw deviation
+                        var percdev = _.round((((observed - expected) / expected) * 100), 2); //percent deviation
+                        // delete digResults[one][two]["perc"]; //get rid of percent
+                        digResults[one][two]["rawdev"] = rawdev;
+                        digResults[one][two]["percdev"] = percdev;
+                    }
+                }
+            }
+
+        //  _ 
+        // / |
+        // | |
+        // | |
+        // |_|
         }else if(digPathItems.length == 1){
             for(id in complete){
                 for(var one in digResults){
@@ -16918,7 +17135,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             //get percent of total for each category and put it in
             for(var one in digResults){
-                digResults[one]["perc"] = digResults[one]["raw"] / digResults["total"];
+                var perc = _.round((digResults[one]["raw"] / digResults["total"] * 100), 2);
+                digResults[one]["perc"] = perc;
             }
         }
     }

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function (result) {
         fillInComplete(result); //turn CSV of report data into a JSON
 
-        var dig = [eevv.groups.intensity, eevv.groups.gender];
+        var dig = [eevv.groups.drugsto100, eevv.groups.gender];
         // var dig = [eevv.groups.gender];
         // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
@@ -97,6 +97,12 @@ document.addEventListener('DOMContentLoaded', function () {
             //         }
             //     }
             // }
+
+        //  _____ 
+        // |___ / 
+        //   |_ \ 
+        //  ___) |
+        // |____/ 
         }else if(digPathItems.length == 3){
             for(id in complete){
                 for(var one in digResults){
@@ -125,10 +131,17 @@ document.addEventListener('DOMContentLoaded', function () {
             for(var one in digResults){
                 for(var two in digResults[one]){
                     for(var three in digResults[one][two]){
-                        digResults[one][two][three]["perc"] = digResults[one][two][three]["raw"] / digResults[one][two]["total"];
+                        var perc = _.round((digResults[one][two][three]["raw"] / digResults[one][two]["total"] * 100), 2);
+                        digResults[one][two][three]["perc"] = perc;
                     }
                 }
             }
+
+        //  ____  
+        // |___ \ 
+        //   __) |
+        //  / __/ 
+        // |_____|
         }else if(digPathItems.length == 2){
             for(id in complete){
                 for(var one in digResults){
@@ -150,9 +163,30 @@ document.addEventListener('DOMContentLoaded', function () {
             //get percent of total for each category and put it in
             for(var one in digResults){
                 for(var two in digResults[one]){
-                    digResults[one][two]["perc"] = digResults[one][two]["raw"] / digResults[one]["total"];
+                    var perc = _.round((digResults[one][two]["raw"] / digResults[one]["total"] * 100), 2);
+                    digResults[one][two]["perc"] = perc;
                 }
             }
+            //for when we're doing digResults, and so want to compute deviation
+            if(baseResults !== undefined){
+                for(var one in digResults){
+                    for(var two in digResults[one]){
+                        var observed = digResults[one][two]["perc"];
+                        var expected = baseResults[two]["perc"];
+                        var rawdev = _.round((observed - expected), 2); //raw deviation
+                        var percdev = _.round((((observed - expected) / expected) * 100), 2); //percent deviation
+                        // delete digResults[one][two]["perc"]; //get rid of percent
+                        digResults[one][two]["rawdev"] = rawdev;
+                        digResults[one][two]["percdev"] = percdev;
+                    }
+                }
+            }
+
+        //  _ 
+        // / |
+        // | |
+        // | |
+        // |_|
         }else if(digPathItems.length == 1){
             for(id in complete){
                 for(var one in digResults){
@@ -171,7 +205,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             //get percent of total for each category and put it in
             for(var one in digResults){
-                digResults[one]["perc"] = digResults[one]["raw"] / digResults["total"];
+                var perc = _.round((digResults[one]["raw"] / digResults["total"] * 100), 2);
+                digResults[one]["perc"] = perc;
             }
         }
     }
