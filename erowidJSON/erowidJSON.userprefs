@@ -1,1 +1,12 @@
-﻿<Properties StartupItem="erowidJSON/erowidJSON.csproj" />
+﻿<Properties StartupItem="erowidJSON/erowidJSON.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="erowidJSON/Program.cs">
+    <Files>
+      <File FileName="erowidJSON/Program.cs" Line="21" Column="21" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

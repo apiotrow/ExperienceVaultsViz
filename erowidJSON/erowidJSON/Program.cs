@@ -15,6 +15,7 @@ namespace erowidJSON
 	{
 		public class MyConverter : CustomCreationConverter<IDictionary<string, object>>
 		{
+
 			public override IDictionary<string, object> Create(Type objectType)
 			{
 				return new Dictionary<string, object>();
@@ -39,6 +40,18 @@ namespace erowidJSON
 				return serializer.Deserialize(reader);
 			}
 		
+		}
+
+		//compute permutations of a list of stuff, with length being length
+		//of each permutation
+		static IEnumerable<IEnumerable<T>>
+		GetPermutations<T>(IEnumerable<T> list, int length)
+		{
+			if (length == 1) return list.Select(t => new T[] { t });
+
+			return GetPermutations(list, length - 1)
+				.SelectMany(t => list.Where(e => !t.Contains(e)),
+					(t1, t2) => t1.Concat(new T[] { t2 }));
 		}
 
 		//gets name of variable as a string
@@ -173,77 +186,37 @@ namespace erowidJSON
 			};
 
 
-			Dictionary<string, Dictionary<string, int>> res = new Dictionary<string, Dictionary<string, int>>();
 
-			//permutation items
-			List<string> nums = new List<string>{"1", "2", "3", "4"};
 
-			//intialize a var like a boss
-			var ree = (dynamic)null;
+			int permLength = 3;
+			IEnumerable<IEnumerable<int>> result =
+				GetPermutations(Enumerable.Range(1, 8), permLength);
 
-			//make permutations
-			if(nums.Count == 3){
-				ree = 
-					from a in nums
-					from b in nums
-					from c in nums
-						where a != b
-						where b != c
-						where a != c
-					select a + b + c;
-			}
-			if(nums.Count == 4){
-				ree = 
-					from a in nums
-					from b in nums
-					from c in nums
-					from d in nums
-						where a != b
-						where a != c
-						where a != d
-						where b != c
-						where b != d
-						where c != d
-					select a + b + c + d;
-			}
-
-			//get number of permutations
-			int reeLength = 0;
-			foreach(var item in ree){
-				reeLength++;
-			}
-
-			//to hold all permutations
-			int[,] perms = new int[reeLength,nums.Count];
-
-			//convert characters into ints and put them in perms[]
-			int index = 0;
-			foreach(var item in ree){
-				string[] p = new string[]{item};
-				foreach(string h in p){
-					char[] butts = h.ToCharArray();
-
-					int arrayIter = 0;
-					foreach(var we in butts){
-						int val = (int)Char.GetNumericValue(we);
-						perms[index,arrayIter] = val;
-						arrayIter++;
-					}
+			int permCount = 0;
+			List<List<int>> permList = new List<List<int>>();
+			foreach(var perm in result){
+				permList.Add(new List<int>());
+				foreach(var num in perm){
+					permList[permCount].Add(num);
+//					Console.Write(perm2);
+//					permLength++;
 				}
-//				Console.WriteLine(perms[index,0] + ", " + perms[index,1] + ", " + perms[index,2]);
-				index++;
+//				Console.WriteLine(permList[permCount].ToString());
+				permCount++;
 			}
 
-			//print out perms array to verify
-			for(int i = 0; i < reeLength; i++){
-				for(int j = 0; j < nums.Count; j++){
-					Console.Write(perms[i,j]);
+			foreach(var perm in permList){
+				foreach(var num in perm){
+					Console.Write(num);
 				}
 				Console.WriteLine("");
 			}
 
+			Console.Write(permList.Count);
 
 
+
+			Dictionary<string, Dictionary<string, int>> res = new Dictionary<string, Dictionary<string, int>>();
 			foreach(var item in complete)
 			{
 				foreach(string c in context){
