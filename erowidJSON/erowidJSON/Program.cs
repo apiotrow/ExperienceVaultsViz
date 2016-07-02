@@ -92,105 +92,77 @@ namespace erowidJSON
 			var json = File.ReadAllText(@"JSONS/complete_depthOne.json");
 			IDictionary<string, IDictionary<string, string>> complete = 
 				JsonConvert.DeserializeObject<IDictionary<String, IDictionary<String, String>>>(json);
+			
 
-			List<Dictionary<string, List<string>>> allGroups = new List<Dictionary<string, List<string>>>{
-				{new Dictionary<string, List<string>>{
-						{"context", new List<string>{
-								"Alone",
-								"Small Group (2-9)",
-								"Large Group (10+)",
-								"Club / Bar",
-								"Rave / Dance Event",
-								"Large Party",
-								"Festival / Lg. Crowd",
-								"Group Ceremony",
-								"School",
-								"Workplace",
-								"Military",
-								"Hospital",
-								"Various",
-								"Unknown Context",
-								"Public Space (Museum, Park, etc)",
-								"Not Applicable"
-							}},
-						{"gender", new List<string>{
-								"Male",
-								"Female",
-								"Not-Specified"
-							}},
-						{"categories", new List<string>{
-								"First Times",
-								"General",
-								"Retrospective / Summary",
-								"Preparation / Recipes",
-								"Difficult Experiences",
-								"Bad Trips",
-								"Health Problems",
-								"Train Wrecks & Trip Disasters",
-								"Addiction & Habituation",
-								"Glowing Experiences",
-								"Mystical Experiences",
-								"Health Benefits",
-								"Families",
-								"Medical Use",
-								"What Was in That?",
-								"Second Hand Report",
-								"Entities / Beings",
-								"Therapeutic Intent or Outcome",
-								"Personal Preparation",
-								"Pregnancy / Baby",
-								"Guides / Sitters",
-								"HPPD / Lasting Visuals",
-								"Overdose",
-								"Video",
-								"Performance Enhancement",
-								"Loss of Magic",
-								"Depression",
-								"Post Trip Problems",
-								"Music Discussion",
-								"Nature / Outdoors",
-								"Cultivation / Synthesis",
-								"Multi-Day Experience",
-								"Poetry",
-								"Relationships",
-								"Hangover / Days After",
-								"Sex Discussion"
-							}},
-					}
-				}
-			};
-
-			List<string> context = new List<string>(){
-				"Alone",
-				"Small Group (2-9)",
-				"Large Group (10+)",
-				"Club / Bar",
-				"Rave / Dance Event",
-				"Large Party",
-				"Festival / Lg. Crowd",
-				"Group Ceremony",
-				"School",
-				"Workplace",
-				"Military",
-				"Hospital",
-				"Various",
-				"Unknown Context",
-				"Public Space (Museum, Park, etc)",
-				"Not Applicable"
-			};
-
-			List<string> gender = new List<string>(){
-				"Male",
-				"Female",
-				"Not-Specified"
+			Dictionary<string, List<string>> allGroups = new Dictionary<string, List<string>>{
+				{"context", new List<string>{
+					"Alone",
+					"Small Group (2-9)",
+					"Large Group (10+)",
+					"Club / Bar",
+					"Rave / Dance Event",
+					"Large Party",
+					"Festival / Lg. Crowd",
+					"Group Ceremony",
+					"School",
+					"Workplace",
+					"Military",
+					"Hospital",
+					"Various",
+					"Unknown Context",
+					"Public Space (Museum, Park, etc)",
+					"Not Applicable"
+				}},
+				{"gender", new List<string>{
+					"Male",
+					"Female",
+					"Not-Specified"
+				}},
+				{"categories", new List<string>{
+					"First Times",
+					"General",
+					"Retrospective / Summary",
+					"Preparation / Recipes",
+					"Difficult Experiences",
+					"Bad Trips",
+					"Health Problems",
+					"Train Wrecks & Trip Disasters",
+					"Addiction & Habituation",
+					"Glowing Experiences",
+					"Mystical Experiences",
+					"Health Benefits",
+					"Families",
+					"Medical Use",
+					"What Was in That?",
+					"Second Hand Report",
+					"Entities / Beings",
+					"Therapeutic Intent or Outcome",
+					"Personal Preparation",
+					"Pregnancy / Baby",
+					"Guides / Sitters",
+					"HPPD / Lasting Visuals",
+					"Overdose",
+					"Video",
+					"Performance Enhancement",
+					"Loss of Magic",
+					"Depression",
+					"Post Trip Problems",
+					"Music Discussion",
+					"Nature / Outdoors",
+					"Cultivation / Synthesis",
+					"Multi-Day Experience",
+					"Poetry",
+					"Relationships",
+					"Hangover / Days After",
+					"Sex Discussion"
+				}},
 			};
 
 
 
-
-			int permLength = 3;
+			int permLength = 2;
 			IEnumerable<IEnumerable<int>> result =
-				GetPermutations(Enumerable.Range(1, 8), permLength);
+				GetPermutations(Enumerable.Range(0, 3), permLength);
 
 			int permCount = 0;
 			List<List<int>> permList = new List<List<int>>();
@@ -198,13 +170,11 @@ namespace erowidJSON
 				permList.Add(new List<int>());
 				foreach(var num in perm){
 					permList[permCount].Add(num);
-//					Console.Write(perm2);
-//					permLength++;
 				}
-//				Console.WriteLine(permList[permCount].ToString());
 				permCount++;
 			}
 
+			//check permutations with print
 			foreach(var perm in permList){
 				foreach(var num in perm){
 					Console.Write(num);
@@ -212,35 +182,49 @@ namespace erowidJSON
 				Console.WriteLine("");
 			}
 
-			Console.Write(permList.Count);
-
-
+			Console.WriteLine(permList.Count);
 
 			Dictionary<string, Dictionary<string, int>> res = new Dictionary<string, Dictionary<string, int>>();
-			foreach(var item in complete)
-			{
-				foreach(string c in context){
-					foreach(string g in gender){
-						if(complete[item.Key].ContainsKey(c) && complete[item.Key].ContainsKey(g)){
-							if(res.ContainsKey(c)){
-								if(res[c].ContainsKey(g)){
-									res[c][g]++;
+			List<string> group1 = new List<string>();
+			List<string> group2 = new List<string>();
+			string group1name = "bug";
+			string group2name = "wat";
+
+			foreach(var perm in permList){
+				group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
+				group2 = allGroups[allGroups.Keys.ElementAt(perm[1])];
+				group1name = allGroups.Keys.ElementAt(perm[0]);
+				group2name = allGroups.Keys.ElementAt(perm[1]);
+
+//				Console.WriteLine(allGroups.Keys.ElementAt(perm[0]));
+
+				foreach(var item in complete)
+				{
+					foreach(string c in group1){
+						foreach(string g in group2){
+							if(complete[item.Key].ContainsKey(c) && complete[item.Key].ContainsKey(g)){
+								if(res.ContainsKey(c)){
+									if(res[c].ContainsKey(g)){
+										res[c][g]++;
+									}else{
+										res[c].Add(g, 0);
+									}
 								}else{
-									res[c].Add(g, 0);
+									res.Add(c, new Dictionary<string, int>());
 								}
-							}else{
-								res.Add(c, new Dictionary<string, int>());
 							}
 						}
 					}
 				}
-			}
-			
 
-			string group1 = MemberInfoGetting.GetMemberName(() => context);
-			string group2 = MemberInfoGetting.GetMemberName(() => gender);
-			string fileName = group1 + "_" + group2;
-			DicToJSON(res, fileName);
+
+//				string group1str = MemberInfoGetting.GetMemberName(() => allGroups.Keys.ElementAt(li[0]));
+//				string group2str = MemberInfoGetting.GetMemberName(() => gender);
+				string fileName = group1name + "_" + group2name;
+				DicToJSON(res, fileName);
+			}
+
+
 
 
 
