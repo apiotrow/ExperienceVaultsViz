@@ -3,3 +3,4 @@
 /Users/aaronpiotrowski/ExperienceVaultsViz/erowidJSON/erowidJSON/bin/Debug/erowidJSON.exe
 /Users/aaronpiotrowski/ExperienceVaultsViz/erowidJSON/erowidJSON/obj/x86/Debug/erowidJSON.exe
 /Users/aaronpiotrowski/ExperienceVaultsViz/erowidJSON/erowidJSON/obj/x86/Debug/erowidJSON.exe.mdb
+/Users/aaronpiotrowski/ExperienceVaultsViz/erowidJSON/erowidJSON/bin/Debug/Newtonsoft.Json.dll

@@ -1,41 +1,113 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Microsoft.CSharp;
+using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
 
 namespace erowidJSON
 {
 	class MainClass
 	{
-		
+		public class MyConverter : CustomCreationConverter<IDictionary<string, object>>
+		{
+			public override IDictionary<string, object> Create(Type objectType)
+			{
+				return new Dictionary<string, object>();
+			}
+
+			public override bool CanConvert(Type objectType)
+			{
+				// in addition to handling IDictionary<string, object>
+				// we want to handle the deserialization of dict value
+				// which is of type object
+				return objectType == typeof(object) || base.CanConvert(objectType);
+			}
+
+			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+			{
+				if (reader.TokenType == JsonToken.StartObject
+					|| reader.TokenType == JsonToken.Null)
+					return base.ReadJson(reader, objectType, existingValue, serializer);
+
+				// if the next token is not an object
+				// then fall back on standard deserializer (strings, numbers etc.)
+				return serializer.Deserialize(reader);
+			}
+		}
+
+		public static void DicToJSON(Dictionary<string, Dictionary<string, string>> info){
+			string json = JsonConvert.SerializeObject(info);
+			System.IO.File.WriteAllText (@"JSONS/output/path.json", json);
+		}
+
+		public static void DicToJSON(Dictionary<string,string> info){
+			string json = JsonConvert.SerializeObject(info);
+			System.IO.File.WriteAllText (@"JSONS/output/path.json", json);
+		}
+
 		public static void Main (string[] args)
 		{
-			Console.WriteLine ("Hello World!");
+			dynamic stuff = JsonConvert.DeserializeObject(File.ReadAllText(@"JSONS/context_gender.json"));
+//			dynamic stuff = JsonConvert.DeserializeObject(File.ReadAllText(@"JSONS/path.json"));
+//			dynamic stuff = JsonConvert.DeserializeObject(File.ReadAllText(@"JSONS/complete.json"));
 
-			string[] lines = { "First line", "Second line", "Third line" };
+			Console.WriteLine(stuff);
 
-			// Example #2: Write one string to a text file.
-			string text = "A class is the most powerful data type in C#. Like a structure, " +
-				"a class defines the data and behavior of the data type. ";
-			// WriteAllText creates a file, writes the specified string to the file,
-			// and then closes the file.    You do NOT need to call Flush() or Close().
-			System.IO.File.WriteAllText(@"WriteText.txt", text);
+			var json = File.ReadAllText(@"JSONS/complete_depthOne.json");
+//			var obj = JsonConvert.DeserializeObject<IDictionary<string, object>>(
+//				json, new JsonConverter[] {new MyConverter()});
 
-			// Example #3: Write only some strings in an array to a file.
-			// The using statement automatically flushes AND CLOSES the stream and calls 
-			// IDisposable.Dispose on the stream object.
-			// NOTE: do not use FileStream for text files because it writes bytes, but StreamWriter
-			// encodes the output as text.
-			using (System.IO.StreamWriter file = 
-				new System.IO.StreamWriter(@"WriteLines2.txt"))
+			IDictionary<string, IDictionary<string, string>> poo = 
+				JsonConvert.DeserializeObject<IDictionary<String, IDictionary<String, String>>>(json);
+
+
+			foreach(var item in poo)
 			{
-				foreach (string line in lines)
-				{
-					// If the line doesn't contain the word 'Second', write the line to the file.
-					if (!line.Contains("Second"))
+				Console.WriteLine(item.Key);
+				foreach(var bee in poo[item.Key]){
+					Console.WriteLine(bee.Key + ": " + bee.Value);
+				}
+
+			}
+
+
+
+//			foreach (var x in poo)
+//			{
+//				
+//			}
+				
+
+//			dynamic bee = JsonConvert.DeserializeObject(File.ReadAllText(@"JSONS/complete_depthOne.json"));
+//			Dictionary<string, Dictionary<string, string>> poo = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(bee);
+
+
+			Dictionary<string, Dictionary<string, string>> info =
+				new Dictionary<string, Dictionary<string, string>>
+			{
+				{"Gen",
+					new Dictionary<string, string>
 					{
-						file.WriteLine(line);
+						{"nayytme", "Genesis"},
+						{"chapters", "50"},
+						{"before", ""},
+						{"after", "Exod"}
+					}
+				},
+				{"Exod",
+					new Dictionary<string, string>
+					{
+						{"name", "Exodus"},
+						{"chapters", "40"},
+						{"before", "Gen"},
+						{"after", "Lev"}
 					}
 				}
-			}
+			};
+			DicToJSON(info);
 
 		}
 	}

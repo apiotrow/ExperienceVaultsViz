@@ -5,13 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var eevv = new globs.eevvStuff();
 
-	// var complete = {}; //id: everything about the report with that id. for nitty gritty.
+	var complete = {}; //id: everything about the report with that id. for nitty gritty.
     var complete = require('./JSONS/complete.json'); //(with path)
     var context_gender = require('./JSONS/context_gender.json');
+    var boop = require('./JSONS/path.json');
+    // console.log(complete);
 
-    // var dig = [eevv.groups.context, eevv.groups.gender];
+
+
+    var dig = [eevv.groups.context, eevv.groups.gender];
     // var dig = [eevv.groups.gender];
-    var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+    // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
     var digResults = performDig(dig);
     // var digResults = context_gender;
@@ -19,13 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("digResults:");
     console.log(digResults);
 
+
+
     // var data = JSON.stringify(digResults);
     // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
     // window.open(url, '_blank');
     // window.focus();
 
 
-    // //initial function
+    //initial function
     // eevv.readTextFile("csvs/data-3-brackets.csv", 
     // function (result) {
     //     fillInComplete(result); //turn CSV of report data into a JSON
@@ -38,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
     //     console.log("digResults:");
     //     console.log(digResults);
+
+    //     // console.log(JSON.stringify(complete));
 
     //     // var txtFile = "complete.txt";
     //     // var file = new File(txtFile, "write");
@@ -375,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //inserts the drug by itself, and also an entry in
             //"drugDetails", with dosage/method/form info
             var drugs = reportArray[i][1].split(";");
-            idEntry["drugDetails"] = {};
+            // idEntry["drugDetails"] = {};
             for (var j = 0; j < drugs.length; j++) {
             	var drugName = "";
 
@@ -429,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
 
-                idEntry["drugDetails"][drugName] = drugEntry;
+                // idEntry["drugDetails"][drugName] = drugEntry;
                 idEntry[drugName] = 0;
             }
 
