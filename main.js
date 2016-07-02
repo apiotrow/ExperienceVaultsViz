@@ -5,11 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var eevv = new globs.eevvStuff();
 
-	var complete = {}; //id: everything about the report with that id. for nitty gritty.
+	// var complete = {}; //id: everything about the report with that id. for nitty gritty.
     var complete = require('./JSONS/complete.json'); //(with path)
     var context_gender = require('./JSONS/context_gender.json');
     var boop = require('./JSONS/path.json');
-    // console.log(complete);
 
 
 
@@ -18,11 +17,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
     var digResults = performDig(dig);
+
+    //if we want to retrieve from a file
     // var digResults = context_gender;
     
     console.log("digResults:");
     console.log(digResults);
 
+
+    // completeFromCSV();
 
 
     // var data = JSON.stringify(digResults);
@@ -31,36 +34,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // window.focus();
 
 
-    //initial function
-    // eevv.readTextFile("csvs/data-3-brackets.csv", 
-    // function (result) {
-    //     fillInComplete(result); //turn CSV of report data into a JSON
+    function completeFromCSV(){
+        //initial function
+        eevv.readTextFile("csvs/data-3-brackets.csv", 
+        function (result) {
+            fillInComplete(result); //turn CSV of report data into a JSON
 
-    //     var dig = [eevv.groups.context, eevv.groups.gender];
-    //     // var dig = [eevv.groups.gender];
-    //     // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+            var dig = [eevv.groups.context, eevv.groups.gender];
+            // var dig = [eevv.groups.gender];
+            // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
-    //     var digResults = performDig(dig);
-        
-    //     console.log("digResults:");
-    //     console.log(digResults);
+            var digResults = performDig(dig);
+            
+            console.log("digResults:");
+            console.log(digResults);
 
-    //     // console.log(JSON.stringify(complete));
-
-    //     // var txtFile = "complete.txt";
-    //     // var file = new File(txtFile, "write");
-    //     // var str = JSON.stringify(complete);
-    //     // var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
-    //     // var link = document.getElementById('link').href = dataUri;
-    //     // console.log(str);
-
-    //     // console.log(JSON.stringify(complete));
-
-    //     // var data = JSON.stringify(digResults);
-    //     // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
-    //     // window.open(url, '_blank');
-    //     // window.focus();
-    // });
+            // console.log(JSON.stringify(complete));
+        });
+    }
 
 
     function performDig(dig){
