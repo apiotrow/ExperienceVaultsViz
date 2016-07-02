@@ -64,17 +64,17 @@ namespace erowidJSON
 			}
 		}
 
-		public static void DicToJSON(Dictionary<string, Dictionary<string, Dictionary<string, int>>> info, string fileName){
+		public static void DicToJSON(Dictionary<string, Dictionary<string, Dictionary<string, double>>> info, string fileName){
 			string json = JsonConvert.SerializeObject(info);
 			System.IO.File.WriteAllText (@"JSONS/output/" + fileName, json);
 		}
 
-		public static void DicToJSON(Dictionary<string, Dictionary<string, int>> info, string fileName){
+		public static void DicToJSON(Dictionary<string, Dictionary<string, double>> info, string fileName){
 			string json = JsonConvert.SerializeObject(info);
 			System.IO.File.WriteAllText (@"JSONS/output/" + fileName, json);
 					}
 
-		public static void DicToJSON(Dictionary<string,int> info, string fileName){
+		public static void DicToJSON(Dictionary<string,double> info, string fileName){
 			string json = JsonConvert.SerializeObject(info);
 			System.IO.File.WriteAllText (@"JSONS/output/" + fileName, json);
 					}
@@ -159,11 +159,12 @@ namespace erowidJSON
 			};
 
 
-
+			//generate permutations
 			int permLength = 2;
 			IEnumerable<IEnumerable<int>> result =
 				GetPermutations(Enumerable.Range(0, 3), permLength);
 
+			//put permutations in a list
 			int permCount = 0;
 			List<List<int>> permList = new List<List<int>>();
 			foreach(var perm in result){
@@ -174,22 +175,27 @@ namespace erowidJSON
 				permCount++;
 			}
 
-			//check permutations with print
+			//check permutations list bt printing out
 			foreach(var perm in permList){
 				foreach(var num in perm){
 					Console.Write(num);
 				}
 				Console.WriteLine("");
 			}
-
 			Console.WriteLine(permList.Count);
 
-			Dictionary<string, Dictionary<string, int>> res = new Dictionary<string, Dictionary<string, int>>();
+			//setup variables for digging and file output loop
+//			Dictionary<string, int> res1 = new Dictionary<string, int>();
+			Dictionary<string, Dictionary<string, Dictionary<string, double>>> res2 = 
+				new Dictionary<string, Dictionary<string, Dictionary<string, double>>>();
+//			Dictionary<string, Dictionary<string, Dictionary<string, int>>> res3 = 
+//				new Dictionary<string, Dictionary<string, Dictionary<string, int>>>();
 			List<string> group1 = new List<string>();
 			List<string> group2 = new List<string>();
 			string group1name = "bug";
 			string group2name = "wat";
 
+			//for all permutations
 			foreach(var perm in permList){
 				group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
 				group2 = allGroups[allGroups.Keys.ElementAt(perm[1])];
@@ -198,60 +204,88 @@ namespace erowidJSON
 
 //				Console.WriteLine(allGroups.Keys.ElementAt(perm[0]));
 
+				//get base numbers for perc calculations
+//				foreach(var item in complete)
+//				{
+//					foreach(string two in group2){
+//						if(complete[item.Key].ContainsKey(two)){
+//							if(res1.ContainsKey(two)){
+//								res1[two]++;
+//							}else{
+//								res1[two] = 0;
+//							}
+//						}
+//					}
+//				}
+
+				//dig in complete for this permutation, and output to file with
+				//appropriate name
 				foreach(var item in complete)
 				{
-					foreach(string c in group1){
-						foreach(string g in group2){
-							if(complete[item.Key].ContainsKey(c) && complete[item.Key].ContainsKey(g)){
-								if(res.ContainsKey(c)){
-									if(res[c].ContainsKey(g)){
-										res[c][g]++;
+					//fill in raw numbers for two groups
+					foreach(string one in group1){
+						foreach(string two in group2){
+							if(complete[item.Key].ContainsKey(one) && complete[item.Key].ContainsKey(two)){
+								if(res2.ContainsKey(one)){
+									if(res2[one].ContainsKey(two)){
+										if(res2[one][two].ContainsKey("raw")){
+											res2[one][two]["raw"]++;
+
+											double tot = 0;
+											double raw = res2[one][two]["raw"];
+											foreach(var twot in res2[one]){
+												tot += res2[one][twot.Key]["raw"];
+											}
+											res2[one][two]["perc"] = (raw / tot) * 100f;
+
+										}else{
+											res2[one][two].Add("raw", 1);
+											res2[one][two].Add("perc", 1);
+										}
 									}else{
-										res[c].Add(g, 0);
+										res2[one].Add(two, new Dictionary<string, double>());
+										res2[one][two].Add("raw", 1);
+										res2[one][two].Add("perc", 1);
 									}
 								}else{
-									res.Add(c, new Dictionary<string, int>());
+									res2.Add(one,new Dictionary<string, Dictionary<string, double>>());
+									res2[one].Add(two, new Dictionary<string, double>());
+									res2[one][two].Add("raw", 1);
+									res2[one][two].Add("perc", 1);
 								}
 							}
 						}
 					}
-				}
 
+//					foreach(var one in res2){
+//						foreach(var two in res2[one.Key]){
+//							double raw = res2[one.Key][two.Key]["raw"];
+//							double perc = (raw / total) * 100f;
+//							res2[one.Key][two.Key].Add("perc", perc);
+//						}
+//					}
+
+
+//					foreach(string one in group1){
+//						foreach(string two in group2){
+//							if(res2.ContainsKey(one)){
+//								if(res2[one].ContainsKey(two)){
+////									res2[one]
+//								}
+//							}else{
+//								res2.Add(one, new Dictionary<string, int>());
+//							}
+//						}
+//
+//					}
+
+				}
 
 //				string group1str = MemberInfoGetting.GetMemberName(() => allGroups.Keys.ElementAt(li[0]));
 //				string group2str = MemberInfoGetting.GetMemberName(() => gender);
-				string fileName = group1name + "_" + group2name;
-				DicToJSON(res, fileName);
+				string fileName = group1name + "_" + group2name + ".json";
+				DicToJSON(res2, fileName);
 			}
-
-
-
-
-
-//			Dictionary<string, Dictionary<string, string>> info =
-//				new Dictionary<string, Dictionary<string, string>>
-//			{
-//				{"Gen",
-//					new Dictionary<string, string>
-//					{
-//						{"nayytme", "Genesis"},
-//						{"chapters", "50"},
-//						{"before", ""},
-//						{"after", "Exod"}
-//					}
-//				},
-//				{"Exod",
-//					new Dictionary<string, string>
-//					{
-//						{"name", "Exodus"},
-//						{"chapters", "40"},
-//						{"before", "Gen"},
-//						{"after", "Lev"}
-//					}
-//				}
-//			};
-//			DicToJSON(info);
-
 		}
 	}
 }
