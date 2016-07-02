@@ -5,28 +5,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var eevv = new globs.eevvStuff();
 
-	var complete = {}; //id: everything about the report with that id. for nitty gritty.
+	// var complete = {}; //id: everything about the report with that id. for nitty gritty.
+    var complete = require('./JSONS/complete.json'); //(with path)
+    var context_gender = require('./JSONS/context_gender.json');
 
+    // var dig = [eevv.groups.context, eevv.groups.gender];
+    // var dig = [eevv.groups.gender];
+    var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+
+    var digResults = performDig(dig);
+    // var digResults = context_gender;
     
+    console.log("digResults:");
+    console.log(digResults);
 
-    // var pixivis = new webglvis.pixivis();
-    // var phaservis = new webglvis.phaservis();
+    // var data = JSON.stringify(digResults);
+    // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
+    // window.open(url, '_blank');
+    // window.focus();
 
 
-    //initial function
-    eevv.readTextFile("csvs/data-3-brackets.csv", 
-    function (result) {
-        fillInComplete(result); //turn CSV of report data into a JSON
+    // //initial function
+    // eevv.readTextFile("csvs/data-3-brackets.csv", 
+    // function (result) {
+    //     fillInComplete(result); //turn CSV of report data into a JSON
 
-        var dig = [eevv.groups.drugsto100, eevv.groups.gender];
-        // var dig = [eevv.groups.gender];
-        // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+    //     var dig = [eevv.groups.context, eevv.groups.gender];
+    //     // var dig = [eevv.groups.gender];
+    //     // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
-        var digResults = performDig(dig);
+    //     var digResults = performDig(dig);
         
-        console.log("digResults:");
-        console.log(digResults);
-    });
+    //     console.log("digResults:");
+    //     console.log(digResults);
+
+    //     // var txtFile = "complete.txt";
+    //     // var file = new File(txtFile, "write");
+    //     // var str = JSON.stringify(complete);
+    //     // var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
+    //     // var link = document.getElementById('link').href = dataUri;
+    //     // console.log(str);
+
+    //     // console.log(JSON.stringify(complete));
+
+    //     // var data = JSON.stringify(digResults);
+    //     // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
+    //     // window.open(url, '_blank');
+    //     // window.focus();
+    // });
 
 
     function performDig(dig){
@@ -136,6 +162,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             }
+            //for when we're doing digResults, and so want to compute deviation
+            if(baseResults !== undefined){
+                for(var one in digResults){
+                    for(var two in digResults[one]){
+                        for(var three in digResults[one][two]){
+                            var observed = digResults[one][two][three]["perc"];
+                            var expected = baseResults[two][three]["perc"];
+                            var rawdev = _.round((observed - expected), 2); //raw deviation
+                            var percdev = _.round((((observed - expected) / expected) * 100), 2); //percent deviation
+                            // delete digResults[one][two]["perc"]; //get rid of percent
+                            delete digResults[one][two][three]["raw"]; //get rid of raw
+                            digResults[one][two][three]["rawdev"] = rawdev;
+                            digResults[one][two][three]["percdev"] = percdev;
+                        }
+                    }
+                }
+            }
 
         //  ____  
         // |___ \ 
@@ -176,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         var rawdev = _.round((observed - expected), 2); //raw deviation
                         var percdev = _.round((((observed - expected) / expected) * 100), 2); //percent deviation
                         // delete digResults[one][two]["perc"]; //get rid of percent
+                        delete digResults[one][two]["raw"]; //get rid of raw
                         digResults[one][two]["rawdev"] = rawdev;
                         digResults[one][two]["percdev"] = percdev;
                     }
@@ -207,6 +251,19 @@ document.addEventListener('DOMContentLoaded', function () {
             for(var one in digResults){
                 var perc = _.round((digResults[one]["raw"] / digResults["total"] * 100), 2);
                 digResults[one]["perc"] = perc;
+            }
+            //for when we're doing digResults, and so want to compute deviation
+            if(baseResults !== undefined){
+                for(var one in digResults){
+                    var observed = digResults[one]["perc"];
+                    var expected = baseResults["perc"];
+                    var rawdev = _.round((observed - expected), 2); //raw deviation
+                    var percdev = _.round((((observed - expected) / expected) * 100), 2); //percent deviation
+                    // delete digResults[one]["perc"]; //get rid of percent
+                    delete digResults[one]["raw"]; //get rid of raw
+                    digResults[one]["rawdev"] = rawdev;
+                    digResults[one]["percdev"] = percdev;
+                }
             }
         }
     }
