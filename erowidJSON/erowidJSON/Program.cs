@@ -875,16 +875,13 @@ namespace erowidJSON
 			List<List<int>> permList = new List<List<int>>();
 
 
-			//basically, length of allGroups dictionary
-			//(0,3) will do permutations for 0, 1, and 2
-			//these will be used for indexes for the allGroups dictionary
-			//---
+
 			//make all permutations for length of 1 (should be same number as # of items in allGroups)
 			//--
 			//how many categories are compared, e.g. 2 = gender_context, 3 = gender_context_category
-			int permLength = 3; 
+			int permLength = 1; 
 			IEnumerable<IEnumerable<int>> result =
-				GetPermutations(Enumerable.Range(1, 5), permLength);
+				GetPermutations(Enumerable.Range(0, 6), permLength);
 			int permCount = 0;
 			foreach(var perm in result){
 				permList.Add(new List<int>());
@@ -896,7 +893,7 @@ namespace erowidJSON
 
 			//make all permutations for length of 2
 			permLength = 2; 
-			result = GetPermutations(Enumerable.Range(1, 5), permLength);
+			result = GetPermutations(Enumerable.Range(0, 6), permLength);
 			foreach(var perm in result){
 				permList.Add(new List<int>());
 				foreach(var num in perm){
@@ -906,8 +903,8 @@ namespace erowidJSON
 			}
 
 			//make all permutations for length of 3
-			permLength = 1; 
-			result = GetPermutations(Enumerable.Range(1, 5), permLength);
+			permLength = 3; 
+			result = GetPermutations(Enumerable.Range(0, 6), permLength);
 			foreach(var perm in result){
 				permList.Add(new List<int>());
 				foreach(var num in perm){
@@ -960,27 +957,26 @@ namespace erowidJSON
 					int baseTot = 0;
 					foreach(var item in complete)
 					{
-						foreach(string two in group2){
-							if(complete[item.Key].ContainsKey(two)){
-								if(res1.ContainsKey(two)){
-									if(res1[two].ContainsKey("raw")){
+						foreach(string one in group1){
+							if(complete[item.Key].ContainsKey(one)){
+								if(res1.ContainsKey(one)){
+									if(res1[one].ContainsKey("raw")){
 										baseTot++;
-										res1[two]["raw"]++;
-										res1[two]["perc"] = (res1[two]["raw"] / baseTot) * 100f;
+										res1[one]["raw"]++;
+										res1[one]["perc"] = (res1[one]["raw"] / baseTot) * 100f;
 									}else{
-										res1[two].Add("raw", 1);
-										res1[two].Add("perc", 1);
+										res1[one].Add("raw", 1);
+										res1[one].Add("perc", 1);
 										baseTot++;
 									}
 								}else{
-									res1.Add(two, new Dictionary<string, double>());
+									res1.Add(one, new Dictionary<string, double>());
 								}
 							}
 						}
-
-						fileName = group2name + ".json";
-						DicToJSON(res1, fileName);
 					}
+					fileName = group1name + ".json";
+					DicToJSON(res1, fileName);
 				}else if(perm.Count == 2){
 					group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
 					group2 = allGroups[allGroups.Keys.ElementAt(perm[1])];
@@ -1026,10 +1022,9 @@ namespace erowidJSON
 								}
 							}
 						}
-
-						fileName = group1name + "_" + group2name + ".json";
-						DicToJSON(res2, fileName);
 					}
+					fileName = group1name + "_" + group2name + ".json";
+					DicToJSON(res2, fileName);
 				}else if(perm.Count == 3){
 					group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
 					group2 = allGroups[allGroups.Keys.ElementAt(perm[1])];
