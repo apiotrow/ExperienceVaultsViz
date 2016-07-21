@@ -61,12 +61,12 @@ eevv.optionValues = function() {
                 end: "DoseMethodID",
                 theArray: eevv.OptionValues_Context = []
             };
-            eevv.optionValueArrays[++iter] = {
-                type: "dosemethod",
-                begin: "DoseMethodID",
-                end: "A1",
-                theArray: eevv.OptionValues_DoseMethod = []
-            };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "dosemethod",
+            //     begin: "DoseMethodID",
+            //     end: "A1",
+            //     theArray: eevv.OptionValues_DoseMethod = []
+            // };
             //    optionValueArrays[++iter] = {
             //    type: "author",
             //        begin: "A1",
