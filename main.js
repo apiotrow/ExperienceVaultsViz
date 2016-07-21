@@ -12,9 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    var dig = [eevv.groups.context, eevv.groups.gender];
+    // var dig = [eevv.groups.context, eevv.groups.gender];
     // var dig = [eevv.groups.gender];
-    // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+    var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+
 
     var digResults = performDig(dig);
 
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
     console.log("digResults:");
     console.log(digResults);
+    
+
 
 
     // completeFromCSV();

@@ -119,6 +119,10 @@ eevv.scrapeReports = function () {
                     }
 
                     url += "&SP=1&ShowViews=1&Start=0&Max=" + pageSize;
+
+                    //add in cellar reports, which adds like 1000 more.
+                    //but they're apparently less reliable
+                    url += "&Cellar=1";
                 }
 
                 
@@ -418,6 +422,8 @@ eevv.scrapeReports = function () {
     //page through the search results by retrieving the source code and progressively
     //modifying the URL in order to move from one page to the next.
     function getURL(iter) {
+       
+
         //if we've iterated over all of them
         if (iter >= allURLS.length) {
             //exportToCSV();
@@ -428,6 +434,8 @@ eevv.scrapeReports = function () {
         //get the source for the search, count the reports, and shove them
         //in the div
         eevv.getSourceCode(allURLS[iter].url, function () {
+             
+
             //we're flipping through pages. don't parse the original URL again
             if (onPageOne == true) {
                 parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
@@ -438,6 +446,7 @@ eevv.scrapeReports = function () {
             currStart += pageSize;
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
             nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
+
             eevv.getSourceCode(nextPage, function () {
                 var totalBegin = eevv.URLSource.indexOf("><b>(") + 5;
                 var totalEnd = eevv.URLSource.indexOf("Total");

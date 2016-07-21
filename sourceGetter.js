@@ -36,6 +36,8 @@ eevv.getSourceCode = function (your_url, callback) {
 
             var url = o.url;
 
+            // console.log(url);
+
             if (/get/i.test(o.type) && !/json/i.test(o.dataType) && isExternal(url)) {
 
                 // Manipulate options so that JSONP-x request is made to YQL
@@ -60,17 +62,32 @@ eevv.getSourceCode = function (your_url, callback) {
                 o.success = (function (_success) {
                     return function (data) {
 
-                        if (_success) {
-                            // Fake XHR callback.
-                            _success.call(this, {
+                        //if it throws that error i don't know why happens
+                        //where data.results[0] is undefined, try again
+                        if(data.results[0] === undefined){
+                            console.log(data);
+                            eevv.getSourceCode(your_url, function () {
+                                // console.log(eevv.URLSource);
+                                console.log("fuckup");
+                                callback(eevv.URLSource);
+                            });
+                        }else{
 
-                                responseText: data.results[0]
-                                // YQL screws with <script>s
-                                // Get rid of them
-                                .replace(/<script[^>]+?\/>|<script(.|\s)*?\/script>/gi, '')
-                            }, 'success');
+                            if (_success) {
+                                // Fake XHR callback.
+                                _success.call(this, {
 
-                        }
+
+
+                                    responseText: data.results[0]
+                                    // YQL screws with <script>s
+                                    // Get rid of them
+                                    .replace(/<script[^>]+?\/>|<script(.|\s)*?\/script>/gi, '')
+                                }, 'success');
+
+                            }
+
+                    }
 
                     };
                 })(o.success);
@@ -78,6 +95,7 @@ eevv.getSourceCode = function (your_url, callback) {
                 o.error = (function (xhr, textStatus, errorThrown) {
                     console.log("hi");
                     if (textStatus == 'timeout') {
+
                         o.tryCount++;
                         if (o.tryCount <= o.retryLimit) {
                             //try again
@@ -114,7 +132,7 @@ eevv.getSourceCode = function (your_url, callback) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-
+        console.log("hiy");
             if (textStatus == 'timeout') {
                 this.tryCount++;
                 if (this.tryCount <= this.retryLimit) {
