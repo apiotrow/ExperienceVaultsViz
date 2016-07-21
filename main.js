@@ -6,16 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var eevv = new globs.eevvStuff();
 
 	// var complete = {}; //id: everything about the report with that id. for nitty gritty.
-    var complete = require('./JSONS/complete.json'); //(with path)
+    var complete = require('./JSONS/complete_jul2016.json'); //(with path)
     var context_gender = require('./JSONS/context_gender.json');
     var boop = require('./JSONS/path.json');
 
 
-
+    
     // var dig = [eevv.groups.context, eevv.groups.gender];
     // var dig = [eevv.groups.gender];
     var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
-
 
     var digResults = performDig(dig);
 
@@ -28,7 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
     // completeFromCSV();
+
+
+
 
 
     // var data = JSON.stringify(digResults);
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function completeFromCSV(){
         //initial function
-        eevv.readTextFile("csvs/data-3-brackets.csv", 
+        eevv.readTextFile("csvs/jul2016scrape-brackets.csv", 
         function (result) {
             fillInComplete(result); //turn CSV of report data into a JSON
 
@@ -52,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("digResults:");
             console.log(digResults);
 
-            // console.log(JSON.stringify(complete));
+            console.log(JSON.stringify(complete));
         });
     }
 
