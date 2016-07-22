@@ -252,23 +252,49 @@ eevv.scrapeReports = function () {
 
                     //push new things
                     reportArray_Entry.title.push(dataParams.titleText);
+                    eevv.newComplete[idnum]["title"] = dataParams.titleText;
+
                     reportArray_Entry.author.push(dataParams.authorText);
+                    eevv.newComplete[idnum]["author"] = dataParams.authorText;
+
                     reportArray_Entry.date.push(dataParams.dateText);
+                    eevv.newComplete[idnum]["date"] = dataParams.dateText;
+
                     reportArray_Entry.views.push(dataParams.viewsText);
+                    eevv.newComplete[idnum]["views"] = dataParams.viewsText;
+
+                    if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
+                        eevv.newComplete[idnum][dataParams.substanceText] = {};
+
+                        if(dataParams.methodText !== undefined && dataParams.methodText != "")
+                            eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
+
+                        if(dataParams.amountText !== undefined && dataParams.amountText != "")
+                            eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
+
+                        if(dataParams.formText !== undefined && dataParams.formText != "")
+                            eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
+                        // console.log(dataParams.substanceText);
+                    }
                 } else if (type == "category") {
                     reportArray_Entry.category.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "nonsubstance") {
                     reportArray_Entry.nonSubstance.push(itemName);
                     eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "context") {
                     reportArray_Entry.context.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "dosemethod") {
                     reportArray_Entry.doseMethod.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "intensity") {
                     reportArray_Entry.intensity.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } 
                 else if (type == "genderselect") {
                     reportArray_Entry.gender.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 }
 
                 eevv.reportArrays[idnum] = reportArray_Entry;
@@ -280,10 +306,35 @@ eevv.scrapeReports = function () {
                 if (type == "drug") {
                     if (eevv.reportArrays[idnum].drugs.indexOf(itemName) == -1) {
                         dataLoop(dataParams, eevv.reportArrays[idnum]);
+
+                        //push new things
+                        eevv.newComplete[idnum]["title"] = dataParams.titleText;
+
+                        eevv.newComplete[idnum]["author"] = dataParams.authorText;
+
+                        eevv.newComplete[idnum]["date"] = dataParams.dateText;
+
+                        eevv.newComplete[idnum]["views"] = dataParams.viewsText;
+
+                        if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
+                            eevv.newComplete[idnum][dataParams.substanceText] = {};
+                           
+                            if(dataParams.methodText !== undefined && dataParams.methodText != "")
+                                eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
+
+                            if(dataParams.amountText !== undefined && dataParams.amountText != "")
+                                eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
+
+                            if(dataParams.formText !== undefined && dataParams.formText != "")
+                                eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
+                            // console.log(dataParams.substanceText);
+                        }
                     }
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "category") {
                     if (eevv.reportArrays[idnum].category.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].category.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "nonsubstance") {
                     if (eevv.reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].nonSubstance.push(itemName);
@@ -291,16 +342,19 @@ eevv.scrapeReports = function () {
                 } else if (type == "context") {
                     if (eevv.reportArrays[idnum].context.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].context.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "dosemethod") {
                     if (eevv.reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].doseMethod.push(itemName);
                 } else if (type == "intensity") {
                     if (eevv.reportArrays[idnum].intensity.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].intensity.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } 
                 else if (type == "genderselect") {
                     if (eevv.reportArrays[idnum].gender.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].gender.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 }
             }
 
@@ -315,7 +369,7 @@ eevv.scrapeReports = function () {
             // });
 
 
-
+            // console.log(eevv.newComplete);
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
 
@@ -419,7 +473,17 @@ eevv.scrapeReports = function () {
                         entryText += "[form]" + loopParams.formText;
                     }
                     reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(loopParams.substanceText)] = entryText;
-                    //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
+
+                    //jul 22, 2016
+                    //for new scrape->JSON method. params was passed in by reference.
+                    //add stuff to params so we can add it to the JSON in dataLoop()
+                    params.substanceText = loopParams.substanceText;
+                    params.methodText = loopParams.methodText;
+                    params.amountText = loopParams.amountText;
+                    params.formText = loopParams.formText;
+
+
+                //in case of sitations where for instance 5-Me-DMT has just DMT in its dose chart
                 } else if (loopParams.substanceText != "" && itemName.indexOf(loopParams.substanceText) != -1) {
                     var entryText = reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)];
                     if (loopParams.methodText != "") {
@@ -433,7 +497,17 @@ eevv.scrapeReports = function () {
                         entryText += "[form]" + loopParams.formText;
                     }
                     reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
-                    //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
+
+                    //jul 22, 2016
+                    //for new scrape->JSON method. params was passed in by reference.
+                    //add stuff to params so we can add it to the JSON in dataLoop()
+                    params.substanceText = loopParams.substanceText;
+                    params.methodText = loopParams.methodText;
+                    params.amountText = loopParams.amountText;
+                    params.formText = loopParams.formText;
+
+
+                //in case of the reverse, where for instance report is listed under Alcohol, but chart has Alcohol - Beer/Wine
                 } else if (loopParams.substanceText != "" && loopParams.substanceText.indexOf(itemName) != -1) {
                     var entryText = reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)];
                     if (loopParams.methodText != "") {
@@ -447,10 +521,20 @@ eevv.scrapeReports = function () {
                         entryText += "[form]" + loopParams.formText;
                     }
                     reportArrayEntry.drugs[reportArrayEntry.drugs.indexOf(itemName)] = entryText;
+
+                    //jul 22, 2016
+                    //for new scrape->JSON method. params was passed in by reference.
+                    //add stuff to params so we can add it to the JSON in dataLoop()
+                    params.substanceText = loopParams.substanceText;
+                    params.methodText = loopParams.methodText;
+                    params.amountText = loopParams.amountText;
+                    params.formText = loopParams.formText;
+
                 }
 
                 loopParams.trStart = loopParams.thisRegion.indexOf("<tr>");
                 loopParams.trRegion = loopParams.thisRegion.substring(loopParams.trStart, loopParams.trEnd);
+                // console.log(loopParams.substanceText);
             } //end while
         } //end dataLoop
     }
