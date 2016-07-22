@@ -64,6 +64,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
+
+
+
+    //combine all the separate JSONS into a master JSON
+
     var groups = {};
 
 
@@ -108,12 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     var combinedCompleteString = JSON.stringify(combinedComplete);
     console.log(combinedCompleteString);
-
-    // console.log(combinedComplete);
-    // console.log(combinedComplete[80334]);
-    // console.log(combinedComplete[259]);
-
-
 
 
 

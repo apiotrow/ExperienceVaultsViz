@@ -788,7 +788,7 @@ namespace erowidJSON
 					"Female",
 					"Not-Specified"
 					}},
-				{"nonsubstances", new List<string>{
+				{"nonsubstance", new List<string>{
 					"Breathing",
 					"Chanting",
 					"Conferences",
@@ -822,7 +822,7 @@ namespace erowidJSON
 					"Strong",
 					"Extreme",
 					}},
-				{"categories", new List<string>{
+				{"category", new List<string>{
 					"First Times",
 					"General",
 					"Retrospective / Summary",
@@ -860,7 +860,6 @@ namespace erowidJSON
 					"Hangover / Days After",
 					"Sex Discussion"
 					}},
-				
 			};
 
 
@@ -879,7 +878,7 @@ namespace erowidJSON
 			//make all permutations for length of 1 (should be same number as # of items in allGroups)
 			//--
 			//how many categories are compared, e.g. 2 = gender_context, 3 = gender_context_category
-			int permLength = 1; 
+			int permLength = 3; 
 			IEnumerable<IEnumerable<int>> result =
 				GetPermutations(Enumerable.Range(0, 6), permLength);
 			int permCount = 0;
@@ -903,7 +902,7 @@ namespace erowidJSON
 			}
 
 			//make all permutations for length of 3
-			permLength = 3; 
+			permLength = 1; 
 			result = GetPermutations(Enumerable.Range(0, 6), permLength);
 			foreach(var perm in result){
 				permList.Add(new List<int>());
@@ -954,27 +953,42 @@ namespace erowidJSON
 					res1.Clear();
 
 					//res1
-					int baseTot = 0;
 					foreach(var item in complete)
 					{
 						foreach(string one in group1){
 							if(complete[item.Key].ContainsKey(one)){
 								if(res1.ContainsKey(one)){
 									if(res1[one].ContainsKey("raw")){
-										baseTot++;
 										res1[one]["raw"]++;
-										res1[one]["perc"] = (res1[one]["raw"] / baseTot) * 100f;
 									}else{
 										res1[one].Add("raw", 1);
-										res1[one].Add("perc", 1);
-										baseTot++;
+										res1[one].Add("perc", 0);
 									}
 								}else{
 									res1.Add(one, new Dictionary<string, double>());
+									res1[one].Add("raw", 1);
+									res1[one].Add("perc", 0);
 								}
 							}
 						}
 					}
+
+					//collect total
+					double thisTot = 0;
+					foreach(string one in group1){
+						if(res1.ContainsKey(one)){
+							thisTot += res1[one]["raw"];
+						}
+					}
+
+					//calculate percents
+					foreach(string one in group1){
+						if(res1.ContainsKey(one)){
+							res1[one]["total"] = thisTot;
+							res1[one]["perc"] = (res1[one]["raw"] / thisTot) * 100f;
+						}
+					}
+
 					fileName = group1name + ".json";
 					DicToJSON(res1, fileName);
 				}else if(perm.Count == 2){
@@ -996,33 +1010,48 @@ namespace erowidJSON
 										if(res2[one].ContainsKey(two)){
 											if(res2[one][two].ContainsKey("raw")){
 												res2[one][two]["raw"]++;
-
-												double tot = 0;
-												double raw = res2[one][two]["raw"];
-												foreach(var twot in res2[one]){
-													tot += res2[one][twot.Key]["raw"];
-												}
-												res2[one][two]["perc"] = (raw / tot) * 100f;
-
 											}else{
 												res2[one][two].Add("raw", 1);
-												res2[one][two].Add("perc", 1);
+												res2[one][two].Add("perc", 0);
 											}
 										}else{
 											res2[one].Add(two, new Dictionary<string, double>());
 											res2[one][two].Add("raw", 1);
-											res2[one][two].Add("perc", 1);
+											res2[one][two].Add("perc", 0);
 										}
 									}else{
-										res2.Add(one,new Dictionary<string, Dictionary<string, double>>());
+										res2.Add(one, new Dictionary<string, Dictionary<string, double>>());
 										res2[one].Add(two, new Dictionary<string, double>());
 										res2[one][two].Add("raw", 1);
-										res2[one][two].Add("perc", 1);
+										res2[one][two].Add("perc", 0);
 									}
 								}
 							}
 						}
 					}
+
+
+					foreach(string one in group1){
+						//collect total
+						double thisTot = 0;
+						foreach(string two in group2){
+							if(res2.ContainsKey(one)){
+								if(res2[one].ContainsKey(two)){
+									thisTot += res2[one][two]["raw"];
+								}
+							}					
+						}
+						//calculate percents
+						foreach(string two in group2){
+							if(res2.ContainsKey(one)){
+								if(res2[one].ContainsKey(two)){
+									res2[one][two].Add("total", thisTot);
+									res2[one][two]["perc"] = (res2[one][two]["raw"] / thisTot) * 100f;
+								}
+							}					
+						}
+					}
+
 					fileName = group1name + "_" + group2name + ".json";
 					DicToJSON(res2, fileName);
 				}else if(perm.Count == 3){
@@ -1048,35 +1077,27 @@ namespace erowidJSON
 												if(res3[one][two].ContainsKey(three)){
 													if(res3[one][two][three].ContainsKey("raw")){
 														res3[one][two][three]["raw"]++;
-
-														double tot = 0;
-														double raw = res3[one][two][three]["raw"];
-														foreach(var threet in res3[one][two]){
-															tot += res3[one][two][threet.Key]["raw"];
-														}
-														res3[one][two][three]["perc"] = (raw / tot) * 100f;
-
 													}else{
 														res3[one][two][three].Add("raw", 1);
-														res3[one][two][three].Add("perc", 1);
+														res3[one][two][three].Add("perc", 0);
 													}
 												}else{
 													res3[one][two].Add(three, new Dictionary<string, double>());
 													res3[one][two][three].Add("raw", 1);
-													res3[one][two][three].Add("perc", 1);
+													res3[one][two][three].Add("perc", 0);
 												}
 											}else{
 												res3[one].Add(two, new Dictionary<string, Dictionary<string, double>>());
 												res3[one][two].Add(three, new Dictionary<string, double>());
 												res3[one][two][three].Add("raw", 1);
-												res3[one][two][three].Add("perc", 1);
+												res3[one][two][three].Add("perc", 0);
 											}
 										}else{
 											res3.Add(one, new Dictionary<string, Dictionary<string, Dictionary<string, double>>>());
 											res3[one].Add(two, new Dictionary<string, Dictionary<string, double>>());
 											res3[one][two].Add(three, new Dictionary<string, double>());
 											res3[one][two][three].Add("raw", 1);
-											res3[one][two][three].Add("perc", 1);
+											res3[one][two][three].Add("perc", 0);
 										}
 									}
 								}
@@ -1084,10 +1105,46 @@ namespace erowidJSON
 						}
 					}
 
+					foreach(string one in group1){
+						foreach(string two in group2){
+							//collect total
+							double thisTot = 0;
+							foreach(string three in group3){
+								if(res3.ContainsKey(one)){
+									if(res3[one].ContainsKey(two)){
+										if(res3[one][two].ContainsKey(three)){
+											thisTot += res3[one][two][three]["raw"];
+										}
+									}
+								}					
+							}
+
+							//calculate percents
+							foreach(string three in group3){
+								if(res3.ContainsKey(one)){
+									if(res3[one].ContainsKey(two)){
+										if(res3[one][two].ContainsKey(three)){
+											res3[one][two][three].Add("total", thisTot);
+											res3[one][two][three]["perc"] = (res3[one][two][three]["raw"] / thisTot) * 100f;
+										}
+									}
+								}					
+							}
+						}
+					}
+
 					fileName = group1name + "_" + group2name + "_" + group3name + ".json";
 					DicToJSON(res3, fileName);
 				}
-//
+
+
+
+
+
+
+
+
+
 //				group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
 //				group2 = allGroups[allGroups.Keys.ElementAt(perm[1])];
 //				group3 = allGroups[allGroups.Keys.ElementAt(perm[2])];
