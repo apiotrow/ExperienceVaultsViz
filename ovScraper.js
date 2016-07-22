@@ -33,12 +33,12 @@ eevv.optionValues = function() {
         function fillOptionValueArrays() {
             var iter = -1;
 
-            eevv.optionValueArrays[++iter] = {
-                type: "drug",
-                begin: "S1",
-                end: "S2",
-                theArray: eevv.OptionValues_Drugs = []
-            };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "drug",
+            //     begin: "S1",
+            //     end: "S2",
+            //     theArray: eevv.OptionValues_Drugs = []
+            // };
             // eevv.optionValueArrays[++iter] = {
             //     type: "category",
             //     begin: "C1",
@@ -81,12 +81,12 @@ eevv.optionValues = function() {
             //        end: "Group",
             //        theArray: OptionValues_Lang = []
             //    };
-            // eevv.optionValueArrays[++iter] = {
-            //     type: "intensity",
-            //     begin: "Intensity",
-            //     end: "I2",
-            //     theArray: eevv.OptionValues_Intensity = []
-            // };
+            eevv.optionValueArrays[++iter] = {
+                type: "intensity",
+                begin: "Intensity",
+                end: "I2",
+                theArray: eevv.OptionValues_Intensity = []
+            };
         }
 
 

@@ -263,19 +263,22 @@ eevv.scrapeReports = function () {
                     reportArray_Entry.views.push(dataParams.viewsText);
                     eevv.newComplete[idnum]["views"] = dataParams.viewsText;
 
-                    if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
-                        eevv.newComplete[idnum][dataParams.substanceText] = {};
+                    // console.log(reportArray_Entry.drugs);
 
-                        if(dataParams.methodText !== undefined && dataParams.methodText != "")
-                            eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
+                    // if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
+                    //     eevv.newComplete[idnum][dataParams.substanceText] = {};
 
-                        if(dataParams.amountText !== undefined && dataParams.amountText != "")
-                            eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
+                    //     if(dataParams.methodText !== undefined && dataParams.methodText != "")
+                    //         eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
 
-                        if(dataParams.formText !== undefined && dataParams.formText != "")
-                            eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
-                        // console.log(dataParams.substanceText);
-                    }
+                    //     if(dataParams.amountText !== undefined && dataParams.amountText != "")
+                    //         eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
+
+                    //     if(dataParams.formText !== undefined && dataParams.formText != "")
+                    //         eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
+                    //     // console.log(dataParams.substanceText);
+                    // }
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "category") {
                     reportArray_Entry.category.push(itemName);
                     eevv.newComplete[idnum][itemName] = 0;
@@ -299,7 +302,7 @@ eevv.scrapeReports = function () {
 
                 eevv.reportArrays[idnum] = reportArray_Entry;
 
-                //the report is already in the array. add whatever new information needs to be added.
+            //the report is already in the array. add whatever new information needs to be added.
             } else {
                 //the indexOf checks are required so we don't duplicate entries
                 //as we iterate through multiple pages
@@ -316,19 +319,19 @@ eevv.scrapeReports = function () {
 
                         eevv.newComplete[idnum]["views"] = dataParams.viewsText;
 
-                        if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
-                            eevv.newComplete[idnum][dataParams.substanceText] = {};
+                        // if(dataParams.substanceText !== undefined && dataParams.substanceText != ""){
+                        //     eevv.newComplete[idnum][dataParams.substanceText] = {};
                            
-                            if(dataParams.methodText !== undefined && dataParams.methodText != "")
-                                eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
+                        //     if(dataParams.methodText !== undefined && dataParams.methodText != "")
+                        //         eevv.newComplete[idnum][dataParams.substanceText]["method"] = dataParams.methodText;
 
-                            if(dataParams.amountText !== undefined && dataParams.amountText != "")
-                                eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
+                        //     if(dataParams.amountText !== undefined && dataParams.amountText != "")
+                        //         eevv.newComplete[idnum][dataParams.substanceText]["amount"] = dataParams.amountText;
 
-                            if(dataParams.formText !== undefined && dataParams.formText != "")
-                                eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
-                            // console.log(dataParams.substanceText);
-                        }
+                        //     if(dataParams.formText !== undefined && dataParams.formText != "")
+                        //         eevv.newComplete[idnum][dataParams.substanceText]["form"] = dataParams.formText;
+                        //     // console.log(dataParams.substanceText);
+                        // }
                     }
                     eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "category") {

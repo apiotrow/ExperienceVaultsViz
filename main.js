@@ -64,6 +64,62 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
+    var groups = {};
+
+
+    groups.intensity = require('./JSONS/groups_separated/intensity.json');
+    groups.context = require('./JSONS/groups_separated/context.json');
+    groups.nonsubstances = require('./JSONS/groups_separated/nonsubstances.json');
+    groups.categories = require('./JSONS/groups_separated/categories.json');
+    groups.gender = require('./JSONS/groups_separated/gender.json');
+    groups.drugs = require('./JSONS/groups_separated/drugs.json');
+    
+    var combinedComplete = {};
+
+    console.log(groups);
+
+    //setup combinedComplete
+    for(var g in groups){
+        var group = groups[g];
+        for(var id in group){
+            if(!combinedComplete.hasOwnProperty(id)){
+                combinedComplete[id] = {};
+            }
+
+        }
+    }
+
+    //fill in combinedComplete
+    for(var g in groups){
+        var group = groups[g];
+        for(var id in group){
+            var groupEntry = group[id];
+            for(var item in groupEntry){
+                var groupEntryItem = groupEntry[item];
+
+                //if it equals 0 its a group. otherwise it's date/title/author.
+                if(groupEntryItem == 0){
+                    combinedComplete[id][item] = 0;
+                }else{
+                    combinedComplete[id][item] = groupEntryItem;
+                }
+            }
+        }
+    }
+    var combinedCompleteString = JSON.stringify(combinedComplete);
+    console.log(combinedCompleteString);
+
+    // console.log(combinedComplete);
+    // console.log(combinedComplete[80334]);
+    // console.log(combinedComplete[259]);
+
+
+
+
+
+
+
+
 
 
 
