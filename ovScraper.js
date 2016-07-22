@@ -28,6 +28,8 @@ eevv.optionValues = function() {
             }
         }
 
+        //can scrape specific groups by commenting out any of the blocks
+        //below and leaving some uncommented
         function fillOptionValueArrays() {
             var iter = -1;
 
@@ -37,30 +39,30 @@ eevv.optionValues = function() {
                 end: "S2",
                 theArray: eevv.OptionValues_Drugs = []
             };
-            eevv.optionValueArrays[++iter] = {
-                type: "category",
-                begin: "C1",
-                end: "S4",
-                theArray: eevv.OptionValues_Category = []
-            };
-            eevv.optionValueArrays[++iter] = {
-                type: "nonsubstance",
-                begin: "S4",
-                end: "GenderSelect",
-                theArray: eevv.OptionValues_NonSubstance = []
-            };
-            eevv.optionValueArrays[++iter] = {
-                type: "genderselect",
-                begin: "GenderSelect",
-                end: "Context",
-                theArray: eevv.OptionValues_Gender = []
-            };
-            eevv.optionValueArrays[++iter] = {
-                type: "context",
-                begin: "Context",
-                end: "DoseMethodID",
-                theArray: eevv.OptionValues_Context = []
-            };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "category",
+            //     begin: "C1",
+            //     end: "S4",
+            //     theArray: eevv.OptionValues_Category = []
+            // };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "nonsubstance",
+            //     begin: "S4",
+            //     end: "GenderSelect",
+            //     theArray: eevv.OptionValues_NonSubstance = []
+            // };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "genderselect",
+            //     begin: "GenderSelect",
+            //     end: "Context",
+            //     theArray: eevv.OptionValues_Gender = []
+            // };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "context",
+            //     begin: "Context",
+            //     end: "DoseMethodID",
+            //     theArray: eevv.OptionValues_Context = []
+            // };
             // eevv.optionValueArrays[++iter] = {
             //     type: "dosemethod",
             //     begin: "DoseMethodID",
@@ -79,12 +81,12 @@ eevv.optionValues = function() {
             //        end: "Group",
             //        theArray: OptionValues_Lang = []
             //    };
-            eevv.optionValueArrays[++iter] = {
-                type: "intensity",
-                begin: "Intensity",
-                end: "I2",
-                theArray: eevv.OptionValues_Intensity = []
-            };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "intensity",
+            //     begin: "Intensity",
+            //     end: "I2",
+            //     theArray: eevv.OptionValues_Intensity = []
+            // };
         }
 
 

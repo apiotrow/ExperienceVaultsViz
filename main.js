@@ -14,15 +14,53 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // var dig = [eevv.groups.context, eevv.groups.gender];
     // var dig = [eevv.groups.gender];
-    var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
+    // var dig = [eevv.groups.context, eevv.groups.gender, eevv.groups.intensity];
 
-    var digResults = performDig(dig);
+    // var digResults = performDig(dig);
+
+
 
     //if we want to retrieve from a file
     // var digResults = context_gender;
     
-    console.log("digResults:");
-    console.log(digResults);
+
+
+    // console.log("digResults:");
+    // console.log(digResults);
+
+
+
+    ///shove intensity into complete
+    //clone complete into oldComplete
+    // var oldComplete = JSON.parse(JSON.stringify(complete));
+
+    // eevv.readTextFile("csvs/jul2016scrape-justintensity.csv", 
+    // function (result) {
+    //     fillInComplete(result); //turn CSV of report data into a JSON
+
+    //     for(var ent in complete){
+    //         if(oldComplete.hasOwnProperty(ent) && complete[ent].hasOwnProperty("Extreme")){
+    //             oldComplete[ent]["Extreme"] = 0;
+    //         }
+    //         if(oldComplete.hasOwnProperty(ent) && complete[ent].hasOwnProperty("No Effect")){
+    //             oldComplete[ent]["No Effect"] = 0;
+    //         }
+    //         if(oldComplete.hasOwnProperty(ent) && complete[ent].hasOwnProperty("Light")){
+    //             oldComplete[ent]["Light"] = 0;
+    //         }
+    //         if(oldComplete.hasOwnProperty(ent) && complete[ent].hasOwnProperty("Medium")){
+    //             oldComplete[ent]["Medium"] = 0;
+    //         }
+    //         if(oldComplete.hasOwnProperty(ent) && complete[ent].hasOwnProperty("Strong")){
+    //             oldComplete[ent]["Strong"] = 0;
+    //         }
+    //     }
+
+    //     var data = JSON.stringify(oldComplete);
+    //     var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
+    //     window.open(url, '_blank');
+    //     window.focus();
+    // });
     
 
 
@@ -58,6 +96,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log(JSON.stringify(complete));
         });
+
+
+
+
     }
 
 
@@ -462,9 +504,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if(reportArray[i][4] != "")
                 idEntry[reportArray[i][4]] = 0;
 
+            //method
+            if(reportArray[i][5] != "")
+                idEntry[reportArray[i][5]] = 0;
+
             //intensity
             if(reportArray[i][6] != "")
                 idEntry[reportArray[i][6]] = 0;
+
+            // idEntry.intensity = "";
+            // idEntry.intensity = idEntry[reportArray[i][6]];
 
             //gender
             if(reportArray[i][7] != "")
@@ -487,6 +536,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         console.log(complete[48983]);
         console.log(complete[80334]);
-        console.log(complete[86136]);
+        console.log(complete[259]);
     }
 });

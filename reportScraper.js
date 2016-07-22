@@ -13,7 +13,7 @@ eevv.scrapeReports = function () {
     var nonSubstance = -1;
     var gender = -1;
     var context = -1;
-    // var doseMethod = -1;
+    var doseMethod = -1;
     var title = "";
     var authorSearch = "";
     var erowidAuthor = -1;
@@ -51,6 +51,14 @@ eevv.scrapeReports = function () {
     } , 500);
 
 
+
+
+
+
+
+
+    
+
     //iterate through option values, generating URLS which will later
     //be iterated through to get their source code
     function fillURLArray() {
@@ -78,12 +86,13 @@ eevv.scrapeReports = function () {
                     nonSubstance = eevv.optionValueArrays[i].theArray[j].optionValue;
                 } else if (eevv.optionValueArrays[i].type == "context") {
                     context = eevv.optionValueArrays[i].theArray[j].optionValue;
-                // } else if (eevv.optionValueArrays[i].type == "dosemethod") {
-                //     doseMethod = eevv.optionValueArrays[i].theArray[j].optionValue;
+                } else if (eevv.optionValueArrays[i].type == "dosemethod") {
+                    doseMethod = eevv.optionValueArrays[i].theArray[j].optionValue;
                 } else if (eevv.optionValueArrays[i].type == "intensity") {
                     intensityMin = eevv.optionValueArrays[i].theArray[j].optionValue;
                     intensityMax = eevv.optionValueArrays[i].theArray[j].optionValue;
-                } else if (eevv.optionValueArrays[i].type == "genderselect") {
+                } 
+                else if (eevv.optionValueArrays[i].type == "genderselect") {
                     gender = eevv.optionValueArrays[i].theArray[j].optionValue;
                 }
 
@@ -94,7 +103,7 @@ eevv.scrapeReports = function () {
                     nonSubstance,
                     gender,
                     context,
-                    // doseMethod,
+                    doseMethod,
                     title,
                     authorSearch,
                     erowidAuthor,
@@ -112,7 +121,7 @@ eevv.scrapeReports = function () {
                     if ( /*optionValueArrays[i].type != "category" &&*/
                         eevv.optionValueArrays[i].type != "nonsubstance" &&
                         eevv.optionValueArrays[i].type != "context" &&
-                        // eevv.optionValueArrays[i].type != "dosemethod" &&
+                        eevv.optionValueArrays[i].type != "dosemethod" &&
                         eevv.optionValueArrays[i].type != "genderselect") {
                         for (var urlFields_index in urlFields) {
                             if (urlFields.hasOwnProperty(urlFields_index)) {
@@ -155,7 +164,7 @@ eevv.scrapeReports = function () {
         nonSubstance = -1;
         gender = -1;
         context = -1;
-        // doseMethod = -1;
+        doseMethod = -1;
         title = "";
         authorSearch = "";
         erowidAuthor = -1;
@@ -166,8 +175,8 @@ eevv.scrapeReports = function () {
         intensityMax = "";
     }
 
-    // function setupURL(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16) {
-        function setupURL(f1, f2, f3, f4, f5, f6, f7, f9, f10, f11, f12, f13, f14, f15, f16) {
+    function setupURL(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16) {
+        // function setupURL(f1, f2, f3, f9, f10, f11, f12, f13, f14, f15, f16) {
         urlFields = {
             init: "https://www.erowid.org/experiences/exp.cgi?A=Search",
 //            init: "file:///Volumes/erowid_may_1_201/e/http80/www.erowid.org/experiences/exp.cgi.html?A=Search",
@@ -178,7 +187,7 @@ eevv.scrapeReports = function () {
             nonSubstance: "&S4=" + f5,
             gender: "&GenderSelect=" + f6,
             context: "&Context=" + f7,
-            // doseMethod: "&DoseMethodID=" + f8,
+            doseMethod: "&DoseMethodID=" + f8,
             title: "&Title=" + f9,
             authorSearch: "&AuthorSearch=" + f10,
             erowidAuthor: "&A1=" + f11,
@@ -201,6 +210,14 @@ eevv.scrapeReports = function () {
             var idArea = text.substring(pos, text.indexOf(">", pos));
             var idnum = idArea.substring(idArea.indexOf('=') + 1, idArea.indexOf('"'));
 
+
+
+            if(!eevv.newComplete.hasOwnProperty(idnum)){
+                eevv.newComplete[idnum] = {};
+            }
+
+
+
             //hold these here so dataLoop can modify them by reference
             dataParams = {
                 titleText: "",
@@ -218,7 +235,7 @@ eevv.scrapeReports = function () {
                     category: [],
                     nonSubstance: [],
                     context: [],
-                    // doseMethod: [],
+                    doseMethod: [],
                     intensity: [],
                     gender: [],
                     title: [],
@@ -242,13 +259,15 @@ eevv.scrapeReports = function () {
                     reportArray_Entry.category.push(itemName);
                 } else if (type == "nonsubstance") {
                     reportArray_Entry.nonSubstance.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "context") {
                     reportArray_Entry.context.push(itemName);
-                // } else if (type == "dosemethod") {
-                //     reportArray_Entry.doseMethod.push(itemName);
+                } else if (type == "dosemethod") {
+                    reportArray_Entry.doseMethod.push(itemName);
                 } else if (type == "intensity") {
                     reportArray_Entry.intensity.push(itemName);
-                } else if (type == "genderselect") {
+                } 
+                else if (type == "genderselect") {
                     reportArray_Entry.gender.push(itemName);
                 }
 
@@ -268,29 +287,34 @@ eevv.scrapeReports = function () {
                 } else if (type == "nonsubstance") {
                     if (eevv.reportArrays[idnum].nonSubstance.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].nonSubstance.push(itemName);
+                    eevv.newComplete[idnum][itemName] = 0;
                 } else if (type == "context") {
                     if (eevv.reportArrays[idnum].context.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].context.push(itemName);
-                // } else if (type == "dosemethod") {
-                //     if (eevv.reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
-                //         eevv.reportArrays[idnum].doseMethod.push(itemName);
+                } else if (type == "dosemethod") {
+                    if (eevv.reportArrays[idnum].doseMethod.indexOf(itemName) == -1)
+                        eevv.reportArrays[idnum].doseMethod.push(itemName);
                 } else if (type == "intensity") {
                     if (eevv.reportArrays[idnum].intensity.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].intensity.push(itemName);
-                } else if (type == "genderselect") {
+                } 
+                else if (type == "genderselect") {
                     if (eevv.reportArrays[idnum].gender.indexOf(itemName) == -1)
                         eevv.reportArrays[idnum].gender.push(itemName);
                 }
             }
 
             //fills in drug ID table
-            $(document).ready(function () {
-                $("#" + idnum).remove(); //if entry in table exists, replace it with new one
+            // $(document).ready(function () {
+            //     $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
-                //put the ID in the table with all its info
-                $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + eevv.reportArrays[idnum].category + '</td><td>' + eevv.reportArrays[idnum].nonSubstance + '</td><td>' + eevv.reportArrays[idnum].context + '</td><td>' + /*eevv.reportArrays[idnum].doseMethod*/ "" + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + eevv.reportArrays[idnum].gender + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
+            //     //put the ID in the table with all its info
+            //     $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + eevv.reportArrays[idnum].category + '</td><td>' + eevv.reportArrays[idnum].nonSubstance + '</td><td>' + eevv.reportArrays[idnum].context + '</td><td>' + eevv.reportArrays[idnum].doseMethod + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + eevv.reportArrays[idnum].gender + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
+            //     // $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
 
-            });
+            // });
+
+
 
             pos = text.indexOf('exp.php?ID', pos + 1);
         }
@@ -440,14 +464,20 @@ eevv.scrapeReports = function () {
         if (iter >= allURLS.length) {
             //exportToCSV();
             console.log("we done");
+
+            console.log(eevv.newComplete);
+            var data = JSON.stringify(eevv.newComplete);
+            console.log(data);
+            // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
+            // window.open(url, '_blank');
+            // window.focus();
+
             return;
         }
 
         //get the source for the search, count the reports, and shove them
         //in the div
         eevv.getSourceCode(allURLS[iter].url, function () {
-             
-
             //we're flipping through pages. don't parse the original URL again
             if (onPageOne == true) {
                 parseSource(allURLS[iter].itemName, allURLS[iter].urlType); //send in item name, and type
@@ -457,7 +487,7 @@ eevv.scrapeReports = function () {
             var startBegin = url.indexOf("Start=") + 6;
             currStart += pageSize;
             nextPage = allURLS[iter].url.substring(0, startBegin - 6);
-            nextPage += "Start=" + (currStart) + "&Max=" + pageSize;
+            nextPage += "Start=" + (currStart) + "&Max=" + pageSize + "&Cellar=1";
 
             eevv.getSourceCode(nextPage, function () {
                 var totalBegin = eevv.URLSource.indexOf("><b>(") + 5;
@@ -496,5 +526,6 @@ eevv.scrapeReports = function () {
                 }
             });
         });
+
     }
 }

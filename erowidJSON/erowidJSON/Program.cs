@@ -94,7 +94,7 @@ namespace erowidJSON
 
 //			Console.WriteLine(stuff);
 
-			var json = File.ReadAllText(@"JSONS/complete_jul2016.json");
+			var json = File.ReadAllText(@"JSONS/complete_jul2016_withintensitynow.json");
 			IDictionary<string, IDictionary<string, string>> complete = 
 				JsonConvert.DeserializeObject<IDictionary<String, IDictionary<String, String>>>(json);
 			

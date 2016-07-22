@@ -6,6 +6,7 @@ eevv = {
     //for storing and grabbing source code that the ajax
     //request gets in sourceGetter.js
     URLSource: "",
+    recurseCount: 0,
 
     //holds all arrays that hold option values, as well
     //as their starting and ending points in the source code
@@ -13,6 +14,7 @@ eevv = {
 
     //final scraped data for reportScraper.js
     reportArrays: {},
+    newComplete: {},
 
     groups: {
         categories: "categories",
