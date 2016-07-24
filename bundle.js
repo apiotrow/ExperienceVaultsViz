@@ -25882,7 +25882,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var testfile = statfiles.context_gender;
     // console.log(testfile);
 
-    var t = getStats2(testfile, "Female", "perc", 10);
+    var t = getStats2(testfile, "Female", "perc", 1);
     // console.log(t);
 
     // t = getStats2(testfile, "Male", "perc", 10);
