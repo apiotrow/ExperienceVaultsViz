@@ -57,26 +57,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     var svgW = 600;
-    var svgH = 300;
+    var svgH = 500;
+    var margin_x = 32;
+    var margin_y = 20;
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
     // svg.append('circle').style('stroke', 'red').style('fill', 'yellow').attr('r',50).attr('cx', svgW/2)
     // .attr('cy', svgH/2);
 
     var g = svg.append("svg:g");
 
-    var circ1 = circ(g, 40, 30, 15, 'blue', 'green');
-    var rect1 = rect(g, 50, 100, 10, 100);
 
-    rect1.attr('transform', 'translate(100, 60),scale(2, 1),rotate(30, 150, 100)');
+    // var circ1 = circ(g, 40, 30, 15, 'blue', 'green');
+    // var rect1 = rect(g, 50, 100, 10, 100);
+
+    // rect1.attr('transform', 'translate(100, 60),scale(2, 1),rotate(30, 150, 100)');
     // rect1.attr('transform', 'scale(2, 1)');
     // rect1.attr('transform', 'rotate(30, 150, 100)');
 
-    circ1.transition().delay(100).duration(4000).attr('r',50).attr('cx', 90);
+    //expanding circle
+    // circ1.transition().delay(100).duration(4000).attr('r',50).attr('cx', 90).style('fill','red');
 
-    d3.select('svg').select('g').selectAll('rect').data(t).enter().append('rect')
-    .attr('width', 10).attr('x', function(d, i){return i * 10}).attr('h', function(d, i){return d[1] * 3})
-    .attr('y', 100);
 
+    // d3.select('svg').select('g').selectAll('rect').data(t).enter().append('rect')
+    // .attr('width', 10).attr('x', function(d, i){return i * 10}).attr('h', function(d, i){return d[1] * 3})
+    // .attr('y', 100);
+
+
+
+
+    //ch2
+    // var data = [100, 110, 140, 130, 80, 75, 120, 130, 100];
+    // var scale = d3.scaleLinear().domain([0,5]).range([0,255]);
+    // g.attr("transform", "translate(0," + svgH + ")"); //uncomment to make line graph show up
+    // console.log(t[0][1]);
+    var y = d3.scaleLinear().domain([0, t[0][1]]).range([0 + margin_y, svgH - margin_y]);
+    var x = d3.scaleLinear().domain([0, t.length]).range([0 + margin_x, svgW - margin_x]);
+    // var line = d3.line().x(function(d,i){return x(i);}).y(function(d,i){return -1 * y(t[i][1]);});
+    // g.append('svg:path').attr('d', line(t)).style('stroke',"blue").style('fill','red');
+
+    //bars
+    var bar = g.selectAll('rect')
+    .data(t).enter().append('rect')
+    .attr('x',function(d,i){return x(i);})
+    .attr('y', function(d,i){return svgH - y(t[i][1]);}) //top of bars
+    .attr('height',function(d,i){return y(t[i][1]);})
+    .attr('width', 20)
+    .style('fill','blue')
+    .style('opacity', 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //make shape functions
     function circ(obj, cx, cy, r, fill, outline){
         return obj.append('circle').attr('r',r).attr('cx', cx).attr('cy', cy).style('fill', fill).style('stroke',outline);
     }
@@ -86,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-
+    //bullet list
     d3.select('body').append('ul');
     d3.select('ul').selectAll('li').data(t).enter().append('li').text(function(d){
         return(d[0] + ": " + d[1]);
