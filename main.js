@@ -16,30 +16,42 @@ document.addEventListener('DOMContentLoaded', function () {
          context_category :require('./JSONS/output/context_category.json'),
          context_gender :require('./JSONS/output/context_gender.json'),
          context_intensity: require('./JSONS/output/context_intensity.json'),
+         context_nonsubstance: require('./JSONS/output/context_nonsubstance.json'),
 
          intensity: require('./JSONS/output/intensity.json'),
          intensity_context :require('./JSONS/output/intensity_context.json'),
          intensity_drug: require('./JSONS/output/intensity_drug.json'),
          intensity_category :require('./JSONS/output/intensity_category.json'),
          intensity_gender: require('./JSONS/output/intensity_gender.json'),
+         intensity_nonsubstance: require('./JSONS/output/intensity_nonsubstance.json'),
 
          gender: require('./JSONS/output/gender.json'),
          gender_context :require('./JSONS/output/gender_context.json'),
          gender_intensity: require('./JSONS/output/gender_intensity.json'),
          gender_drug: require('./JSONS/output/gender_drug.json'),
          gender_category: require('./JSONS/output/gender_category.json'),
+         gender_nonsubstance: require('./JSONS/output/gender_nonsubstance.json'),
 
          drug: require('./JSONS/output/drug.json'),
          drug_context: require('./JSONS/output/drug_context.json'),
          drug_intensity: require('./JSONS/output/drug_intensity.json'),
          drug_gender: require('./JSONS/output/drug_gender.json'),
          drug_category: require('./JSONS/output/drug_category.json'),
+         drug_nonsubstance: require('./JSONS/output/drug_nonsubstance.json'),
 
          category: require('./JSONS/output/category.json'),
          category_context: require('./JSONS/output/category_context.json'),
          category_intensity: require('./JSONS/output/category_intensity.json'),
          category_gender: require('./JSONS/output/category_gender.json'),
          category_drug: require('./JSONS/output/category_drug.json'),
+         category_nonsubstance: require('./JSONS/output/category_nonsubstance.json'),
+
+         nonsubstance: require('./JSONS/output/nonsubstance.json'),
+         nonsubstance_context: require('./JSONS/output/nonsubstance_context.json'),
+         nonsubstance_intensity: require('./JSONS/output/nonsubstance_intensity.json'),
+         nonsubstance_gender: require('./JSONS/output/nonsubstance_gender.json'),
+         nonsubstance_drug: require('./JSONS/output/nonsubstance_drug.json'),
+         nonsubstance_category: require('./JSONS/output/nonsubstance_category.json'),
     };
 
 
@@ -47,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //setup drawing area
     var svgW = 900;
     var bargW = 600;
+    var bargH = 570;
     var svgH = 600;
 
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
@@ -59,22 +72,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function barGraphHoriz(){
         var statObject = statfiles.context_gender;
         var stat = "Female";
-        var data = getStats2(statObject, stat, "perc", 1);
+        var rawOrPerc = "perc";
+        var data = getStats2(statObject, stat, rawOrPerc, 10);
+        console.log(data);
 
         var g = svg.append('svg:g');
 
-        var barH = 30;
+        var barH = bargH / data.length;
         var barAndTextPadding = 10;
         var color = d3.scale.category20();
-        var xScale = d3.scale.linear().domain([0, data[0][1]]).range([0, bargW]);
+        var barScale = d3.scale.linear().domain([data[data.length - 1][1], data[0][1]]).range([50, bargW]);
 
         var bars = 
         g.selectAll('rect').data(data).enter().append('rect')
         .style('fill', function(d,i){return color(i)})
         .attr('x', svgW - bargW)
-        .attr('y', function(d,i){return barH * i})
-        .attr('height', barH) //don't go past bottom margin
-        .attr('width', function(d,i){return xScale(d[1])})
+        .attr('y', function(d,i){return (barH * i) + (svgH - bargH)})
+        .attr('height', barH)
+        .attr('width', function(d,i){return barScale(d[1])})
         .attr('class','bar')
         .attr('stroke','black');
 
@@ -82,16 +97,23 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('text').data(data).enter().append('text')
         .text(function(d,i){return d[0]})
         .attr('x', svgW - bargW - barAndTextPadding)
-        .attr('y', function(d,i){return (barH * i) + barH / 2})
+        .attr('y', function(d,i){return ((barH * i) + barH / 1.3) + (svgH - bargH)})
         .attr('text-anchor','end')
         .style("font-size", 15);
 
-        g.attr('transform','translate(0,50)');
+        var avgBox = svg.append('svg:g');
+        avgBox.append('rect')
+        .attr('x', svgW - bargW)
+        .attr('y', (svgH - bargH))
+        .attr('height', bargH)
+        .attr('width', barScale(statfiles.gender[stat][rawOrPerc]))
+        .style('fill','red')
+        // .style('stroke','black')
+        .style('opacity', 0.3);
 
         var graphTitle = svg.append('svg:g');
         graphTitle.append('text').text(function(){
             for(key in statfiles){
-                console.log(key);
                 if(statfiles[key] == statObject)
                     return key + ": " + stat;
             }
@@ -119,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //---
         var testfile = statfiles.context_gender;
         var gender = "Female";
-        var data = getStats2(testfile, gender, "perc", 1);
+        var data = getStats2(testfile, gender, "raw", 250);
         console.log(data);
 
         var y = d3.scaleLinear().domain([0, data[0][1]]).range([0 + margin_y, svgH - margin_y]);
@@ -265,7 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if(file.hasOwnProperty(key)){
                 //make sure it has an entry for "Female" or whatever.
                 //if it doesn't, that means it was 0
-                if(file[key].hasOwnProperty(group) && file[key][group]["total"] >= thresh)
+                if(file[key].hasOwnProperty(group) && file[key][group]["raw"] >= thresh
+                     && file[key][group]["total"] >= thresh)
                     sortable.push([key, file[key][group][stat]]);
             }
 
