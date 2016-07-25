@@ -39,12 +39,12 @@ eevv.optionValues = function() {
             //     end: "S2",
             //     theArray: eevv.OptionValues_Drugs = []
             // };
-            // eevv.optionValueArrays[++iter] = {
-            //     type: "category",
-            //     begin: "C1",
-            //     end: "S4",
-            //     theArray: eevv.OptionValues_Category = []
-            // };
+            eevv.optionValueArrays[++iter] = {
+                type: "category",
+                begin: "C1",
+                end: "S4",
+                theArray: eevv.OptionValues_Category = []
+            };
             // eevv.optionValueArrays[++iter] = {
             //     type: "nonsubstance",
             //     begin: "S4",
@@ -81,12 +81,12 @@ eevv.optionValues = function() {
             //        end: "Group",
             //        theArray: OptionValues_Lang = []
             //    };
-            eevv.optionValueArrays[++iter] = {
-                type: "intensity",
-                begin: "Intensity",
-                end: "I2",
-                theArray: eevv.OptionValues_Intensity = []
-            };
+            // eevv.optionValueArrays[++iter] = {
+            //     type: "intensity",
+            //     begin: "Intensity",
+            //     end: "I2",
+            //     theArray: eevv.OptionValues_Intensity = []
+            // };
         }
 
 

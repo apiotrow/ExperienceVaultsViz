@@ -25935,11 +25935,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // barGraphOne();
 
     function barGraphHoriz(){
-        var statObject = statfiles.context_gender;
-        var stat = "Female";
+        var statObject = statfiles.gender_category;
+        var stat = "Addiction & Habituation";
+        console.log(statObject);
         var rawOrPerc = "perc";
-        var data = getStats2(statObject, stat, rawOrPerc, 10);
-        console.log(data);
+        var data = getStats2(statObject, stat, rawOrPerc, 50);
 
         var g = svg.append('svg:g');
 
@@ -25948,6 +25948,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var color = d3.scale.category20();
         var barScale = d3.scale.linear().domain([data[data.length - 1][1], data[0][1]]).range([50, bargW]);
 
+        //bars representing stat
         var bars = 
         g.selectAll('rect').data(data).enter().append('rect')
         .style('fill', function(d,i){return color(i)})
@@ -25958,6 +25959,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('class','bar')
         .attr('stroke','black');
 
+        //text labels left of bars
         var barText = 
         g.selectAll('text').data(data).enter().append('text')
         .text(function(d,i){return d[0]})
@@ -25966,18 +25968,29 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('text-anchor','end')
         .style("font-size", 15);
 
+        //translucent box that overlays graph and represents the norm for the selected stat
         var avgBox = svg.append('svg:g');
+        var p = "context_gender";
         avgBox.append('rect')
         .attr('x', svgW - bargW)
         .attr('y', (svgH - bargH))
         .attr('height', bargH)
-        .attr('width', barScale(statfiles.gender[stat][rawOrPerc]))
+        .attr('width', function(){
+            //e.g. if picked category_context.json, get stat from context.json
+            for(key in statfiles){
+                if(statfiles[key] == statObject) {
+                    return barScale(statfiles[key.substring(key.indexOf('_') + 1)][stat][rawOrPerc]);
+                }    
+            }
+        })
         .style('fill','red')
         // .style('stroke','black')
         .style('opacity', 0.3);
 
+        //top center text
         var graphTitle = svg.append('svg:g');
         graphTitle.append('text').text(function(){
+            //get object name for json we picked
             for(key in statfiles){
                 if(statfiles[key] == statObject)
                     return key + ": " + stat;
@@ -26152,7 +26165,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if(file.hasOwnProperty(key)){
                 //make sure it has an entry for "Female" or whatever.
                 //if it doesn't, that means it was 0
-                if(file[key].hasOwnProperty(group) && file[key][group]["raw"] >= thresh
+                if(file[key].hasOwnProperty(group)
                      && file[key][group]["total"] >= thresh)
                     sortable.push([key, file[key][group][stat]]);
             }

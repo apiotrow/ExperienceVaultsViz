@@ -878,7 +878,7 @@ namespace erowidJSON
 			//make all permutations for length of 1 (should be same number as # of items in allGroups)
 			//--
 			//how many categories are compared, e.g. 2 = gender_context, 3 = gender_context_category
-			int permLength = 3; 
+			int permLength = 1; 
 			IEnumerable<IEnumerable<int>> result =
 				GetPermutations(Enumerable.Range(0, 6), permLength);
 			int permCount = 0;
@@ -902,15 +902,15 @@ namespace erowidJSON
 			}
 
 			//make all permutations for length of 3
-			permLength = 1; 
-			result = GetPermutations(Enumerable.Range(0, 6), permLength);
-			foreach(var perm in result){
-				permList.Add(new List<int>());
-				foreach(var num in perm){
-					permList[permCount].Add(num);
-				}
-				permCount++;
-			}
+//			permLength = 3; 
+//			result = GetPermutations(Enumerable.Range(0, 6), permLength);
+//			foreach(var perm in result){
+//				permList.Add(new List<int>());
+//				foreach(var num in perm){
+//					permList[permCount].Add(num);
+//				}
+//				permCount++;
+//			}
 
 
 			//check permutations list by printing out
