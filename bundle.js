@@ -25879,27 +25879,14 @@ document.addEventListener('DOMContentLoaded', function () {
          category_drug: require('./JSONS/output/category_drug.json'),
     };
 
-    var testfile = statfiles.context_gender;
-    // console.log(testfile);
-
-    var t = getStats2(testfile, "Female", "perc", 1);
-    // console.log(t);
-
-    // t = getStats2(testfile, "Male", "perc", 10);
-    // console.log(t);
-
-    // testfile = statfiles.gender;
-    // t = getStats1(testfile, "perc", 10);
-    console.log(t);
 
 
+    //setup drawing area
     var svgW = 600;
     var svgH = 500;
     var margin_x = 32;
     var margin_y = 20;
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
-    // svg.append('circle').style('stroke', 'red').style('fill', 'yellow').attr('r',50).attr('cx', svgW/2)
-    // .attr('cy', svgH/2);
 
     var g = svg.append("svg:g");
 
@@ -25915,36 +25902,71 @@ document.addEventListener('DOMContentLoaded', function () {
     // circ1.transition().delay(100).duration(4000).attr('r',50).attr('cx', 90).style('fill','red');
 
 
-    // d3.select('svg').select('g').selectAll('rect').data(t).enter().append('rect')
-    // .attr('width', 10).attr('x', function(d, i){return i * 10}).attr('h', function(d, i){return d[1] * 3})
-    // .attr('y', 100);
 
+    //BAR GRAPH
+    //---
+    var testfile = statfiles.context_gender;
+    var gender = "Female";
+    var data = getStats2(testfile, gender, "perc", 1);
+    console.log(data);
 
+    var y = d3.scaleLinear().domain([0, data[0][1]]).range([0 + margin_y, svgH - margin_y]);
+    var x = d3.scaleLinear().domain([0, data.length]).range([0 + margin_x, svgW - margin_x]);
 
+    //numbers on scale
+    g.selectAll('.yLabel').data(y.ticks(5)).enter().append('svg:text').attr('class','yLabel')
+    .text(String).attr('x',25).attr('y', function(d,i){return svgH - y(d)}).attr('text-anchor','end');
 
-    //ch2
-    // var data = [100, 110, 140, 130, 80, 75, 120, 130, 100];
-    // var scale = d3.scaleLinear().domain([0,5]).range([0,255]);
-    // g.attr("transform", "translate(0," + svgH + ")"); //uncomment to make line graph show up
-    // console.log(t[0][1]);
-    var y = d3.scaleLinear().domain([0, t[0][1]]).range([0 + margin_y, svgH - margin_y]);
-    var x = d3.scaleLinear().domain([0, t.length]).range([0 + margin_x, svgW - margin_x]);
-    // var line = d3.line().x(function(d,i){return x(i);}).y(function(d,i){return -1 * y(t[i][1]);});
-    // g.append('svg:path').attr('d', line(t)).style('stroke',"blue").style('fill','red');
+    //%s on scale
+    g.selectAll('.yPercents').data(y.ticks(5)).enter().append('svg:text').attr('class','yPercents').text("%")
+    .attr('x',25).attr('y', function(d,i){return svgH - y(d)});
+
+    //horizonal grid lines
+    var yGrid = g.selectAll('.yGrid').data(y.ticks(5)).enter().append('svg:line').attr('class','yGrid')
+    .attr('x1', 0).attr('y1', function(d,i){return svgH - y(d)})
+    .attr('x2', svgW).attr('y2', function(d,i){return svgH - y(d)}).attr('stroke','gray');
 
     //bars
     var bar = g.selectAll('rect')
-    .data(t).enter().append('rect')
+    .data(data).enter().append('rect')
     .attr('x',function(d,i){return x(i);})
-    .attr('y', function(d,i){return svgH - y(t[i][1]);}) //top of bars
-    .attr('height',function(d,i){return y(t[i][1]);})
+    .attr('y', function(d,i){return svgH - y(d[1]);}) //top of bars
+    .attr('height',function(d,i){return y(d[1]) - margin_y;}) //don't go past bottom margin
     .attr('width', 20)
     .style('fill','blue')
-    .style('opacity', 1);
+    .style('opacity', 1)
+    .attr('class','bar');
+
+    //bar labels
+    g.selectAll(".bar").enter().data(data).enter().append('text')
+    .text(function(d,i){return d[0];})
+    .attr('x',function(d,i){return x(i);})
+    .attr('y', function(d,i){return svgH - y(d[1]);})
+    .attr('class','barlabel');
+
+    // g.selectAll('.barlabel').attr('transform', 'rotate(30, 0, 0)');
 
 
 
+    // g.selectAll('.bar').data(data).enter().append('svg:text')
+    // .text(function(d,i){return d[0];})
+    // .attr('x',function(d,i){return x(i);})
+    // .attr('y', function(d,i){return svgH - y(d[1]);}) //top of bars
+    // .style('fill','blue')
+    // .style('opacity', 1);
 
+    bar.attr('transform','translate(20,0)'); //push them right so scale numbers aren't on top
+    yGrid.attr('transform','translate(50,0)');
+    // g..attr('transform', 'rotate(30, 150, 100)');
+
+    //load gender alone data
+    testfile = statfiles.gender;
+    data = getStats1(testfile, "perc", 1);
+
+    //make translucent block showing the average
+    var avgBlock = g.append('rect').attr('x', 50).attr('y', y(testfile[gender]['perc']))
+    .attr('width', svgW).attr('height', y(testfile["Female"]['perc']) - margin_y)
+    .style('opacity', 0.5).style('fill','orange');
 
 
 
@@ -25966,7 +25988,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //bullet list
     d3.select('body').append('ul');
-    d3.select('ul').selectAll('li').data(t).enter().append('li').text(function(d){
+    d3.select('ul').selectAll('li').data(data).enter().append('li').text(function(d){
         return(d[0] + ": " + d[1]);
     });
 
