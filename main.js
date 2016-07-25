@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var y = d3.scaleLinear().domain([0, data[0][1]]).range([0 + margin_y, svgH - margin_y]);
     var x = d3.scaleLinear().domain([0, data.length]).range([0 + margin_x, svgW - margin_x]);
+    // var x = d3.scaleOrdinal().band([0,svgW]);
+
 
     //numbers on scale
     g.selectAll('.yLabel').data(y.ticks(5)).enter().append('svg:text').attr('class','yLabel')
@@ -100,24 +102,21 @@ document.addEventListener('DOMContentLoaded', function () {
     .style('opacity', 1)
     .attr('class','bar');
 
+
+
     //bar labels
-    g.selectAll(".bar").enter().data(data).enter().append('text')
+    var labels = g.selectAll(".bar").enter().data(data).enter().append('svg:text')
     .text(function(d,i){return d[0];})
     .attr('x',function(d,i){return x(i);})
     .attr('y', function(d,i){return svgH - y(d[1]);})
+    // .attr('dx',function(d,i){return x(i);})
+    // .attr('dy', function(d,i){return svgH - y(d[1]);})
+    .attr("transform", function(d,i){return "rotate("+-25+","+x(i)+"," +(svgH - y(d[1]))+")";})
     .attr('class','barlabel');
-
-    // g.selectAll('.barlabel').attr('transform', 'rotate(30, 0, 0)');
-
+    // g.selectAll('.barlabel').attr('transform','translate(20,0)');
 
 
-    // g.selectAll('.bar').data(data).enter().append('svg:text')
-    // .text(function(d,i){return d[0];})
-    // .attr('x',function(d,i){return x(i);})
-    // .attr('y', function(d,i){return svgH - y(d[1]);}) //top of bars
-    // .style('fill','blue')
-    // .style('opacity', 1);
-
+    // labels.attr('transform','translate(20,0)');
     bar.attr('transform','translate(20,0)'); //push them right so scale numbers aren't on top
     yGrid.attr('transform','translate(50,0)');
     // g..attr('transform', 'rotate(30, 150, 100)');
