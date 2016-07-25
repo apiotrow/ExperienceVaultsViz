@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 	var globs = require('./js/phaservis/eevvStuff.js');
     var eevv = new globs.eevvStuff();
-    var d3 = require('d3');
+    var d3 = require('./js/phaservis/d3.min.js');
     var $ = require('./js/phaservis/jquery.js')
 
     // var completeCompiler = require('./js/phaservis/completeCompiler.js');
@@ -45,135 +45,191 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     //setup drawing area
-    var svgW = 600;
-    var svgH = 500;
-    var margin_x = 32;
-    var margin_y = 20;
+    var svgW = 900;
+    var bargW = 600;
+    var svgH = 600;
+
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
 
-    var g = svg.append("svg:g");
 
 
-    // var circ1 = circ(g, 40, 30, 15, 'blue', 'green');
-    // var rect1 = rect(g, 50, 100, 10, 100);
+    barGraphHoriz();
+    // barGraphOne();
 
-    // rect1.attr('transform', 'translate(100, 60),scale(2, 1),rotate(30, 150, 100)');
-    // rect1.attr('transform', 'scale(2, 1)');
-    // rect1.attr('transform', 'rotate(30, 150, 100)');
+    function barGraphHoriz(){
+        var statObject = statfiles.context_gender;
+        var stat = "Female";
+        var data = getStats2(statObject, stat, "perc", 1);
 
-    //expanding circle
-    // circ1.transition().delay(100).duration(4000).attr('r',50).attr('cx', 90).style('fill','red');
+        var g = svg.append('svg:g');
 
+        var barH = 30;
+        var barAndTextPadding = 10;
+        var color = d3.scale.category20();
+        var xScale = d3.scale.linear().domain([0, data[0][1]]).range([0, bargW]);
 
+        var bars = 
+        g.selectAll('rect').data(data).enter().append('rect')
+        .style('fill', function(d,i){return color(i)})
+        .attr('x', svgW - bargW)
+        .attr('y', function(d,i){return barH * i})
+        .attr('height', barH) //don't go past bottom margin
+        .attr('width', function(d,i){return xScale(d[1])})
+        .attr('class','bar')
+        .attr('stroke','black');
 
-    //BAR GRAPH
-    //---
-    var testfile = statfiles.context_gender;
-    var gender = "Female";
-    var data = getStats2(testfile, gender, "perc", 1);
-    console.log(data);
+        var barText = 
+        g.selectAll('text').data(data).enter().append('text')
+        .text(function(d,i){return d[0]})
+        .attr('x', svgW - bargW - barAndTextPadding)
+        .attr('y', function(d,i){return (barH * i) + barH / 2})
+        .attr('text-anchor','end')
+        .style("font-size", 15);
 
-    var y = d3.scaleLinear().domain([0, data[0][1]]).range([0 + margin_y, svgH - margin_y]);
-    var x = d3.scaleLinear().domain([0, data.length]).range([0 + margin_x, svgW - margin_x]);
-    // var x = d3.scaleOrdinal().band([0,svgW]);
+        g.attr('transform','translate(0,50)');
 
-
-    //numbers on scale
-    g.selectAll('.yLabel').data(y.ticks(5)).enter().append('svg:text').attr('class','yLabel')
-    .text(String).attr('x',25).attr('y', function(d,i){return svgH - y(d)}).attr('text-anchor','end');
-
-    //%s on scale
-    g.selectAll('.yPercents').data(y.ticks(5)).enter().append('svg:text').attr('class','yPercents').text("%")
-    .attr('x',25).attr('y', function(d,i){return svgH - y(d)});
-
-    //horizonal grid lines
-    var yGrid = g.selectAll('.yGrid').data(y.ticks(5)).enter().append('svg:line').attr('class','yGrid')
-    .attr('x1', 0).attr('y1', function(d,i){return svgH - y(d)})
-    .attr('x2', svgW).attr('y2', function(d,i){return svgH - y(d)}).attr('stroke','gray');
-
-    //bars
-    var bar = g.selectAll('rect')
-    .data(data).enter().append('rect')
-    .attr('x',function(d,i){return x(i);})
-    .attr('y', function(d,i){return svgH - y(d[1]);}) //top of bars
-    .attr('height',function(d,i){return y(d[1]) - margin_y;}) //don't go past bottom margin
-    .attr('width', 20)
-    .style('fill','blue')
-    .style('opacity', 1)
-    .attr('class','bar');
-
-
-
-    //bar labels
-    var labels = g.selectAll(".bar").enter().data(data).enter().append('svg:text')
-    .text(function(d,i){return d[0];})
-    .attr('x',function(d,i){return x(i);})
-    .attr('y', function(d,i){return svgH - y(d[1]);})
-    // .attr('dx',function(d,i){return x(i);})
-    // .attr('dy', function(d,i){return svgH - y(d[1]);})
-    .attr("transform", function(d,i){return "rotate("+-25+","+x(i)+"," +(svgH - y(d[1]))+")";})
-    .attr('class','barlabel');
-    // g.selectAll('.barlabel').attr('transform','translate(20,0)');
-
-
-    // labels.attr('transform','translate(20,0)');
-    bar.attr('transform','translate(20,0)'); //push them right so scale numbers aren't on top
-    yGrid.attr('transform','translate(50,0)');
-    // g..attr('transform', 'rotate(30, 150, 100)');
-
-    //load gender alone data
-    testfile = statfiles.gender;
-    data = getStats1(testfile, "perc", 1);
-
-    //make translucent block showing the average
-    var avgBlock = g.append('rect').attr('x', 50).attr('y', y(testfile[gender]['perc']))
-    .attr('width', svgW).attr('height', y(testfile["Female"]['perc']) - margin_y)
-    .style('opacity', 0.5).style('fill','orange');
+        var graphTitle = svg.append('svg:g');
+        graphTitle.append('text').text(function(){
+            for(key in statfiles){
+                console.log(key);
+                if(statfiles[key] == statObject)
+                    return key + ": " + stat;
+            }
+        })
+        .attr('x', svgW / 2)
+        .attr('y', 20)
+        .attr('text-anchor','middle');
 
 
 
-
-
-
-
-
-
-    //make shape functions
-    function circ(obj, cx, cy, r, fill, outline){
-        return obj.append('circle').attr('r',r).attr('cx', cx).attr('cy', cy).style('fill', fill).style('stroke',outline);
-    }
-
-    function rect(obj, x, y, w, h){
-        return obj.append('rect').attr('x', x).attr('y', y).attr('width', w).attr('height', h);
     }
 
 
-    //bullet list
-    d3.select('body').append('ul');
-    d3.select('ul').selectAll('li').data(data).enter().append('li').text(function(d){
-        return(d[0] + ": " + d[1]);
-    });
+
+
+
+    
+
+    function barGraphOne(){
+        var g = svg.append("svg:g");
+        var margin_x = 32;
+        var margin_y = 20;
+
+        //BAR GRAPH
+        //---
+        var testfile = statfiles.context_gender;
+        var gender = "Female";
+        var data = getStats2(testfile, gender, "perc", 1);
+        console.log(data);
+
+        var y = d3.scaleLinear().domain([0, data[0][1]]).range([0 + margin_y, svgH - margin_y]);
+        var x = d3.scaleLinear().domain([0, data.length]).range([0 + margin_x, svgW - margin_x]);
+        // var x = d3.scaleOrdinal().band([0,svgW]);
+
+
+        //numbers on scale
+        g.selectAll('.yLabel').data(y.ticks(5)).enter().append('svg:text').attr('class','yLabel')
+        .text(String).attr('x',25).attr('y', function(d,i){return svgH - y(d)}).attr('text-anchor','end');
+
+        //%s on scale
+        g.selectAll('.yPercents').data(y.ticks(5)).enter().append('svg:text').attr('class','yPercents').text("%")
+        .attr('x',25).attr('y', function(d,i){return svgH - y(d)});
+
+        //horizonal grid lines
+        var yGrid = g.selectAll('.yGrid').data(y.ticks(5)).enter().append('svg:line').attr('class','yGrid')
+        .attr('x1', 0).attr('y1', function(d,i){return svgH - y(d)})
+        .attr('x2', svgW).attr('y2', function(d,i){return svgH - y(d)}).attr('stroke','gray');
+
+        //bars
+        var bar = g.selectAll('rect')
+        .data(data).enter().append('rect')
+        .attr('x',function(d,i){return x(i);})
+        .attr('y', function(d,i){return svgH - y(d[1]);}) //top of bars
+        .attr('height',function(d,i){return y(d[1]) - margin_y;}) //don't go past bottom margin
+        .attr('width', 20)
+        .style('fill','blue')
+        .style('opacity', 1)
+        .attr('class','bar');
+
+
+
+        //bar labels
+        var labels = g.selectAll(".bar").enter().data(data).enter().append('svg:text')
+        .text(function(d,i){return d[0];})
+        .attr('x',function(d,i){return x(i);})
+        .attr('y', function(d,i){return svgH - y(d[1]);})
+        // .attr('dx',function(d,i){return x(i);})
+        // .attr('dy', function(d,i){return svgH - y(d[1]);})
+        .attr("transform", function(d,i){return "rotate("+-25+","+x(i)+"," +(svgH - y(d[1]))+")";})
+        .attr('class','barlabel');
+        // g.selectAll('.barlabel').attr('transform','translate(20,0)');
+
+
+        // labels.attr('transform','translate(20,0)');
+        bar.attr('transform','translate(20,0)'); //push them right so scale numbers aren't on top
+        yGrid.attr('transform','translate(50,0)');
+        // g..attr('transform', 'rotate(30, 150, 100)');
+
+        //load gender alone data
+        testfile = statfiles.gender;
+        data = getStats1(testfile, "perc", 1);
+
+        //make translucent block showing the average
+        var avgBlock = g.append('rect').attr('x', 50).attr('y', y(testfile[gender]['perc']))
+        .attr('width', svgW).attr('height', y(testfile["Female"]['perc']) - margin_y)
+        .style('opacity', 0.5).style('fill','orange');
+    }
+
+    function firstTests(){
+        // var circ1 = circ(g, 40, 30, 15, 'blue', 'green');
+        // var rect1 = rect(g, 50, 100, 10, 100);
+
+        // rect1.attr('transform', 'translate(100, 60),scale(2, 1),rotate(30, 150, 100)');
+        // rect1.attr('transform', 'scale(2, 1)');
+        // rect1.attr('transform', 'rotate(30, 150, 100)');
+
+        //expanding circle
+        // circ1.transition().delay(100).duration(4000).attr('r',50).attr('cx', 90).style('fill','red');
+
+        //make shape functions
+        function circ(obj, cx, cy, r, fill, outline){
+            return obj.append('circle').attr('r',r).attr('cx', cx).attr('cy', cy).style('fill', fill).style('stroke',outline);
+        }
+
+        function rect(obj, x, y, w, h){
+            return obj.append('rect').attr('x', x).attr('y', y).attr('width', w).attr('height', h);
+        }
+
+
+        //bullet list
+        d3.select('body').append('ul');
+        d3.select('ul').selectAll('li').data(data).enter().append('li').text(function(d){
+            return(d[0] + ": " + d[1]);
+        });
+
+        // var selection = d3.selectAll("div");
+        // selection.text("hey");
+
+        // d3.selectAll("div")
+        // .text("yoyo")
+        // .style('text-align','left')
+        // .append("p")
+        // .text("hi");
+
+        // d3.select("div").append('p').text("yes");
+
+        // d3.select('body').insert('div', 'div:nth-child(3)').text("yee");
+
+        // console.log(d3.selectAll("div").text());
+        // d3.select("h1").attr('align',"center").html('<h2>heyguys</h2>');
+
+        // d3.select('body').html("<h1>fuck you</h1>");
+    }
 
 
 
 
-    // var selection = d3.selectAll("div");
-    // selection.text("hey");
 
-    // d3.selectAll("div")
-    // .text("yoyo")
-    // .style('text-align','left')
-    // .append("p")
-    // .text("hi");
-
-    // d3.select("div").append('p').text("yes");
-
-    // d3.select('body').insert('div', 'div:nth-child(3)').text("yee");
-
-    // console.log(d3.selectAll("div").text());
-    // d3.select("h1").attr('align',"center").html('<h2>heyguys</h2>');
-
-    // d3.select('body').html("<h1>fuck you</h1>");
 
 
 
