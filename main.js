@@ -54,27 +54,24 @@ document.addEventListener('DOMContentLoaded', function () {
          nonsubstance_category: require('./JSONS/output/nonsubstance_category.json'),
     };
 
-
-
     //setup drawing area
     var svgW = 900;
     var bargW = 600;
     var bargH = 570;
     var svgH = 600;
-
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
-
-
 
     barGraphHoriz();
     // barGraphOne();
 
     function barGraphHoriz(){
-        var statObject = statfiles.gender_category;
-        var stat = "Addiction & Habituation";
+        var statObject = statfiles.drug_context;
+        var stat = "Group Ceremony";
+
         console.log(statObject);
         var rawOrPerc = "perc";
-        var data = getStats2(statObject, stat, rawOrPerc, 50);
+        var data = getStats2(statObject, stat, rawOrPerc, 200);
+        // var data = getStats1(statObject, rawOrPerc, 1);
 
         var g = svg.append('svg:g');
 
