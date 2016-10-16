@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var _ = require('./js/phaservis/lodash.js');
 
+	console.log("sdds");
+
+
     //stat files
     var statfiles = {
          context: require('./JSONS/output/context.json'),

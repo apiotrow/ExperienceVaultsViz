@@ -1,33 +1,65 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
 
 <head>
     <link rel="stylesheet" type="text/css" href="css/formatting.css">
+    <script src="./node_modules/phaser/build/phaser.js" charset="utf-8"></script>
+    <script src="bundle.js"></script>
+
+<!-- 
+    <script src="./node_modules/d3/build/d3.min.js" charset="utf-8"></script>
+     -->
+<!-- <script src="./js/lib/d3.min.js" charset="utf-8"></script>
+ -->
+
+
 </head>
 
-<body>
-    <center>
-        <p id="top-heading">
-            Erowid Experience Vaults Visualization
-        </p>
-        <p id="top-subheading">
-            Main Page
-        </p>
-        
-        <hr>
-        
-        <p id="top-links">
-            <a href="index.html">Main Page</a>&nbsp;&nbsp;&nbsp;
-            <a href="scraper.html">Scraper</a>&nbsp;&nbsp;&nbsp;
-            <a href="viz.html">Visualizations</a>&nbsp;&nbsp;&nbsp;
-        </p>
-        
-        <hr>
-        
-        Welcome to my <a href="https://www.erowid.org/experiences/exp_front.shtml">Erowid Experience Vaults</a> data scraping / data visualizing project.
+<style>
+    .inactive,
+    .tentative {
+        stroke: darkgray;
+        stroke-width: 2px;
+        stroke-dasharray: 5 5;
+    }
+    .tentative {
+        opacity: .5;
+    }
+    .active {
+        stroke: black;
+        stroke-width: 4px;
+        stroke-dasharray: 1;
+    }
+    circle {
+        fill: red;
+    }
+    rect {
+        fill: darkgray;
+        Using HTML5 27
+    }
+    #textViz, tr, td{
+        text-align: left;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-right: 10px;
+        border: 0px;
+        font-size: 12pt
+    }
+    #link{
+        font-size: 12pt;
+    }
+    div
+    {
+        /*background-color:#ccc;*/
+        width: 100%;
+    }
+</style>
 
-        <hr>
-    </center>
+<body>
+
+<div id="vis"></div>
+
 
 </body>
 
