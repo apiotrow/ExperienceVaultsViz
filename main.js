@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var _ = require('./js/phaservis/lodash.js');
 
-	console.log("sdds");
-
-
     //stat files
     var statfiles = {
          context: require('./JSONS/output/context.json'),
@@ -64,13 +61,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var svgH = 600;
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
 
-    barGraphHoriz();
+    barGraphHoriz(statfiles.drug_category, eevv.categories.addiction);
     // barGraphOne();
+	svg.selectAll("*").remove();
+    barGraphHoriz(statfiles.drug_category, eevv.categories.difficultExp);
 
-    function barGraphHoriz(){
-        var statObject = statfiles.drug_context;
-        var stat = "Group Ceremony";
+    function createMenu(){
+    	
+    }
 
+    function barGraphHoriz(statObject, stat){
         console.log(statObject);
         var rawOrPerc = "perc";
         var data = getStats2(statObject, stat, rawOrPerc, 200);
@@ -134,16 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('x', svgW / 2)
         .attr('y', 20)
         .attr('text-anchor','middle');
-
-
-
     }
 
 
-
-
-
-    
 
     function barGraphOne(){
         var g = svg.append("svg:g");
