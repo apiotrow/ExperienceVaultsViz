@@ -8,7 +8,6 @@ using System.Linq;
 public class uibargraph : MonoBehaviour {
     public List<RectTransform> bars; //holds bar transform so we can modify their height
     Dictionary<string, float> dataDict; //holds the <group, raw/perc> data that we graph
-    List<float> valuesList; //just the values
 
     class Metric
     {
@@ -20,7 +19,6 @@ public class uibargraph : MonoBehaviour {
 
     void Start () {
         dataDict = new Dictionary<string, float>();
-        valuesList = new List<float>();
 
         setupButtons();
         TextAsset asset = Resources.Load(Path.Combine("output", "drug")) as TextAsset;
@@ -29,12 +27,12 @@ public class uibargraph : MonoBehaviour {
         setupDict(j, metric.raw, 100f);
         sortDict(dataDict);
 
-        valuesList = dataDict.Values.ToList();
-
         //foreach (var entry in dataDict)
         //{
         //    print(entry.Key + ": " + entry.Value);
         //}
+
+        createBarGraph(dataDict);
 
     }
 
@@ -60,7 +58,7 @@ public class uibargraph : MonoBehaviour {
         Button btn;
         btn = GameObject.Find("Button1").GetComponent("Button") as Button;
         btn.onClick.AddListener(() => {
-            createBarGraph(valuesList);
+            createBarGraph(dataDict);
         });
         //btn = GameObject.Find("Button2").GetComponent("Button") as Button;
         //btn.onClick.AddListener(() => {
@@ -74,7 +72,7 @@ public class uibargraph : MonoBehaviour {
 
 
     //make bar graph with given data
-    void createBarGraph(List<float> a)
+    void createBarGraph(Dictionary<string, float> a)
     {
         //create new list of bar dimensions
         bars.Clear();
@@ -105,7 +103,7 @@ public class uibargraph : MonoBehaviour {
     }
 
     //make bars grow up to needed height
-    IEnumerator barHeightLerp(List<float> data)
+    IEnumerator barHeightLerp(Dictionary<string, float> a)
     {
         while (true)
         {
@@ -115,12 +113,15 @@ public class uibargraph : MonoBehaviour {
             for (int i = 0; i < bars.Count; i++)
             {
                 //clamp bar height so the tallest bar is right up the the top edge of the screen
-                float goToThisHeight = (data[i] / data.Max()) * 22f;
+                //float goToThisHeight = (data[i] / data.Max()) * 22f;
+                float goToThisHeight = (a.Values.ElementAt(i) / a.Values.ElementAt(0)) * 22f;
+
 
                 bars[i].transform.localScale = new Vector3(1f, Mathf.Lerp(bars[i].transform.localScale.y, goToThisHeight, Time.deltaTime * 5f), 1f);
+                bars[i].transform.Find("Text").GetComponent<Text>().text = a.Keys.ElementAt(i);
 
                 //if we haven't hit the right height, coroutine still has to go
-                if (Mathf.Abs(data[i] - bars[i].transform.localScale.y) > 0.01f)
+                if (Mathf.Abs(a.Values.ElementAt(i) - bars[i].transform.localScale.y) > 0.01f)
                 {
                     done = false;
                 }

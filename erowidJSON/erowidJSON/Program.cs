@@ -418,7 +418,7 @@ namespace erowidJSON
 					"Idebenone",
 					"Ilex guayusa",
 					"Indian Warrior",
-					"Inhalants",
+					//"Inhalants",
 					"Inhalants - Nitrites",
 					"Isopropylphenidate",
 					"JB-336",
@@ -532,8 +532,8 @@ namespace erowidJSON
 					"Nootka Lupine",
 					"Nutmeg",
 					"Ondansetron",
-					"Opiates",
-					"Opioids",
+					//"Opiates",
+					//"Opioids",
 					"Opium",
 					"Orphenadrine",
 					"Oxandrolone",
@@ -709,10 +709,10 @@ namespace erowidJSON
 					"Smarts - Phenibut",
 					"Sophora secundiflora",
 					"Spearmint",
-					"SSRIs",
+					//"SSRIs",
 					"St. John's Wort",
-					"Steroids",
-					"Stimulants",
+					//"Steroids",
+					//"Stimulants",
 					"Stipa robusta",
 					"Sumatriptan",
 					"Synaptolepis kirkii",
@@ -740,13 +740,13 @@ namespace erowidJSON
 					"Turbina corymbosa",
 					"Tyrosine",
 					"U-47700",
-					"Unknown",
+					//"Unknown",
 					"UR-144",
 					"Uvaursi",
 					"Valerian",
 					"Vardenafil",
 					"Varenicline",
-					"Various",
+					//"Various",
 					"Vasopressin",
 					"Vervain",
 					"Vinpocetine",
@@ -973,23 +973,51 @@ namespace erowidJSON
 						}
 					}
 
-					//collect total
-					double thisTot = 0;
-					foreach(string one in group1){
-						if(res1.ContainsKey(one)){
-							thisTot += res1[one]["raw"];
-						}
-					}
+                    //collect all report IDs (this is the total for 1-group stats)
+                    int cnt = 0;
+                    foreach (var item in complete)
+                    {
+                        cnt++;
+                    }
+                    foreach (string one in group1)
+                    {
+                        if (res1.ContainsKey(one))
+                        {
+                            res1[one]["total"] = cnt;
+                        }
+                    }
 
-					//calculate percents
-					foreach(string one in group1){
-						if(res1.ContainsKey(one)){
-							res1[one]["total"] = thisTot;
-							res1[one]["perc"] = (res1[one]["raw"] / thisTot) * 100f;
-						}
-					}
+                    ////calculate percents
+                    foreach (string one in group1)
+                    {
+                        if (res1.ContainsKey(one))
+                        {
+                            res1[one]["perc"] = (res1[one]["raw"] / res1[one]["total"]) * 100f;
+                        }
+                    }
 
-					fileName = group1name + ".json";
+
+
+
+
+
+                    //collect total
+                    //               double thisTot = 0;
+                    //foreach(string one in group1){
+                    //	if(res1.ContainsKey(one)){
+                    //		thisTot += res1[one]["raw"];
+                    //	}
+                    //}
+
+                    //calculate percents
+                    //foreach(string one in group1){
+                    //	if(res1.ContainsKey(one)){
+                    //		res1[one]["total"] = thisTot;
+                    //		res1[one]["perc"] = (res1[one]["raw"] / thisTot) * 100f;
+                    //	}
+                    //}
+
+                    fileName = group1name + ".json";
 					DicToJSON(res1, fileName);
 				}else if(perm.Count == 2){
 					group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];
@@ -1030,29 +1058,57 @@ namespace erowidJSON
 						}
 					}
 
+                    //collect all report IDs that have group1 in them
+                    HashSet<string> reportsThatMatch = new HashSet<string>();
+                    foreach (string one in group1)
+                    {
+                        reportsThatMatch.Clear();
+                        foreach (var item in complete)
+                        {
+                            if (complete[item.Key].ContainsKey(one))
+                            {
+                                if (!reportsThatMatch.Contains(item.Key))
+                                    reportsThatMatch.Add(item.Key);
+                            }
+                        }
+                        foreach (string two in group2)
+                        {
+                            if (res2.ContainsKey(one))
+                            {
+                                if (res2[one].ContainsKey(two))
+                                {
+                                    res2[one][two].Add("total", reportsThatMatch.Count);
+                                    res2[one][two]["perc"] = (res2[one][two]["raw"] / reportsThatMatch.Count) * 100f;
+                                }
+                            }
+                        }
+                    }
 
-					foreach(string one in group1){
-						//collect total
-						double thisTot = 0;
-						foreach(string two in group2){
-							if(res2.ContainsKey(one)){
-								if(res2[one].ContainsKey(two)){
-									thisTot += res2[one][two]["raw"];
-								}
-							}					
-						}
-						//calculate percents
-						foreach(string two in group2){
-							if(res2.ContainsKey(one)){
-								if(res2[one].ContainsKey(two)){
-									res2[one][two].Add("total", thisTot);
-									res2[one][two]["perc"] = (res2[one][two]["raw"] / thisTot) * 100f;
-								}
-							}					
-						}
-					}
 
-					fileName = group1name + "_" + group2name + ".json";
+
+
+                    //               foreach (string one in group1){
+                    //	//collect total
+                    //	double thisTot = 0;
+                    //	foreach(string two in group2){
+                    //		if(res2.ContainsKey(one)){
+                    //			if(res2[one].ContainsKey(two)){
+                    //				thisTot += res2[one][two]["raw"];
+                    //			}
+                    //		}					
+                    //	}
+                    //	//calculate percents
+                    //	foreach(string two in group2){
+                    //		if(res2.ContainsKey(one)){
+                    //			if(res2[one].ContainsKey(two)){
+                    //				res2[one][two].Add("total", thisTot);
+                    //				res2[one][two]["perc"] = (res2[one][two]["raw"] / thisTot) * 100f;
+                    //			}
+                    //		}					
+                    //	}
+                    //}
+
+                    fileName = group1name + "_" + group2name + ".json";
 					DicToJSON(res2, fileName);
 				}else if(perm.Count == 3){
 					group1 = allGroups[allGroups.Keys.ElementAt(perm[0])];

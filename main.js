@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }    
             }
         })
-        .style('fill','red')
+        .style('fill','blue')
         // .style('stroke','black')
         .style('opacity', 0.3);
 
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-
+/*
     function barGraphOne(){
         var g = svg.append("svg:g");
         var margin_x = 32;
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // d3.select('body').html("<h1>fuck you</h1>");
     }
 
-
+*/
 
 
 
