@@ -63,97 +63,107 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //setup drug button area
     var buttonSVGW= 900;
-    var buttonSVGH = 250;
+    var buttonSVGH = 350;
     var buttonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','buttonSVG');
 
-    setupButtons();
+    
+    var statObject = statfiles.drug_category;
+    barGraphHoriz(statObject, eevv.categories.badTrip);
+    setupButtons(statObject);
 
-    barGraphHoriz(statfiles.drug_category, eevv.categories.addiction);
-    barGraphHoriz(statfiles.drug_category, eevv.categories.difficultExp);
+    // var statObject = statfiles.context;
+    // barGraphHoriz(statObject);
+    // setupButtons(statObject);
 
-    function setupButtons(){
-    	 var g = buttonSVG.append('svg:g');
-    	 var color = d3.scale.category20();
-    	 var buttonH = 40;
-    	 var buttonW = 80;
-    	 var buttonSpacing = 10;
+    function setupButtons(statObject){
+    	var g = buttonSVG.append('svg:g');
+    	var color = d3.scale.category20();
+    	var buttonH = 40;
+    	var buttonW = 80;
+    	var buttonSpacing = 10;
 
-    	 var data = getStats1(statfiles.category, "raw", 200);
-    	 console.log(data);
+    	var get = "";
+    	for(key in statfiles){
+	        if(statfiles[key] == statObject) {
+		        get = statfiles[key.substring(key.indexOf('_') + 1)];
+		    }    
+	    }
 
-    	 // var buttons =
-    	 // g.selectAll('rect').data(data).enter().append('rect')
-      //   .style('fill', function(d,i){return color(i)})
-      //   .attr('x', function(d,i){return (buttonW * i)})
-      //   .attr('y', 0)
-      //   .attr('height', buttonH)
-      //   .attr('width', buttonW)
-      //   .attr('class','bar')
-      //   .attr('stroke','black')
-      //   .attr('id', 'button');
+    	var data = getStats1(get, "raw", 200);
+    	console.log(data);
 
         var lastTextEnd = 0;
         var currRow = 0;
 
+        //set button text
         var buttonText =
         g.selectAll('text').data(data).enter().append('text')
-        .style("font-size", 10)
+        .style("font-size", 20)
         .attr('text-anchor','start')
         .text(function(d,i){return d[0]})
         .attr('x', function(d,i){
         	var textx = lastTextEnd;
-        	lastTextEnd += this.getComputedTextLength() + 20;
+        	lastTextEnd += this.getComputedTextLength() + 30;
         	
+        	//if this text is going off the edge of the SVG, start a new row
         	if(lastTextEnd > buttonSVGW){
         		currRow += 1;
         		textx = 0;
-        		lastTextEnd = this.getComputedTextLength() + 20;
-        		
+        		lastTextEnd = this.getComputedTextLength() + 30;
         	}
-
+        	
+        	//set row property so we can adjust row Y later
         	d3.select(this).attr("buttonRow", currRow);
 
         	return textx;
         })
         .attr('y', 0) //placeholding. we'll change y later
         .attr("font-family", "sans-serif")
-        .attr("dominant-baseline", "central")
+        .attr("dominant-baseline", "text-before-edge")
         .attr('id', 'buttontext');
 
+        //run through button text and set height according to the row we set earlier
         g.selectAll('#buttontext').each(function () {
         	d3.select(this).attr(
         		'y', 
         		d3.select(this).attr('buttonRow') * buttonH + 20);
         });
 
-        //expand or shrink text to fit within button
-   //      g.selectAll('#buttontext').each(function () {
-   //      	var ln = this.getComputedTextLength();
+        // var r = buttonSVG.append('svg:g');
 
-			// if(ln > buttonW){
-	  //       	while(ln > buttonW){
-	  //       		var currFontSize = d3.select(this).style("font-size");
-	  //       		var newFontSize = parseFloat(currFontSize) - 1;
-	  //       		d3.select(this).style("font-size", newFontSize);
-	        		
-	  //       		ln = this.getComputedTextLength();
-	  //       	}
-	  //       }else if(ln < buttonW){
-	  //       	while(ln < buttonW - 10){
-	  //       		var currFontSize = d3.select(this).style("font-size");
-	  //       		var newFontSize = parseFloat(currFontSize) + 1;
-	  //       		d3.select(this).style("font-size", newFontSize);
-	        		
-	  //       		ln = this.getComputedTextLength();
-	  //       	}
-	  //       }
-   //  	});
+        //collect info about each text for button
+        var buttonLocations = [];
+        g.selectAll('#buttontext').each(function () {
+        	var buttonXY = [];
+        	buttonXY.push(d3.select(this).attr('x'));
+        	buttonXY.push(d3.select(this).attr('y'));
+        	buttonXY.push(this.getComputedTextLength());
+        	buttonXY.push(window.getComputedStyle(this).height);
+        	buttonLocations.push(buttonXY);
+        });
 
-        // g.selectAll('#button').each(function () {
-        	// d3.select(this).attr('width', 40);
-        // });
+        //create button rectangles using button dimenstions, etc
+    	g.selectAll('rect').data(buttonLocations).enter().append('rect')
+    	.attr('x', function(d,i){
+    		return d[0];
+    	})
+    	.attr('y', function(d,i){
+    		return d[1];
+    	})
+    	.attr('height', function(d,i){
+    		return d[3];
+    	})
+    	.attr('width', function(d,i){
+    		return d[2];
+    	})
+    	.attr('class','bar')
+    	.attr('stroke','black')
+    	.style('fill', function(d,i){return color(i)});
 
-    	
+    	//move text in front of buttons
+    	g.selectAll('#buttontext').each(function(){
+	    	this.parentNode.appendChild(this);
+	  	});
     }
 
     function barGraphHoriz(statObject, stat){
@@ -396,6 +406,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         return sortable;
     }
+
+
+
+
 
 
     
