@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	    }
 
     	var data = getStats1(get, "raw", 200);
-    	console.log(data);
 
         var lastTextEnd = 0;
         var currRow = 0;
@@ -120,7 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('y', 0) //placeholding. we'll change y later
         .attr("font-family", "sans-serif")
         .attr("dominant-baseline", "text-before-edge")
-        .attr('id', 'buttontext');
+        .attr('id', 'buttontext')
+        .attr('pointer-events', 'none');
 
         //run through button text and set height according to the row we set earlier
         g.selectAll('#buttontext').each(function () {
@@ -128,8 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
         		'y', 
         		d3.select(this).attr('buttonRow') * buttonH + 20);
         });
-
-        // var r = buttonSVG.append('svg:g');
 
         //collect info about each text for button
         var buttonLocations = [];
@@ -139,8 +137,11 @@ document.addEventListener('DOMContentLoaded', function () {
         	buttonXY.push(d3.select(this).attr('y'));
         	buttonXY.push(this.getComputedTextLength());
         	buttonXY.push(window.getComputedStyle(this).height);
+        	buttonXY.push(data); //so we have access to the stat object
         	buttonLocations.push(buttonXY);
         });
+
+        console.log(buttonLocations);
 
         //create button rectangles using button dimenstions, etc
     	g.selectAll('rect').data(buttonLocations).enter().append('rect')
@@ -158,13 +159,19 @@ document.addEventListener('DOMContentLoaded', function () {
     	})
     	.attr('class','bar')
     	.attr('stroke','black')
-    	.style('fill', function(d,i){return color(i)});
+    	.style('fill', function(d,i){return color(i)})
+    	.on("click", function(d,i){
+        	var statObject = statfiles.drug_category;
+   			barGraphHoriz(statObject, d[4][i][0]);
+        });
 
     	//move text in front of buttons
     	g.selectAll('#buttontext').each(function(){
 	    	this.parentNode.appendChild(this);
 	  	});
     }
+
+
 
     function barGraphHoriz(statObject, stat){
     	svg.selectAll("*").remove(); //remove current graph
@@ -230,7 +237,8 @@ document.addEventListener('DOMContentLoaded', function () {
             //get object name for json we picked
             for(key in statfiles){
                 if(statfiles[key] == statObject)
-                    return key + ": " + stat;
+                    // return key + ": " + stat;
+                	return stat;
             }
         })
         .attr('x', svgW / 2)
