@@ -59,19 +59,107 @@ document.addEventListener('DOMContentLoaded', function () {
     var bargW = 600;
     var bargH = 570;
     var svgH = 600;
-    var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH);
+    var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH).attr('id','bargSVG');
+
+    //setup drug button area
+    var buttonSVGW= 900;
+    var buttonSVGH = 250;
+    var buttonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','buttonSVG');
+
+    setupButtons();
 
     barGraphHoriz(statfiles.drug_category, eevv.categories.addiction);
-    // barGraphOne();
-	svg.selectAll("*").remove();
     barGraphHoriz(statfiles.drug_category, eevv.categories.difficultExp);
 
-    function createMenu(){
+    function setupButtons(){
+    	 var g = buttonSVG.append('svg:g');
+    	 var color = d3.scale.category20();
+    	 var buttonH = 40;
+    	 var buttonW = 80;
+    	 var buttonSpacing = 10;
+
+    	 var data = getStats1(statfiles.category, "raw", 200);
+    	 console.log(data);
+
+    	 // var buttons =
+    	 // g.selectAll('rect').data(data).enter().append('rect')
+      //   .style('fill', function(d,i){return color(i)})
+      //   .attr('x', function(d,i){return (buttonW * i)})
+      //   .attr('y', 0)
+      //   .attr('height', buttonH)
+      //   .attr('width', buttonW)
+      //   .attr('class','bar')
+      //   .attr('stroke','black')
+      //   .attr('id', 'button');
+
+        var lastTextEnd = 0;
+        var currRow = 0;
+
+        var buttonText =
+        g.selectAll('text').data(data).enter().append('text')
+        .style("font-size", 10)
+        .attr('text-anchor','start')
+        .text(function(d,i){return d[0]})
+        .attr('x', function(d,i){
+        	var textx = lastTextEnd;
+        	lastTextEnd += this.getComputedTextLength() + 20;
+        	
+        	if(lastTextEnd > buttonSVGW){
+        		currRow += 1;
+        		textx = 0;
+        		lastTextEnd = this.getComputedTextLength() + 20;
+        		
+        	}
+
+        	d3.select(this).attr("buttonRow", currRow);
+
+        	return textx;
+        })
+        .attr('y', 0) //placeholding. we'll change y later
+        .attr("font-family", "sans-serif")
+        .attr("dominant-baseline", "central")
+        .attr('id', 'buttontext');
+
+        g.selectAll('#buttontext').each(function () {
+        	d3.select(this).attr(
+        		'y', 
+        		d3.select(this).attr('buttonRow') * buttonH + 20);
+        });
+
+        //expand or shrink text to fit within button
+   //      g.selectAll('#buttontext').each(function () {
+   //      	var ln = this.getComputedTextLength();
+
+			// if(ln > buttonW){
+	  //       	while(ln > buttonW){
+	  //       		var currFontSize = d3.select(this).style("font-size");
+	  //       		var newFontSize = parseFloat(currFontSize) - 1;
+	  //       		d3.select(this).style("font-size", newFontSize);
+	        		
+	  //       		ln = this.getComputedTextLength();
+	  //       	}
+	  //       }else if(ln < buttonW){
+	  //       	while(ln < buttonW - 10){
+	  //       		var currFontSize = d3.select(this).style("font-size");
+	  //       		var newFontSize = parseFloat(currFontSize) + 1;
+	  //       		d3.select(this).style("font-size", newFontSize);
+	        		
+	  //       		ln = this.getComputedTextLength();
+	  //       	}
+	  //       }
+   //  	});
+
+        // g.selectAll('#button').each(function () {
+        	// d3.select(this).attr('width', 40);
+        // });
+
     	
     }
 
     function barGraphHoriz(statObject, stat){
-        console.log(statObject);
+    	svg.selectAll("*").remove(); //remove current graph
+
+        // console.log(statObject);
         var rawOrPerc = "perc";
         var data = getStats2(statObject, stat, rawOrPerc, 200);
         // var data = getStats1(statObject, rawOrPerc, 1);
@@ -99,11 +187,15 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('text').data(data).enter().append('text')
         .text(function(d,i){return d[0]})
         .attr('x', svgW - bargW - barAndTextPadding)
-        .attr('y', function(d,i){return ((barH * i) + barH / 1.3) + (svgH - bargH)})
+        .attr('y', function(d,i){return ((barH * i) + barH / 2) + (svgH - bargH)})
         .attr('text-anchor','end')
-        .style("font-size", 15);
+        .style("font-size", 15)
+        .attr("font-family", "sans-serif")
+        .attr("dominant-baseline", "central");
 
         //translucent box that overlays graph and represents the norm for the selected stat
+        //i.e. for drug_category, the % of total reports that are of the selected category.
+        //this shows in what direction each drug deviates from the norm, and by how much
         var avgBox = svg.append('svg:g');
         var p = "context_gender";
         avgBox.append('rect')
@@ -270,7 +362,8 @@ document.addEventListener('DOMContentLoaded', function () {
     {
         var sortable=[];
         for(var key in file)
-            if(file.hasOwnProperty(key))
+            if(file.hasOwnProperty(key)
+            	&& file[key]["raw"] >= thresh)
                 sortable.push([key, file[key][stat]]);
 
         sortable.sort(function(a, b){
