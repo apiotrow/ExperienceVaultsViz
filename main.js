@@ -54,20 +54,22 @@ document.addEventListener('DOMContentLoaded', function () {
          nonsubstance_category: require('./JSONS/output/nonsubstance_category.json'),
     };
 
+
+
     //setup drawing area
     var svgW = 900;
-    var bargW = 600;
+    var bargW = 650;
     var bargH = 570;
     var svgH = 600;
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH).attr('id','bargSVG');
 
-    //setup drug button area
+    //setup bottom button area
     var buttonSVGW= 900;
-    var buttonSVGH = 350;
+    var buttonSVGH = 100;
     var buttonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','buttonSVG');
 
     //choices that need to be buttons
-    var statObject = statfiles.drug_category;
+    var statObject = statfiles.category_drug;
     var thresh = 200;
 
     //find a random group for the graph so we have something to render initially
@@ -78,20 +80,24 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(randomKey);
 
     //render graph and buttons
+    setupButtons(statObject, thresh, buttonSVG);
+    var secondButtonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','secondButtonSVG');
+    setupButtons(statfiles.drug_context, thresh, secondButtonSVG);
+
     barGraphHoriz(statObject, randomKey, thresh);
-    setupButtons(statObject, thresh);
+    
 
     // var statObject = statfiles.context;
     // barGraphHoriz(statObject);
     // setupButtons(statObject);
 
-    function setupButtons(statObject, thresh){
-    	var g = buttonSVG.append('svg:g');
+    function setupButtons(statObject, thresh, svgToAppendTo){
+    	var g = svgToAppendTo.append('svg:g');
     	var color = d3.scale.category20();
-    	var buttonH = 40;
-    	var buttonW = 80;
-    	var buttonSpacing = 50;
+    	var buttonH = 20;
+    	var buttonSpacing = 40;
     	var buttonRectPadding = 10;
+    	var fontSize = 15;
 
     	var get = "";
     	for(key in statfiles){
@@ -108,15 +114,17 @@ document.addEventListener('DOMContentLoaded', function () {
         //set button text
         var buttonText =
         g.selectAll('text').data(data).enter().append('text')
-        .style("font-size", 20)
+        .style("font-size", fontSize)
         .attr('text-anchor','start')
         .text(function(d,i){return d[0]})
         .attr('x', function(d,i){
         	var textx = lastTextEnd;
         	lastTextEnd += this.getComputedTextLength() + buttonSpacing;
         	
-        	//if this text is going off the edge of the SVG, start a new row
-        	if(lastTextEnd > buttonSVGW){
+        	//if this text is going off the edge of the SVG, start a new row.
+        	//the + 20 is hardcoded ass, and is there to make the button, not text, edge
+        	//is used to determine if button is off the SVG or not.
+        	if(lastTextEnd + 20 > buttonSVGW){
         		currRow += 1;
         		textx = 0;
         		lastTextEnd = this.getComputedTextLength() + buttonSpacing;
@@ -137,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('#buttontext').each(function () {
         	d3.select(this).attr(
         		'y', 
-        		d3.select(this).attr('buttonRow') * buttonH + 20);
+        		d3.select(this).attr('buttonRow') * buttonH);
         });
 
         //collect info about each text for button
@@ -173,21 +181,32 @@ document.addEventListener('DOMContentLoaded', function () {
     	.style('fill', function(d,i){return color(i)})
     	.on("click", function(d,i){
    			barGraphHoriz(statObject, d[4][i][0], thresh);
-        });
-
-    	//make the button area SVG tall enough that it fits all the buttons
-    	var highestY = buttonLocations[buttonLocations.length - 1][1];
-    	var ynum = parseFloat(highestY);
-    	console.log(highestY);
-        buttonSVG.attr('height', ynum + 50);
+        })
+        .attr('id','buttonRect');
 
     	//move text in front of buttons
     	g.selectAll('#buttontext').each(function(){
 	    	this.parentNode.appendChild(this);
 	  	});
 
-    	//shift button over so they aren't cut off on the left
-	  	g.attr('transform','translate(20,0)');
+	  	var lowestButton = 0;
+	  	//move text in front of buttons
+    	g.selectAll('#buttonRect').each(function(){
+	    	var y = parseFloat(d3.select(this).attr('y'));
+	    	if(y > lowestButton)
+	    		lowestButton = y;
+	  	});
+
+	  	console.log(lowestButton)
+
+	  	//make the button area SVG tall enough that it fits all the buttons
+    	var highestY = buttonLocations[buttonLocations.length - 1][1];
+    	var ynum = parseFloat(highestY);
+    	console.log(highestY);
+        svgToAppendTo.attr('height', ynum + 30);
+
+        //move entire g to the right so left side of buttons on left side don't chopped off
+        g.attr('transform','translate(20,0)');
     }
 
 
