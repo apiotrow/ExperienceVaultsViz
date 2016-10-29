@@ -224,9 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var barH = bargH / data.length;
         var barAndTextPadding = 10;
         var color = d3.scale.category20();
-        var barScale = d3.scale.linear().domain([data[data.length - 1][1], data[0][1]]).range([50, bargW]);
+        var barScale = d3.scale.linear().domain([data[data.length - 1][1], data[0][1]]).range([50, bargW - 50]);
 
-        //bars representing stat
+        //bars
         var bars = 
         g.selectAll('rect').data(data).enter().append('rect')
         .style('fill', function(d,i){return color(i)})
@@ -235,7 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('height', barH)
         .attr('width', function(d,i){return barScale(d[1])})
         .attr('class','bar')
-        .attr('stroke','black');
+        .attr('stroke','black')
+        .attr('id', 'bar');
 
         //text labels left of bars
         var barText = 
@@ -247,6 +248,16 @@ document.addEventListener('DOMContentLoaded', function () {
         .style("font-size", 15)
         .attr("font-family", "sans-serif")
         .attr("dominant-baseline", "central");
+
+        //percent text at end of each bar
+        bars.select('#percText').data(data).enter().append('text')
+	    	.text(function(d,i){return (Math.floor(d[1] * 100) / 100) + "%"})
+	    	.attr('x',  function(d,i){return barScale(d[1]) + ( svgW - bargW)})
+	    	.attr('y', function(d,i){return ((barH * i) + barH / 2) + (svgH - bargH)})
+	    	.attr('id','percText')
+	    	.style("font-size", 15)
+        	.attr("font-family", "sans-serif")
+        	.attr("dominant-baseline", "central");
 
         //translucent box that overlays graph and represents the norm for the selected stat
         //i.e. for drug_category, the % of total reports that are of the selected category.
