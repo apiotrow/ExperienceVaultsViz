@@ -60,13 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var svgW = 1000;
     var bargW = 500;
     var bargH = 570;
-    var svgH = 600;
+    var svgH = 670;
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH).attr('id','bargSVG');
-
-    //setup button area
-    var buttonSVGW= 300;
-    var buttonSVGH = 200;
-    var buttonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','buttonSVG');
 
     //choices that need to be buttons
     var statObject = statfiles.category_drug;
@@ -80,11 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     barGraphHoriz(statObject, randomKey, thresh);
     //render graph and buttons
-    setupButtons(statObject, thresh, svg);
-    // var secondButtonSVG = d3.select('#vis').append('svg').attr('width',buttonSVGW).attr('height',buttonSVGH).attr('id','secondButtonSVG');
-    // setupButtons(statfiles.drug_context, thresh, secondButtonSVG);
+    setupButtons(statObject, thresh, svg, 300, 200, 50);
+    setupButtons(statfiles.context_drug, thresh, svg, 1000, 150, bargH + 50);
 
-    function setupButtons(statObject, thresh, svgToAppendTo){
+    function setupButtons(statObject, thresh, svgToAppendTo, buttonSVGW, buttonSVGH, yOffset){
     	var g = svgToAppendTo.append('svg:g');
     	var color = d3.scale.category20();
     	var buttonH = 20;
@@ -128,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         	return textx;
         })
-        .attr('y', 0) //placeholding. we'll change y later
+        .attr('y', 0) //placeholding. we change y in the row setup below
         .attr("font-family", "sans-serif")
         .attr("dominant-baseline", "text-before-edge")
         .attr('id', 'buttontext')
@@ -138,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('#buttontext').each(function () {
         	d3.select(this).attr(
         		'y', 
-        		d3.select(this).attr('buttonRow') * buttonH);
+        		d3.select(this).attr('buttonRow') * buttonH + yOffset);
         });
 
         //collect info about each text for button
@@ -230,13 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function barGraphHoriz(statObject, stat, thresh){
     	d3.selectAll(".barGraphStuff").remove(); //remove current graph
+    	var graphYOffset = 40;
 
-        // console.log(statObject);
         var rawOrPerc = "perc";
         var data = getStats2(statObject, stat, rawOrPerc, thresh);
         // var data = getStats1(statObject, rawOrPerc, 1);
 
-        var g = svg.append('svg:g').attr('class','barGraphStuff');
+        var graphHolderG = svg.append('svg:g').attr('class','barGraphStuff');
+
+        var g = graphHolderG.append('svg:g');
 
         var barH = bargH / data.length;
         var barAndTextPadding = 10;
@@ -248,23 +244,21 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('rect').data(data).enter().append('rect')
         .style('fill', function(d,i){return color(i)})
         .attr('x', svgW - bargW)
-        .attr('y', function(d,i){return (barH * i) + (svgH - bargH)})
+        // .attr('y', function(d,i){return (barH * i) + (svgH - bargH)})
+        .attr('y', function(d,i){return (barH * i) + graphYOffset})
         .attr('height', barH)
         .attr('width', function(d,i){return barScale(d[1])})
         .attr('class','bar')
         .attr('stroke','black')
         .attr('stroke-width', 1)
         .attr('id', 'bar')
-        .attr('class','barGraphStuff')
         .on("mouseover", function() { 
-        	// d3.select(this).attr('stroke','red') 
         	d3.select(this).attr('stroke-width', 4);
 
         	//bring bar to front, so outline won't be behind any nearby bar
         	this.parentNode.appendChild(this); 
         })
         .on("mouseout", function() { 
-        	// d3.select(this).attr('stroke','black')
         	d3.select(this).attr('stroke-width', 1) ;
         });
 
@@ -273,32 +267,30 @@ document.addEventListener('DOMContentLoaded', function () {
         g.selectAll('text').data(data).enter().append('text')
         .text(function(d,i){return d[0]})
         .attr('x', svgW - bargW - barAndTextPadding)
-        .attr('y', function(d,i){return ((barH * i) + barH / 2) + (svgH - bargH)})
+        .attr('y', function(d,i){return ((barH * i) + barH / 2) + graphYOffset})
         .attr('text-anchor','end')
         .style("font-size", 15)
         .attr("font-family", "sans-serif")
-        .attr("dominant-baseline", "central")
-        .attr('class','barGraphStuff');
+        .attr("dominant-baseline", "central");
 
         //percent text at end of each bar
         bars.select('#percText').data(data).enter().append('text')
 	    	.text(function(d,i){return (Math.floor(d[1] * 100) / 100) + "%"})
 	    	.attr('x',  function(d,i){return barScale(d[1]) + ( svgW - bargW) + 5})
-	    	.attr('y', function(d,i){return ((barH * i) + barH / 2) + (svgH - bargH)})
+	    	.attr('y', function(d,i){return ((barH * i) + barH / 2) + graphYOffset})
 	    	.attr('id','percText')
 	    	.style("font-size", 15)
         	.attr("font-family", "sans-serif")
-        	.attr("dominant-baseline", "central")
-        	.attr('class','barGraphStuff');
+        	.attr("dominant-baseline", "central");
 
         //translucent box that overlays graph and represents the norm for the selected stat
         //i.e. for drug_category, the % of total reports that are of the selected category.
         //this shows in what direction each drug deviates from the norm, and by how much
-        var avgBox = svg.append('svg:g');
+        var avgBox = graphHolderG.append('svg:g');
         var p = "context_gender";
         avgBox.append('rect')
         .attr('x', svgW - bargW)
-        .attr('y', (svgH - bargH))
+        .attr('y', graphYOffset)
         .attr('height', bargH)
         .attr('width', function(){
             //e.g. if picked category_context.json, get stat from context.json
@@ -311,11 +303,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .style('fill','blue')
         // .style('stroke','black')
         .style('opacity', 0.3)
-        .attr('class','barGraphStuff')
         .attr('pointer-events', 'none');
 
         //top center text
-        var graphTitle = svg.append('svg:g');
+        var graphTitle = graphHolderG.append('svg:g');
         graphTitle.append('text').text(function(){
             //get object name for json we picked
             for(key in statfiles){
@@ -327,8 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('x', svgW / 2)
         .attr('y', 20)
         .attr('text-anchor','middle')
-        .attr("font-family", "sans-serif")
-        .attr('class','barGraphStuff');
+        .attr("font-family", "sans-serif");
     }
 
     //for statfiles with only 1 group
