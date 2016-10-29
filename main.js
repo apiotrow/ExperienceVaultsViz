@@ -54,8 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
          nonsubstance_category: require('./JSONS/output/nonsubstance_category.json'),
     };
 
-
-
     //setup drawing area
     var svgW = 1000;
     var bargW = 500;
@@ -64,39 +62,37 @@ document.addEventListener('DOMContentLoaded', function () {
     var svg = d3.select('#vis').append('svg').attr('width',svgW).attr('height',svgH).attr('id','bargSVG');
 
     //choices that need to be buttons
-    var statObject = statfiles.category_drug;
+    var currStatObject; //global holder for current statobject
     var thresh = 200;
 
     //find a random group for the graph so we have something to render initially
-    var keyNames = Object.keys(statObject);
-    var randomKey = keyNames[Math.floor(Math.random() * keyNames.length)];
-    keyNames = Object.keys(statObject[randomKey]);
-    randomKey = keyNames[Math.floor(Math.random() * keyNames.length)];
+    randomKey = getRandomKey(statfiles.category_drug, thresh);
 
-    barGraphHoriz(statObject, randomKey, thresh);
+    barGraphHoriz(statfiles.category_drug, randomKey, thresh);
     //render graph and buttons
-    setupButtons(statObject, thresh, svg, 300, 200, 50);
-    setupButtons(statfiles.context_drug, thresh, svg, 1000, 150, bargH + 50);
+    setupButtons(statfiles.category_drug, thresh, svg, 300, 200, "particular", 0, 50);
 
-    function setupButtons(statObject, thresh, svgToAppendTo, buttonSVGW, buttonSVGH, yOffset){
+    setupGroupButton(thresh, svg, 100, 150, "group1", svgW / 2 - 100, bargH + 100);
+    setupGroupButton(thresh, svg, 100, 150, "group2", svgW / 2 + 100, bargH + 100);
+
+    function setupGroupButton(thresh, svgToAppendTo, buttonSVGW, buttonSVGH, buttonClass, xOffset, yOffset){
     	var g = svgToAppendTo.append('svg:g');
     	var color = d3.scale.category20();
     	var buttonH = 20;
-    	var buttonSpacing = 40;
-    	var buttonRectPadding = 10;
+    	var buttonSpacing = 20;
+    	var buttonRectPadding = 5;
     	var fontSize = 15;
 
-    	var get = "";
+    	var data = [];
     	for(key in statfiles){
-	        if(statfiles[key] == statObject) {
-		        get = statfiles[key.substring(key.indexOf('_') + 1)];
-		    }    
-	    }
+			if(key.indexOf('_') == -1) {
+				var dataEntry = [key, 0];
+				data.push(dataEntry);
+			}
+		}
 
-    	var data = getStats1(get, "raw", thresh);
-
-        var lastTextEnd = 0;
-        var currRow = 0;
+		var lastTextEnd = 0; //holder for the last button text's right end. used to prevent overflow.
+        var currRow = 0; //iterator for setting up button rows
 
         //set button text
         var buttonText =
@@ -120,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         	//set row property so we can adjust row Y later
         	d3.select(this).attr("buttonRow", currRow);
 
-        	return textx;
+        	return textx + xOffset;
         })
         .attr('y', 0) //placeholding. we change y in the row setup below
         .attr("font-family", "sans-serif")
@@ -165,7 +161,41 @@ document.addEventListener('DOMContentLoaded', function () {
     	.attr('stroke','black')
     	.style('fill', function(d,i){return color(i)})
     	.on("click", function(d,i){
-   			barGraphHoriz(statObject, d[4][i][0], thresh);
+
+			var currGroup1;
+			var currGroup2;
+			var proposedGroup = d[4][i][0];
+
+			//get current 1st and 2nd group
+			for(key in statfiles){
+				if(statfiles[key] == currStatObject) {
+					currGroup1 = key.substring(0, key.indexOf('_'));
+					currGroup2 = key.substring(key.indexOf('_') + 1);
+		    	}
+			}
+
+			if(d3.select(this).attr('class') == "group1"){
+				if(currGroup1 != proposedGroup && currGroup2 != proposedGroup){
+					statObject = statfiles[proposedGroup + "_" + currGroup2];
+
+					randomKey = getRandomKey(statObject, thresh);
+
+				    d3.selectAll("#particularButtonsHolder").remove(); //remove current graph
+				    barGraphHoriz(statObject, randomKey, thresh);
+	   				setupButtons(statObject, thresh, svg, 300, 200, "particular", 0, 50);
+				}
+			}else if(d3.select(this).attr('class') == "group2"){
+				if(currGroup1 != proposedGroup && currGroup2 != proposedGroup){
+					statObject = statfiles[currGroup1 + "_" + proposedGroup];
+
+					randomKey = getRandomKey(statObject, thresh);
+
+				    d3.selectAll("#particularButtonsHolder").remove(); //remove current graph
+				    barGraphHoriz(statObject, randomKey, thresh);
+	   				setupButtons(statObject, thresh, svg, 300, 200, "particular", 0, 50);
+				}
+			}
+   			
 
    			//set button outline to thick red and set every other button
    			//to regular (to unselect previously selected button)
@@ -181,14 +211,164 @@ document.addEventListener('DOMContentLoaded', function () {
         	//we use this to prevent loss of selected button in .mouseout
         	d3.select(this).attr('selected', 'yes');
         })
-        .attr('id','buttonRect')
+        .attr('id', "buttonRect")
         .on("mouseover", function() { 
         	d3.select(this).attr('stroke-width', 3);
         })
         .on("mouseout", function() { 
         	if(d3.select(this).attr('selected') != 'yes')
         		d3.select(this).attr('stroke-width', 1);
+        })
+        .attr('class',buttonClass);
+
+        //put separator between button groups
+        // d3.select('#vis').append("hr");
+
+    	//move text in front of buttons
+    	g.selectAll('#buttontext').each(function(){
+	    	this.parentNode.appendChild(this);
+	  	});
+
+    	//if we want to get bottomest button from buttons themselves
+    	//rather than the original Y value we found
+    	/*
+	  	var lowestButton = 0;
+    	g.selectAll('#buttonRect').each(function(){
+	    	var y = parseFloat(d3.select(this).attr('y'));
+	    	if(y > lowestButton)
+	    		lowestButton = y;
+	  	});
+		*/
+
+		//if svg isn't tall enough to fit all buttons,
+	  	//make the button area SVG tall enough that it fits all the buttons
+    	var highestY = buttonLocations[buttonLocations.length - 1][1];
+    	var ynum = parseFloat(highestY);
+    	if(svgToAppendTo.attr('height') < ynum + 30)
+       		svgToAppendTo.attr('height', ynum + 30);
+
+        //move entire g to the right so left side of buttons on left side don't chopped off
+        g.attr('transform','translate(20,0)');
+    }
+
+    function setupButtons(statObject, thresh, svgToAppendTo, buttonSVGW, buttonSVGH, buttonClass, xOffset, yOffset){
+    	var g = svgToAppendTo.append('svg:g').attr('id','particularButtonsHolder');
+    	var color = d3.scale.category20();
+    	var buttonH = 20;
+    	var buttonSpacing = 20;
+    	var buttonRectPadding = 5;
+    	var fontSize = 15;
+
+    	//get the raw numbers of the second group, so we can
+    	//filter out ones that don't meet our chosen threshold
+    	var data = [];
+
+		currStatObject = statObject; //so we have global access to statobject
+
+		// g.attr('class','particular');
+
+    	for(key in statfiles){
+	        if(statfiles[key] == statObject) {
+	        	var getObject = statfiles[key.substring(key.indexOf('_') + 1)];
+	        	data = getStats1(getObject, "raw", thresh);
+		    }    
+	    }
+
+        var lastTextEnd = 0; //holder for the last button text's right end. used to prevent overflow.
+        var currRow = 0; //iterator for setting up button rows
+
+        //set button text
+        var buttonText =
+        g.selectAll('text').data(data).enter().append('text')
+        .style("font-size", fontSize)
+        .attr('text-anchor','start')
+        .text(function(d,i){return d[0]})
+        .attr('x', function(d,i){
+        	var textx = lastTextEnd;
+        	lastTextEnd += this.getComputedTextLength() + buttonSpacing;
+        	
+        	//if this text is going off the edge of the SVG, start a new row.
+        	//the + 20 is hardcoded ass, and is there to make the button, not text, edge
+        	//is used to determine if button is off the SVG or not.
+        	if(lastTextEnd + 20 > buttonSVGW){
+        		currRow += 1;
+        		textx = 0;
+        		lastTextEnd = this.getComputedTextLength() + buttonSpacing;
+        	}
+        	
+        	//set row property so we can adjust row Y later
+        	d3.select(this).attr("buttonRow", currRow);
+
+        	return textx + xOffset;
+        })
+        .attr('y', 0) //placeholding. we change y in the row setup below
+        .attr("font-family", "sans-serif")
+        .attr("dominant-baseline", "text-before-edge")
+        .attr('id', 'buttontext')
+        .attr('pointer-events', 'none');
+
+        //run through button text and set height according to the row we set earlier
+        g.selectAll('#buttontext').each(function () {
+        	d3.select(this).attr(
+        		'y', 
+        		d3.select(this).attr('buttonRow') * buttonH + yOffset);
         });
+
+        //collect info about each text for button
+        var buttonLocations = [];
+        g.selectAll('#buttontext').each(function () {
+        	var buttonXY = [];
+        	buttonXY.push(d3.select(this).attr('x'));
+        	buttonXY.push(d3.select(this).attr('y'));
+        	buttonXY.push(this.getComputedTextLength());
+        	buttonXY.push(window.getComputedStyle(this).height);
+        	buttonXY.push(data); //so we have access to the stat object
+        	buttonLocations.push(buttonXY);
+        });
+
+        //create button rectangles using button dimenstions, etc
+    	g.selectAll('rect').data(buttonLocations).enter().append('rect')
+    	.attr('x', function(d,i){
+    		return d[0] - buttonRectPadding;
+    	})
+    	.attr('y', function(d,i){
+    		return d[1];
+    	})
+    	.attr('height', function(d,i){
+    		return d[3];
+    	})
+    	.attr('width', function(d,i){
+    		return d[2] + buttonRectPadding * 2;
+    	})
+    	.attr('class','bar')
+    	.attr('stroke','black')
+    	.style('fill', function(d,i){return color(i)})
+    	.on("click", function(d,i){
+			barGraphHoriz(statObject, d[4][i][0], thresh);
+   			
+   			//set button outline to thick red and set every other button
+   			//to regular (to unselect previously selected button)
+   			g.selectAll('#buttonRect').each(function () {
+        		d3.select(this).attr('stroke-width', 1);
+        		d3.select(this).attr('stroke', 'black');
+        		d3.select(this).attr('selected','no');
+        	});
+        	d3.select(this).attr('stroke-width', 3);
+        	d3.select(this).attr('stroke', 'red');
+
+        	//tag button with a property that says it's selected.
+        	//we use this to prevent loss of selected button in .mouseout
+        	d3.select(this).attr('selected', 'yes');
+        })
+        .attr('id', "buttonRect")
+        .on("mouseover", function() { 
+        	d3.select(this).attr('stroke-width', 3);
+        })
+        .on("mouseout", function() { 
+        	if(d3.select(this).attr('selected') != 'yes')
+        		d3.select(this).attr('stroke-width', 1);
+        })
+        .attr('class',buttonClass);
 
         //put separator between button groups
         // d3.select('#vis').append("hr");
@@ -227,6 +407,7 @@ document.addEventListener('DOMContentLoaded', function () {
     	var graphYOffset = 40;
 
         var rawOrPerc = "perc";
+
         var data = getStats2(statObject, stat, rawOrPerc, thresh);
         // var data = getStats1(statObject, rawOrPerc, 1);
 
@@ -301,7 +482,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .style('fill','blue')
-        // .style('stroke','black')
         .style('opacity', 0.3)
         .attr('pointer-events', 'none');
 
@@ -319,6 +499,29 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('y', 20)
         .attr('text-anchor','middle')
         .attr("font-family", "sans-serif");
+    }
+
+    function getRandomKey(statObject, thresh){
+
+    	var keyNames1 = Object.keys(statObject);
+	    var randomKey1 = keyNames1[Math.floor(Math.random() * keyNames1.length)];
+	    var keyNames2 = Object.keys(statObject[randomKey1]);
+	    var randomKey2 = keyNames2[Math.floor(Math.random() * keyNames2.length)];
+	    
+		var inf = 0;
+	    while(statObject[randomKey1][randomKey2]['total'] < thresh){
+	    	console.log(randomKey2);
+	    	console.log(statObject[randomKey1][randomKey2]);
+	    	randomKey1 = keyNames1[Math.floor(Math.random() * keyNames1.length)];
+	    	randomKey2 = keyNames2[Math.floor(Math.random() * keyNames2.length)];
+	    	inf++;
+	    	if (inf > 100){
+	    		console.log("invinie");
+	    		 break;
+	    	}
+	    }
+
+	    return randomKey2;
     }
 
     //for statfiles with only 1 group
@@ -362,7 +565,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return sortable;
     }
 
-
+    function clone(obj) {
+	    if(obj == null || typeof(obj) != 'object')
+	        return obj;    
+	    var temp = new obj.constructor(); 
+	    for(var key in obj)
+	        temp[key] = clone(obj[key]);    
+	    return temp;
+	}
 
 
 
