@@ -172,8 +172,29 @@ document.addEventListener('DOMContentLoaded', function () {
     	.style('fill', function(d,i){return color(i)})
     	.on("click", function(d,i){
    			barGraphHoriz(statObject, d[4][i][0], thresh);
+
+   			//set button outline to thick red and set every other button
+   			//to regular (to unselect previously selected button)
+   			g.selectAll('#buttonRect').each(function () {
+        		d3.select(this).attr('stroke-width', 1);
+        		d3.select(this).attr('stroke', 'black');
+        		d3.select(this).attr('selected','no');
+        	});
+        	d3.select(this).attr('stroke-width', 3);
+        	d3.select(this).attr('stroke', 'red');
+
+        	//tag button with a property that says it's selected.
+        	//we use this to prevent loss of selected button in .mouseout
+        	d3.select(this).attr('selected', 'yes');
         })
-        .attr('id','buttonRect');
+        .attr('id','buttonRect')
+        .on("mouseover", function() { 
+        	d3.select(this).attr('stroke-width', 3);
+        })
+        .on("mouseout", function() { 
+        	if(d3.select(this).attr('selected') != 'yes')
+        		d3.select(this).attr('stroke-width', 1);
+        });
 
         //put separator between button groups
         // d3.select('#vis').append("hr");
