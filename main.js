@@ -64,84 +64,141 @@ document.addEventListener('DOMContentLoaded', function () {
     .attr('height',masterSVGHeight);
 
     var data = getStats2(statfiles.category_drug, 'Mushrooms', 'perc', 500);
+
+    var circCollection = {};
+
     circles(data);
 
-    var inter = setInterval(function() {
-    	d3.selectAll('.circles').each(function(d,i){
-    		var circ1 = d3.select(this);
-    		var circ1CX = circ1.attr('cx') * 1;
-    		var circ1CY = circ1.attr('cy') * 1;
-    		var circ1R = circ1.attr('r') * 1;
+    var checkInterval = setInterval(function() {
+    	var areWeDone = true;
+    	for(key1 in circCollection){
+    		for(key2 in circCollection){
+    			if(circCollection[key1][key2] == false){
+    				areWeDone = false;
+    				break;
+    			}
+    		}
+    	}
 
-    		d3.selectAll('.circles').each(function(dd,ii){
+    	if(areWeDone == true){
+			clearInterval(yy);
+			d3.selectAll('.circles').each(function(d,i){
+				d3.select(this)
+				.transition()
+				.duration(500)
+				.attr('cy', circCollection[d3.select(this).attr('id')]['y'])
+				.attr('cx', circCollection[d3.select(this).attr('id')]['x']);
+			});
 
-    			//if this isn't us
-    			if(ii != i){
-    				var circ2 = d3.select(this);
-    				var circ2CX = circ2.attr('cx') * 1;
-    				var circ2CY = circ2.attr('cy') * 1;
-    				var circ2R = circ2.attr('r') * 1;
+			clearInterval(checkInterval);
+    	}
+    }, 1);
 
-    				var dist = Math.sqrt(Math.pow(circ2CY - circ1CY, 2) + Math.pow(circ2CX - circ1CX, 2));
+    var yy = setInterval(function() {
+
+    	for(key1 in circCollection){
+
+    		var circ1X = circCollection[key1]['x'];
+	    	var circ1Y = circCollection[key1]['y'];
+	    	var circ1R = circCollection[key1]['r'];
+
+	    	for(key2 in circCollection){
+	    		if(key2 != key1){
+	    			var circ2X = circCollection[key2]['x'];
+	    			var circ2Y = circCollection[key2]['y'];
+	    			var circ2R = circCollection[key2]['r'];
+
+	    			var dist = Math.sqrt(Math.pow(circ2Y - circ1Y, 2) + Math.pow(circ2X - circ1X, 2));
     				var targetDist = circ2R + circ1R;
 
-    				var readyToPack = true;
+    				if(targetDist - dist > 0){
 
-    				if(dist < targetDist){
-
-    					readyToPack = false;
-
-    					var angleDeg = Math.atan2(circ2CY - circ1CY, circ2CX - circ1CX);
+    					var angleDeg = Math.atan2(circ2Y - circ1Y, circ2X - circ1X);
     					var xChange = Math.cos(angleDeg);
     					var yChange = Math.sin(angleDeg);
 
-    					var Circ2newX = circ2CX + xChange;
-    					var Circ2newY = circ2CY + yChange;
+    					var Circ2newX = circ2X + xChange;
+    					var Circ2newY = circ2Y + yChange;
 
-    					var Circ1newX = circ1CX - xChange;
-    					var Circ1newY = circ1CY - yChange;
+    					var Circ1newX = circ1X - xChange;
+    					var Circ1newY = circ1Y - yChange;
 
     					//move surrounding circles
-    					circ2.attr('cx', Circ2newX);
-    					circ2.attr('cy', Circ2newY);
+    					circCollection[key2]['x'] = Circ2newX;
+    					circCollection[key2]['y'] = Circ2newY;
 
     					//move us
-    					circ1.attr('cx', Circ1newX);
-    					circ1.attr('cy', Circ1newY);
+    					circCollection[key1]['x'] = Circ1newX;
+    					circCollection[key1]['y'] = Circ1newY;
 
+    				}else{
+    					circCollection[key1][key2] = true;
+    					circCollection[key2][key1] = true;
     				}
+	    		}
+	    	}
+    	}
+	}, 1);
 
-    				if(readyToPack && dist > targetDist){
 
-    					// var angleDeg = Math.atan2(circ2CY - circ1CY, circ2CX - circ1CX);
-    					// var xChange = Math.cos(angleDeg);
-    					// var yChange = Math.sin(angleDeg);
+ //    setInterval(function() {
+ //    	d3.selectAll('.circles').each(function(d,i){
+ //    		var circ1 = d3.select(this);
+ //    		var circ1CX = circ1.attr('cx') * 1;
+ //    		var circ1CY = circ1.attr('cy') * 1;
+ //    		var circ1R = circ1.attr('r') * 1;
 
-    					// var Circ2newX = circ2CX - xChange;
-    					// var Circ2newY = circ2CY - yChange;
+ //    		d3.selectAll('.circles').each(function(dd,ii){
 
-    					// var Circ1newX = circ1CX + xChange;
-    					// var Circ1newY = circ1CY + yChange;
+ //    			//if this isn't us
+ //    			if(ii != i){
+ //    				var circ2 = d3.select(this);
+ //    				var circ2CX = circ2.attr('cx') * 1;
+ //    				var circ2CY = circ2.attr('cy') * 1;
+ //    				var circ2R = circ2.attr('r') * 1;
 
-    					// //move surrounding circles
-    					// circ2.attr('cx', Circ2newX);
-    					// circ2.attr('cy', Circ2newY);
+ //    				var dist = Math.sqrt(Math.pow(circ2CY - circ1CY, 2) + Math.pow(circ2CX - circ1CX, 2));
+ //    				var targetDist = circ2R + circ1R;
 
-    					// //move us
-    					// circ1.attr('cx', Circ1newX);
-    					// circ1.attr('cy', Circ1newY);
+ //    				if(targetDist - dist > 0){
 
-    				}
-    			}
-    		})
+ //    					var angleDeg = Math.atan2(circ2CY - circ1CY, circ2CX - circ1CX);
+ //    					var xChange = Math.cos(angleDeg);
+ //    					var yChange = Math.sin(angleDeg);
 
-    	});
-	}, 10);
+ //    					var Circ2newX = circ2CX + xChange;
+ //    					var Circ2newY = circ2CY + yChange;
+
+ //    					var Circ1newX = circ1CX - xChange;
+ //    					var Circ1newY = circ1CY - yChange;
+
+ //    					//move surrounding circles
+ //    					circ2.attr('cx', Circ2newX);
+ //    					circ2.attr('cy', Circ2newY);
+
+ //    					//move us
+ //    					// circ1.attr('cx', Circ1newX);
+ //    					// circ1.attr('cy', Circ1newY);
+
+ //    				}
+
+ //    				if(dist > targetDist){
+
+
+
+ //    				}
+
+
+ //    			}
+ //    		})
+
+ //    	});
+	// }, 10);
+
 
     function circles(data){
     	var circleG = masterSVG.append('svg:g').attr('id', 'circleG');
 
-    	var circCenterIter = 0;
     	circleG
     	.selectAll('circle')
     	.data(data)
@@ -162,9 +219,27 @@ document.addEventListener('DOMContentLoaded', function () {
     		return "red";
     	})
     	.style('opacity', 0.3)
-    	.attr('class','circles');
+    	.attr('class','circles')
+    	.attr('id', function(d){
+    		return d[0];
+    	});
 
-        
+    	d3.selectAll('.circles').each(function(d,i){
+    		var circ1 = d3.select(this);
+
+    		circCollection[d3.select(this).attr('id')] = {
+    			"x": d3.select(this).attr('cx') * 1,
+    			"y": d3.select(this).attr('cy') * 1,
+    			"r": d3.select(this).attr('r') * 1,
+    			"done": false
+    		};
+
+    		d3.selectAll('.circles').each(function(dd,ii){
+    			if(ii != i){
+    				circCollection[circ1.attr('id')][d3.select(this).attr('id')] = false;
+    			}
+    		});
+    	});
     }
 
     function getStats2(file, group, stat, thresh){
