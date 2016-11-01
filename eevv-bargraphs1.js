@@ -100,7 +100,10 @@ module.exports = {
 
             //set button text
             var buttonText =
-            g.selectAll('text').data(data).enter().append('text')
+            g.selectAll('text')
+            .data(data)
+            .enter()
+            .append('text')
             .style("font-size", fontSize)
             .attr('text-anchor','start')
             .text(function(d,i){return d[0]})
