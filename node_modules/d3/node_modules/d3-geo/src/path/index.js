@@ -6,11 +6,9 @@ import pathCentroid from "./centroid";
 import PathContext from "./context";
 import PathString from "./string";
 
-export default function() {
+export default function(projection, context) {
   var pointRadius = 4.5,
-      projection,
       projectionStream,
-      context,
       contextStream;
 
   function path(object) {
@@ -53,5 +51,5 @@ export default function() {
     return path;
   };
 
-  return path.projection(null).context(null);
+  return path.projection(projection).context(context);
 }

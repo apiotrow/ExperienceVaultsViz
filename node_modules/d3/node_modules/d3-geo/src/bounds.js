@@ -8,7 +8,7 @@ var lambda0, phi0, lambda1, phi1, // bounds
     lambda2, // previous lambda-coordinate
     lambda00, phi00, // first point
     p0, // previous 3D point
-    deltaSum,
+    deltaSum = adder(),
     ranges,
     range;
 
@@ -139,8 +139,6 @@ function rangeContains(range, x) {
 export default function(feature) {
   var i, n, a, b, merged, deltaMax, delta;
 
-  if (deltaSum) deltaSum.reset();
-  else deltaSum = adder();
   phi1 = lambda1 = -(lambda0 = phi0 = Infinity);
   ranges = [];
   stream(feature, boundsStream);

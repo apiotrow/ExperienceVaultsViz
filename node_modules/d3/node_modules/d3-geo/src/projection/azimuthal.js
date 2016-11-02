@@ -1,6 +1,6 @@
 import {asin, atan2, cos, sin, sqrt} from "../math";
 
-export function azimuthal(scale) {
+export function azimuthalRaw(scale) {
   return function(x, y) {
     var cx = cos(x),
         cy = cos(y),

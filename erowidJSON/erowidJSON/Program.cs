@@ -746,7 +746,7 @@ namespace erowidJSON
 					"Valerian",
 					"Vardenafil",
 					"Varenicline",
-                    "Various",
+                    //"Various",
                     "Vasopressin",
 					"Vervain",
 					"Vinpocetine",

@@ -3,9 +3,9 @@ import {atan2, cos, quarterPi, radians, sin, tau} from "./math";
 import noop from "./noop";
 import stream from "./stream";
 
-export var areaRingSum;
+export var areaRingSum = adder();
 
-var areaSum,
+var areaSum = adder(),
     lambda00,
     phi00,
     lambda0,
@@ -68,8 +68,7 @@ function areaPoint(lambda, phi) {
 }
 
 export default function(object) {
-  if (areaSum) areaSum.reset();
-  else areaSum = adder(), areaRingSum = adder();
+  areaSum.reset();
   stream(object, areaStream);
   return areaSum * 2;
 }

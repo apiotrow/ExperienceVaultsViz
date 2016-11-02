@@ -1,8 +1,6 @@
-#!/usr/bin/env node
-
 var fs = require("fs"),
     rollup = require("rollup"),
-    dependencies = require("../package.json").dependencies;
+    dependencies = require("./package.json").dependencies;
 
 rollup.rollup({
   entry: "index.js",
@@ -20,8 +18,6 @@ rollup.rollup({
       else resolve();
     });
   });
-}).then(function() {
-  console.warn("↳ build/d3.node.js");
 }).catch(abort);
 
 function abort(error) {

@@ -3,7 +3,7 @@ import {abs, atan2, cos, radians, sin, sqrt} from "./math";
 import noop from "./noop";
 import stream from "./stream";
 
-var lengthSum,
+var lengthSum = adder(),
     lambda0,
     sinPhi0,
     cosPhi0;
@@ -47,8 +47,7 @@ function lengthPoint(lambda, phi) {
 }
 
 export default function(object) {
-  if (lengthSum) lengthSum.reset();
-  else lengthSum = adder();
+  lengthSum.reset();
   stream(object, lengthStream);
   return +lengthSum;
 }

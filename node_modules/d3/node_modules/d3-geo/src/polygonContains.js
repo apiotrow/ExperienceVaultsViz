@@ -11,6 +11,8 @@ export default function(polygon, point) {
       angle = 0,
       winding = 0;
 
+  sum.reset();
+
   for (var i = 0, n = polygon.length; i < n; ++i) {
     if (!(m = (ring = polygon[i]).length)) continue;
     var ring,
@@ -62,7 +64,5 @@ export default function(polygon, point) {
   // from the point to the South pole.  If it is zero, then the point is the
   // same side as the South pole.
 
-  var contains = (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
-  sum.reset();
-  return contains;
+  return (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
 }
