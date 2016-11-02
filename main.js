@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var d3 = require('./js/phaservis/d3.min.js');
 	var eevvStuffFile = require('./js/phaservis/eevvStuff.js');
-	var eevv = new eevvStuffFile.eevvStuff();
+	// var eevv = new eevvStuffFile.eevvStuff();
 	// var W = require('pyrsmk-w');
 
 	// var newW = W.getViewportWidth() - 100;
@@ -96,32 +96,111 @@ document.addEventListener('DOMContentLoaded', function () {
     var svgBG = svg
     .append('rect')
     .style('fill', 'black')
+    .attr('stroke','#00ff00')
+    .attr('stroke-width', 0.2)
     .attr('width', w)
     .attr('height', h);
 
 
-    var drugs = eevv.drugsto100;
-    var categories = eevv.categories;
+    var group1 = "drug";
+    var group2 = "category";
+    var group2item = "Mystical Experiences";
+    // var group1ItemList = eevv[group1];
+   
+    var file = statfiles[group1 + "_" + group2];
+    var expected = statfiles[group2][group2item]['perc'];
     var data = [];
-    file = statfiles.drug;
-    for(var key in drugs){
-    	if(drugs[key] in file){
-	    	var drugName = drugs[key];
-	    	var perc = file[drugs[key]]['perc'];
 
-	    	var dataEntry = [drugName, perc];
-	    	data.push (dataEntry);
-	    }else{
-	    	console.log(drugs[key] + " not in files");
-	    }
+
+    for(i in statfiles[group1]){
+
+
+    	var sampleSize = statfiles[group1][i]['raw'];
+
+    	if(sampleSize > 100){
+
+	    	//particular drug
+	    	var item = i;
+
+			//if drug_category has this drug, and if drug_category[drug] has any bad trips
+			//put amount of bad trips for this drug in data
+	    	if(file.hasOwnProperty(item) && file[item].hasOwnProperty(group2item)){
+	    		var drugName = item;
+	    		var perc = file[item][group2item]['perc'] - expected;
+	    		var dataEntry = [drugName, perc];
+	    		data.push (dataEntry);
+	    	}else{
+		    	// console.log(item + " not in " + group1 + "_" + group2);
+		    }
+		}
     }
 
-    
-    console.log(data[6][1]);
 
-    var barGraphG = svg.append('svg:g').attr('transform','translate(100,0)scale(1,1)');
 
-    var barScale = d3.scale.linear().domain([data[data.length - 1][1], data[0][1]]).range([1, 85]);
+    //ex: doing drug_category, with bad trips as chosen option
+    //
+    //for every drug in eevv.drugs
+  //   for(i in group1ItemList){
+
+  //   	//particular drug
+  //   	var item = group1ItemList[i];
+
+		// //if drug_category has this drug, and if drug_category[drug] has any bad trips
+		// //put amount of bad trips for this drug in data
+  //   	if(file.hasOwnProperty(item) && file[item].hasOwnProperty(group2item)){
+  //   		var drugName = item;
+  //   		var perc = file[item][group2item]['perc'] - expected;
+  //   		var dataEntry = [drugName, perc];
+  //   		data.push (dataEntry);
+  //   	}else{
+	 //    	console.log(item + " not in " + group1 + "_" + group2);
+	 //    }
+  //   }
+        
+
+    var dataMin = 9999999;
+    var dataMax = -9999999;
+
+    for(key in data){
+    	if(data[key][1] < dataMin){
+    		dataMin = data[key][1];
+    	}
+    }
+
+   	for(key in data){
+    	if(data[key][1] > dataMax){
+    		dataMax = data[key][1];
+    	}
+   	}
+
+
+
+
+
+    // for(var key in file){
+    // 	if(file[key] in file){
+	   //  	var drugName = group[key];
+	   //  	var perc = file[group[key]]['perc'];
+
+	   //  	var dataEntry = [drugName, perc];
+	   //  	data.push (dataEntry);
+	   //  }else{
+	   //  	console.log(group[key] + " not in files");
+	   //  }
+    // }
+    // data.sort(function(a, b){
+    //     return b[1]-a[1];
+    // });
+	data.sort(function(a, b){
+        return b[1]-a[1];
+    });
+
+
+    var hh = svg.append('svg:g').append('svg:g').append('svg:g');
+
+    var barGraphG = svg.append('svg:g').attr('transform','translate(100,5)scale(1,0.9)');
+
+    var barScale = d3.scale.linear().domain([0, dataMax]).range([0, 70]);
 
     var bars = barGraphG
     .selectAll('rect')
@@ -134,7 +213,15 @@ document.addEventListener('DOMContentLoaded', function () {
     .attr('x', 0)
     .attr('y', function(d,i) {return i * (h / data.length)})
     .attr('height', h / data.length)
-    .attr('width', function(d,i) {return barScale(d[1])})
+    .attr('width', function(d,i) {
+
+    	var barLength = Math.abs(d[1]);
+    	if(d[1] < 0){
+    		d3.select(this).attr('transform', 'scale(-1,1)');
+    	}
+
+    	return barScale(barLength);
+    })
     .on('mouseover', function(){
     	d3.select(this).attr('stroke','yellow');
     	d3.select(this).attr('stroke-width', 0.5);
@@ -148,12 +235,22 @@ document.addEventListener('DOMContentLoaded', function () {
     var barText = 
     barGraphG.selectAll('text').data(data).enter().append('text')
     .text(function(d,i){return d[0]})
-    .attr('x', function(d,i) {return barScale(d[1])})
-	.attr('y',  function(d,i) {return i * (h / data.length) + h / data.length})
-    .attr('text-anchor','start')
+    .attr('x', function(d,i) {
+		var barLength = d[1];
+
+		if(d[1] < 0){
+    		d3.select(this).attr('transform', 'translate(0,0)');
+    		d3.select(this).attr('text-anchor','end');
+    	}else{
+			d3.select(this).attr('text-anchor','start');
+    	}
+
+    	return barScale(barLength);
+    })
+	.attr('y',  function(d,i) {return i * (h / data.length) + h / data.length / 3})
     .style("font-size", 2)
     .attr("font-family", "sans-serif")
-    .attr("dominant-baseline", "text-after-edge")
+    .attr("dominant-baseline", "central")
     .style('fill', "#00ff00");
 
 });

@@ -11,13 +11,11 @@ module.exports = {
 	        context: "context",
 	        method: "method",
 	        intensity: "intensity",
-	        drugsto50: "drugsto50",
-	        drugsto100: "drugsto100",
-	        drugsto30: "drugsto30",
+	        drug: "drug",
 	        categoriesTrimmed: "categoriesTrimmed"
     	};
 
-    	this.drugsto100 = {
+    	this.drug = {
     		mushrooms: "Mushrooms",
     		Cannabis: "Cannabis",
 			Salvia: "Salvia divinorum",
@@ -77,7 +75,7 @@ module.exports = {
 			Spice: "Products - Spice and Synthetic Cannabinoids",
 			Methylphenidate: "Pharms - Methylphenidate",
 			Alprazolam: "Pharms - Alprazolam",
-			Methoxetamine: "Methoxetamine",
+			// Methoxetamine: "Methoxetamine",
 			meoamt: "5-MeO-AMT",
 			Venlafaxine: "Pharms - Venlafaxine",
 			Bupropion: "Pharms - Bupropion",
@@ -147,7 +145,7 @@ module.exports = {
 			Spice: "Products - Spice and Synthetic Cannabinoids",
 			Methylphenidate: "Pharms - Methylphenidate",
 			Alprazolam: "Pharms - Alprazolam",
-			Methoxetamine: "Methoxetamine",
+			// Methoxetamine: "Methoxetamine",
 			meoamt: "5-MeO-AMT",
 			Venlafaxine: "Pharms - Venlafaxine",
 			Bupropion: "Pharms - Bupropion",
@@ -263,7 +261,7 @@ module.exports = {
 			Spice: "Products - Spice and Synthetic Cannabinoids",
 			Methylphenidate: "Pharms - Methylphenidate",
 			Alprazolam: "Pharms - Alprazolam",
-			Methoxetamine: "Methoxetamine",
+			// Methoxetamine: "Methoxetamine",
 			meoamt: "5-MeO-AMT",
 			Venlafaxine: "Pharms - Venlafaxine",
 			Bupropion: "Pharms - Bupropion",
@@ -384,7 +382,7 @@ module.exports = {
 	        sexDiscussion: "Sex Discussion",
 	    };
 
-    	this.categories = {
+    	this.category = {
 	        firstTimes: "First Times",
 	        general: "General",
 	        retroSum: "Retrospective / Summary",
@@ -423,7 +421,7 @@ module.exports = {
 	        sexDiscussion: "Sex Discussion",
     	};
 
-    	this.nonsubstances = {
+    	this.nonsubstance = {
 	        breathing: "Breathing",
 	        chanting: "Chanting",
 	        conferences: "Conferences",
