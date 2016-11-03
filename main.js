@@ -219,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				}
 			});
-			// console.log(currentlySelectedGroupInfo.group2ItemChoiceButtonValue);
 
 	    	//if we select a group1 or group2 choice button, do these as needed:
 	    	//-setup a new list of group2Items
@@ -245,6 +244,33 @@ document.addEventListener('DOMContentLoaded', function () {
 					var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
 					var group2ItemList = Object.keys(eevvObject);
 					renderSingleGroupChoiceButtons('group2ItemChoiceButton', 21, group2ItemList);
+
+					var buttonReselectID;
+					for(var key in eevv[currGroup2]){
+						if(eevv[currGroup2][key] == currentlySelectedGroupInfo.group2ItemChoiceButtonValue){
+							buttonReselectID = key;
+							break;
+						}
+					}
+
+
+					//get id of group2Item button that was selected before we deleted the list
+					var buttonReselect = d3.select("#" + buttonReselectID);
+
+					//if the group2 we just selected is different than the last, then the
+					//previously selected group2Item won't exist in the DOM. so don't attempt
+					//to select it.
+					if(buttonReselect.node() !== null){
+						//select the button
+				    	buttonReselect.attr('currentlySelected', 'yes');
+				    	buttonReselect.attr('stroke','yellow');
+				    	buttonReselect.attr('stroke-width', 0.7);
+				    	//put button on top so border color shows
+				    	buttonReselect.node().parentNode.appendChild(buttonReselect.node()); 
+				    	//put text for this button on top
+				    	var textForThisButton = d3.select("#" + buttonReselectID + "-text-group2ItemChoiceButton");
+				    	textForThisButton.node().parentNode.appendChild(textForThisButton.node());
+			    	}
 				}
 			}
 
@@ -278,7 +304,30 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .attr('y', function(d,i){
 	    	return i * 3 + 1;
 	    })
-	    .text(function(d){return d})
+	    .text(function(d){
+
+	    	//if this is a group1 or group2 button, just return name of it.
+	    	//but if this is a group2Item button, give it the name it's supposed to have
+	    	//which is in the eevv data structure
+	    	//
+	    	//we determine if it's a group1/group2 or a group2Item by checking
+	    	//if the eevv data structure contains an entry for it
+			var inEEVVtest = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue][d];
+	    	if(inEEVVtest !== undefined){
+
+	    		//we a group2Item button
+		    	return eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue][d];
+
+		    }else{
+
+		    	//we a group1 or group2 button.
+		    	//capitalize it because we're too lazy to make all the names
+		    	//of properties of objects all over this project capital
+		    	var capitalized = d.charAt(0).toUpperCase() + d.slice(1);
+		    	return capitalized;
+
+		    }
+	    })
 	    .style("font-size", 2)
 	    .attr("font-family", "sans-serif")
 	    .attr("dominant-baseline", "central")
