@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
          nonsubstance_category: require('./JSONS/output/nonsubstance_category.json'),
     };
 
-    var d3 = require('d3');
+    // var d3 = require('d3');
 	var globs = require('./js/phaservis/eevvStuff.js');
     var eevv = new globs.eevvStuff();
 
