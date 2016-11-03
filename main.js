@@ -58,17 +58,22 @@ document.addEventListener('DOMContentLoaded', function () {
 	var globs = require('./js/phaservis/eevvStuff.js');
     var eevv = new globs.eevvStuff();
 
-    //initial setup
+    //width and height of svg. but not actually. because 
+    //i'm using some css i don't understand. but the ratio is
+    //definitely ends up being w:h.
     var w = 200;
     var h = 100;
 
     var group2ItemListXPosition = 0;
     var group2ItemListYPosition = 10;
 
+    //min sample size for any stats we calculate
     var sampleSizeRequirement = 200;
 
+    //width of the left side of the vis with all the buttons
     var buttonAreaMaxWidth = 65;
 
+    //master svg
     var svg = 
     d3.select("div#container")
 	.append("svg")
@@ -76,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
   	.attr("viewBox", "0 0 " + w + " " + h)
   	.classed("svg-content", true);
 
+  	//black bg
     var svgBG = svg
     .append('rect')
     .style('fill', 'black')
@@ -97,6 +103,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		group2ItemChoiceButtonValue: ""
 	};
 	var groupChoiceData = ["context", "drug", "gender", "intensity", "category"];
+
+	var colors = {
+		hotPink: "#ff0066",
+		green: "#00ff00",
+		blue: "#3399ff"
+	}
+	var group1ButtonBorderFill = colors.hotPink;
+	var group1ButtonBGFill = "black";
+	var group1TextFill = "white";
+	
+	var group2ButtonBorderFill = colors.green;
+	var group2ButtonBGFill = "black";
+	var group2TextFill = "white";
+
+	var group2ItemButtonBorderFill = "#3399ff";
+	var group2ItemButtonBGFill = "black";
+	var group2ItemTextFill = "white";
+	
+	var graphTitleFill = "white";
+	var barFill = colors.blue;
+	var barTextFill = "white";
 	
 
 
@@ -110,33 +137,20 @@ document.addEventListener('DOMContentLoaded', function () {
 		currentlySelectedGroupInfo.group2ChoiceButtonValue, 
 		currentlySelectedGroupInfo.group2ItemChoiceButtonValue
 	);
-	renderBarGraph();
+	renderBarGraph(barFill, barTextFill);
 
 
 
 
 
-	function setupGroupChoiceButtons(){
-		var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
-		var group2ItemList = Object.keys(eevvObject);
 
-		renderSingleGroupChoiceButtons('group1ChoiceButton', 0, 0, groupChoiceData, 3);
-		renderSingleGroupChoiceButtons('group2ChoiceButton', 0, 5, groupChoiceData, 3);
-		renderSingleGroupChoiceButtons(
-			'group2ItemChoiceButton', 
-			group2ItemListXPosition, 
-			group2ItemListYPosition, 
-			group2ItemList,
-			3);
-	}
 
-    function renderSingleGroupChoiceButtons(buttonClass, x, y, dataToUse, btnHeight){
+    function renderSingleGroupChoiceButtons(buttonClass, x, y, dataToUse, btnHeight, 
+    	buttonBorderFillColor, buttonBGFillColor, textFillColor){
 		
 		var groupChoiceG = svg.append('svg:g').attr('transform','translate(2,2)scale(1,1)')
 		.attr('id', buttonClass);
 
-
-		var prevTextSiblingWidthITER = 0;
 
 		var groupChoiceButtonsText = groupChoiceG
 	    .selectAll('text')
@@ -173,26 +187,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		    }
 	    })
 	    .attr('x', function(d,i){
+	    	//d3.select(this.previousSibling).node().getComputedTextLength() + 2
 
-	    	//not working. fixing x position at bottom of function.
-	    	// var setTo = 0;
-
-	    	// if(i != 0){
-	    	// 	prevTextSiblingWidthITER += 1 * d3.select(this.previousSibling).node().getComputedTextLength() + 2;
-
-	    	// 	setTo = prevTextSiblingWidthITER;
-	    	// }else{
-	    	// 	setTo = 0;
-	    	// 	prevTextSiblingWidthITER  = 0;
-	    	// }
-
-	    	// return setTo + 1;
-
+	    	//not setting rect width here using getComputedTextLength() because
+	    	//it's always off by some pixels and fucks everything up. doing it at end
+	    	//of function instead.
 	    	return x;
 	    })
 	    .attr("font-family", "sans-serif")
 	    .attr("dominant-baseline", "mathematical")
-	    .style('fill', "#00ff00")
+	    .style('fill', textFillColor)
 	    .style("text-anchor", "start")
 	    .attr('pointer-events', 'none')
 	    .attr('class','textForButton');
@@ -209,9 +213,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .enter()
 		.append('rect')
 	    .attr('id', function(d,i){return d})
-		.attr('stroke','#00ff00')
+		.attr('stroke',buttonBorderFillColor)
 	    .attr('stroke-width', 0.2)
-	    .style('fill', "black")
+	    .style('fill', buttonBGFillColor)
 	    .attr('width', function(d,i){
 
 	    	//set this button's width based off the length of the text for this button
@@ -271,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	//only remove highlights if this button
 	    	//isn't the currently selected one
 	    	if(d3.select(this).attr('currentlySelected') == 'no'){
-		    	d3.select(this).attr('stroke','#00ff00');
+		    	d3.select(this).attr('stroke',buttonBorderFillColor);
 		    	d3.select(this).attr('stroke-width', 0.2);
 		    }
 
@@ -281,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	//unselect all other buttons of this class (group1, group2, group2Item)
 	    	d3.selectAll('.' + buttonClass)
 	    	.attr('currentlySelected', 'no')
-	    	.attr('stroke','#00ff00')
+	    	.attr('stroke',buttonBorderFillColor)
 	    	.attr('stroke-width', 0.2);
 
 	    	//select this button
@@ -343,7 +347,10 @@ document.addEventListener('DOMContentLoaded', function () {
 						group2ItemListXPosition, 
 						group2ItemListYPosition, 
 						group2ItemList,
-						3);
+						3,
+						group2ItemButtonBorderFill,
+						group2ItemButtonBGFill,
+						group2ItemTextFill);
 
 					var buttonReselectID;
 					for(var key in eevv[currGroup2]){
@@ -387,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			//render graph for newly selected values
-			renderBarGraph();
+			renderBarGraph(barFill, barTextFill);
 
 	    })
 	    .attr('currentlySelected', 'no')
@@ -426,16 +433,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	    });
     }
 
-	function renderBarGraph(){
+	function renderBarGraph(barFillColor, barTextFillColor){
 		d3.selectAll("#barGraph").remove();
 
 		//container for graph
 	    var barGraphG = svg
 	    .append('svg:g')
-	    .attr('transform','translate(130,5)scale(1,0.9)')
+	    .attr('transform','translate(127,5)scale(1,0.9)')
 	    .attr('id','barGraph');
 
-	    var barScale = d3.scaleLinear().domain([0, dataMax]).range([0.5, 50]);
+	    var barScale = d3.scaleLinear().domain([0, dataMax]).range([0.5, 45]);
 
 	    var bars = barGraphG
 	    .selectAll('rect')
@@ -444,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .append('rect')
 	    .attr('stroke','black')
 	    .attr('stroke-width', 0.2)
-	    .style('fill', "#00ff00")
+	    .style('fill', barFillColor)
 	    .attr('x', 0)
 	    .attr('y', function(d,i) {return i * (h / data.length)})
 	    .attr('height', h / data.length)
@@ -487,7 +494,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .style("font-size", 2)
 	    .attr("font-family", "sans-serif")
 	    .attr("dominant-baseline", "central")
-	    .style('fill', "#00ff00");
+	    .style('fill', barTextFillColor);
+
+	    renderGraphTitle();
 	}
 
 	function generateData(group1, group2, group2item){
@@ -621,4 +630,61 @@ document.addEventListener('DOMContentLoaded', function () {
 	    });
 	}
 
+	function setupGroupChoiceButtons(){
+		var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
+		var group2ItemList = Object.keys(eevvObject);
+
+		renderSingleGroupChoiceButtons('group1ChoiceButton', 0, 0, groupChoiceData, 3, 
+			group1ButtonBorderFill,
+			group1ButtonBGFill,
+			group1TextFill);
+		renderSingleGroupChoiceButtons('group2ChoiceButton', 0, 5, groupChoiceData, 3, 
+			group2ButtonBorderFill,
+			group2ButtonBGFill, 
+			group2TextFill);
+		renderSingleGroupChoiceButtons(
+			'group2ItemChoiceButton', 
+			group2ItemListXPosition, 
+			group2ItemListYPosition, 
+			group2ItemList,
+			3,
+			group2ItemButtonBorderFill,
+			group2ItemButtonBGFill,
+			group2ItemTextFill);
+	}
+
+	function renderGraphTitle(){
+
+		var group1selected = currentlySelectedGroupInfo.group1ChoiceButtonValue;
+		var group2selected = currentlySelectedGroupInfo.group2ChoiceButtonValue;
+		var group2selectedItem = currentlySelectedGroupInfo.group2ItemChoiceButtonValue;
+
+		var group1Text = group1selected.charAt(0).toUpperCase() + group1selected.slice(1);
+		var group2Text = group2selected.charAt(0).toUpperCase() + group2selected.slice(1);
+		var group2ItemText = group2selectedItem.charAt(0).toUpperCase() + group2selectedItem.slice(1);
+
+		//if we select group2 and the item we have selected isn't in that group
+		//don't change title. or we end up with weird titles like
+		//Gender - Drug: Extreme that don't make sense
+		var goThrough = false;
+		for(var item in eevv[group2selected]){
+			if(eevv[group2selected][item] == group2selectedItem)
+				goThrough = true;
+		}
+
+		if(group1Text != group2Text && goThrough){
+			d3.selectAll("#graphTitleG").remove();
+
+			var graphTitleG = svg.append('svg:g')
+			.attr('transform','translate(130,2)scale(1,1)')
+			.attr('id', 'graphTitleG')
+			.append('text')
+			.text(group1Text + " - [ " + group2Text + ": " + group2ItemText + " ]")
+			.style("font-size", 4)
+			.attr("font-family", "sans-serif")
+		    .attr("dominant-baseline", "mathematical")
+		    .style('fill', graphTitleFill)
+		    .style("text-anchor", "middle");
+		}
+	}
 });
