@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var sampleSizeRequirement = 200;
 
+    var buttonAreaMaxWidth = 65;
+
     var svg = 
     d3.select("div#container")
 	.append("svg")
@@ -94,18 +96,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		group2ChoiceButtonValue: "",
 		group2ItemChoiceButtonValue: ""
 	};
-	var groupChoiceData = ["context","drug", "gender", "intensity","category"];
+	var groupChoiceData = ["context", "drug", "gender", "intensity", "category"];
 	
-
-	setRandomGroupInfo(); //should remove this for live version
-
-
-	var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
-	var group2ItemList = Object.keys(eevvObject);
 
 
 	//render intial graph
+	setRandomGroupInfo();
 	setupGroupChoiceButtons();
+	selectInitiallySelectedButtons();
 	
 	generateData(
 		currentlySelectedGroupInfo.group1ChoiceButtonValue, 
@@ -116,51 +114,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-	initButtonSelectionSetup();
-
-	function initButtonSelectionSetup(){
-
-
-		var buttonSelectID;
-		var currGroup2 = currentlySelectedGroupInfo.group2ChoiceButtonValue;
-
-		//select a given button
-		function selectButton(btn){
-			if(btn.node() !== null){
-				//select the button
-		    	btn.attr('currentlySelected', 'yes');
-		    	btn.attr('stroke','yellow');
-		    	btn.attr('stroke-width', 0.7);
-		    	//put button on top so border color shows
-		    	btn.node().parentNode.appendChild(btn.node()); 
-		    	//put text for this button on top
-		    	var textForThisButton = d3.select("#" + buttonSelectID + "-text-group2ItemChoiceButton");
-		    	textForThisButton.node().parentNode.appendChild(textForThisButton.node());
-			}
-		}
-
-
-		//select group2Item
-		for(var key in eevv[currGroup2]){
-			if(eevv[currGroup2][key] == currentlySelectedGroupInfo.group2ItemChoiceButtonValue){
-				buttonSelectID = key;
-				break;
-			}
-		}
-
-		console.log(currentlySelectedGroupInfo.group2ItemChoiceButtonValue);
-		//get id of group2Item button that was selected before we deleted the list
-		var buttonReselect = d3.select("#" + buttonSelectID);
-		selectButton(buttonReselect);
-
-
-		
-	}
-
-
 
 
 	function setupGroupChoiceButtons(){
+		var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
+		var group2ItemList = Object.keys(eevvObject);
+
 		renderSingleGroupChoiceButtons('group1ChoiceButton', 0, 0, groupChoiceData, 3);
 		renderSingleGroupChoiceButtons('group2ChoiceButton', 0, 5, groupChoiceData, 3);
 		renderSingleGroupChoiceButtons(
@@ -175,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		var groupChoiceG = svg.append('svg:g').attr('transform','translate(2,2)scale(1,1)')
 		.attr('id', buttonClass);
-
 
 
 		var prevTextSiblingWidthITER = 0;
@@ -453,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			//if this row is going to go past our specified width,
 			//start a new row
-	    	if(Xiter + textForThisButton.node().getComputedTextLength() + 2 > 50){
+	    	if(Xiter + textForThisButton.node().getComputedTextLength() + 2 > buttonAreaMaxWidth){
 	    		Yiter += btnHeight;
 	    		Xiter = 0;
 	    	}
@@ -477,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .attr('transform','translate(130,5)scale(1,0.9)')
 	    .attr('id','barGraph');
 
-	    var barScale = d3.scaleLinear().domain([0, dataMax]).range([0, 50]);
+	    var barScale = d3.scaleLinear().domain([0, dataMax]).range([0.5, 50]);
 
 	    var bars = barGraphG
 	    .selectAll('rect')
@@ -516,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			var barLength = d[1];
 
 			if(d[1] < 0){
-	    		d3.select(this).attr('transform', 'translate(-0.5,0)');
+	    		d3.select(this).attr('transform', 'translate(-1.5,0)');
 	    		d3.select(this).attr('text-anchor','end');
 	    	}else{
 	    		d3.select(this).attr('transform', 'translate(0.5,0)');
@@ -612,6 +570,55 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		currentlySelectedGroupInfo.group2ItemChoiceButtonValue = randomGroup2Item;
+	}
+
+	function selectInitiallySelectedButtons(){
+
+		var buttonToSelectID;
+		var currGroup2 = currentlySelectedGroupInfo.group2ChoiceButtonValue;
+
+		//select a given button
+		function selectButton(btn, btnType){
+			if(btn.node() !== null){
+				//select the button
+		    	btn.attr('currentlySelected', 'yes');
+		    	btn.attr('stroke','yellow');
+		    	btn.attr('stroke-width', 0.7);
+		    	//put button on top so border color shows
+		    	btn.node().parentNode.appendChild(btn.node()); 
+		    	//put text for this button on top
+		    	var textForThisButton = d3.select("#" + buttonToSelectID + "-text-" + btnType);
+		    	textForThisButton.node().parentNode.appendChild(textForThisButton.node());
+			}
+		}
+
+		//select group2Item
+		for(var key in eevv[currGroup2]){
+			if(eevv[currGroup2][key] == currentlySelectedGroupInfo.group2ItemChoiceButtonValue){
+				buttonToSelectID = key;
+				break;
+			}
+		}
+		var buttonToSelect = d3.select("#" + buttonToSelectID);
+		selectButton(buttonToSelect, "group2ItemChoiceButton");
+
+		//select group1 button
+		d3.selectAll(".group1ChoiceButton").each(function() {
+			if(d3.select(this).attr('id') == currentlySelectedGroupInfo.group1ChoiceButtonValue){
+				buttonToSelectID = d3.select(this).attr('id');
+	    		buttonToSelect = d3.select(this);
+	    		selectButton(buttonToSelect, "group1ChoiceButton");
+			}
+	    });
+
+	    //select group1 button
+		d3.selectAll(".group2ChoiceButton").each(function() {
+			if(d3.select(this).attr('id') == currentlySelectedGroupInfo.group2ChoiceButtonValue){
+				buttonToSelectID = d3.select(this).attr('id');
+	    		buttonToSelect = d3.select(this);
+	    		selectButton(buttonToSelect, "group2ChoiceButton");
+			}
+	    });
 	}
 
 });

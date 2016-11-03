@@ -15,7 +15,8 @@ module.exports = {
 	        categoriesTrimmed: "categoriesTrimmed"
     	};
 
-    	this.drug = {
+    	//to sample size of 100
+    	this.drugsto100 = {
     		mushrooms: "Mushrooms",
     		Cannabis: "Cannabis",
 			Salvia: "Salvia divinorum",
@@ -85,7 +86,8 @@ module.exports = {
 			acodmt: "4-AcO-DMT",
     	};
 
-    	this.drugsto50 = {
+    	//to sample size of 50
+    	this.drug = {
     		mushrooms: "Mushrooms",
     		Cannabis: "Cannabis",
 			Salvia: "Salvia divinorum",
@@ -201,6 +203,7 @@ module.exports = {
 			Opium: "Opium",
 		};
 
+		//to sample size of 30
 		this.drugsto30 = {
     		mushrooms: "Mushrooms",
     		Cannabis: "Cannabis",
