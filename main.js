@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var d3 = require('d3');
-
+	var globs = require('./js/phaservis/eevvStuff.js');
+    var eevv = new globs.eevvStuff();
 
     //initial setup
     var w = 200;
@@ -86,19 +87,25 @@ document.addEventListener('DOMContentLoaded', function () {
 	var currentlySelectedGroupInfo = {
 		group1ChoiceButtonValue: "",
 		group2ChoiceButtonValue: "",
-		group2SelectedItem: ""
+		group2ItemChoiceButtonValue: ""
 	};
 	var groupChoiceData = ["context","drug", "gender", "intensity","category"];
 	
 
+	setRandomGroupInfo(); //should remove this for live version
+
+
+	var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
+	var group2ItemList = Object.keys(eevvObject);
+
 
 	//render intial graph
 	setupGroupChoiceButtons();
-	setRandomGroupInfo();
+	
 	generateData(
 		currentlySelectedGroupInfo.group1ChoiceButtonValue, 
 		currentlySelectedGroupInfo.group2ChoiceButtonValue, 
-		currentlySelectedGroupInfo.group2SelectedItem
+		currentlySelectedGroupInfo.group2ItemChoiceButtonValue
 	);
 	renderBarGraph();
 	//NEED TO MAKE BUTTONS FOR INITIALLY SELECTED GROUPS HIGHLIGHT, HERE
@@ -106,20 +113,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
 	function setupGroupChoiceButtons(){
-		renderSingleGroupChoiceButtons('group1ChoiceButton', 0);
-		renderSingleGroupChoiceButtons('group2ChoiceButton', 11);
+		renderSingleGroupChoiceButtons('group1ChoiceButton', 0, groupChoiceData);
+		renderSingleGroupChoiceButtons('group2ChoiceButton', 11, groupChoiceData);
+		renderSingleGroupChoiceButtons('group2ItemChoiceButton', 21, group2ItemList);
 	}
 
-    function renderSingleGroupChoiceButtons(buttonClass, x){
+    function renderSingleGroupChoiceButtons(buttonClass, x, dataToUse){
 		
-		var groupChoiceG = svg.append('svg:g').attr('transform','translate(2,2)scale(1,1)');
+		var groupChoiceG = svg.append('svg:g').attr('transform','translate(2,2)scale(1,1)')
+		.attr('id', buttonClass);
 
 		//setup a list of buttons with all group options.
 		//also make them selectable.
 		var groupChoiceButtons = groupChoiceG
 		.selectAll('rect')
-	    .data(groupChoiceData)
+	    .data(dataToUse)
 	    .enter()
 		.append('rect')
 		.attr('stroke','#00ff00')
@@ -135,7 +146,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	    	//select this button
 	    	d3.select(this).attr('stroke','yellow');
-	    	d3.select(this).attr('stroke-width', 0.3);
+	    	//don't thin out border if its the currently selected one
+	    	if(d3.select(this).attr('currentlySelected') == 'no')
+	    		d3.select(this).attr('stroke-width', 0.3);
 	    	this.parentNode.appendChild(this);
 
 	    	//make sure if there's a button already selected
@@ -154,7 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	//put text for this button on top
 	    	var thisID = d3.select(this).attr('id');
 	    	var textElementForThisButton = d3.select("#" + thisID + "-text-" + buttonClass);
+	    	// console.log(textElementForThisButton);
 	    	this.parentNode.appendChild(textElementForThisButton.node()); 
+
 	    })
 	    .on('mouseout', function(){
 
@@ -164,10 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		    	d3.select(this).attr('stroke','#00ff00');
 		    	d3.select(this).attr('stroke-width', 0.2);
 		    }
+
 	    })
 	    .on('click', function(){
 	    
-	    	//unselect all other group1 buttons
+	    	//unselect all other buttons of this class (group1, group2, group2Item)
 	    	d3.selectAll('.' + buttonClass)
 	    	.attr('currentlySelected', 'no')
 	    	.attr('stroke','#00ff00')
@@ -176,8 +192,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	//select this button
 	    	d3.select(this).attr('currentlySelected', 'yes');
 	    	d3.select(this).attr('stroke','yellow');
-	    	d3.select(this).attr('stroke-width', 0.5);
+	    	d3.select(this).attr('stroke-width', 0.7);
 
+	    	//put button on top so border color shows
 	    	this.parentNode.appendChild(this); 
 
 	    	//put text for this button on top
@@ -185,18 +202,51 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	var textForThisButton = d3.select("#" + thisID + "-text-" + buttonClass);
 	    	this.parentNode.appendChild(textForThisButton.node()); 
 
-	    	//set a variable to the currently selected button
-	    	//so we can mess with it in other functions
+	    	//set the corresponding value in currentlySelectedGroupInfo to the selected
+	    	//button's value
 	    	d3.selectAll("." + buttonClass).each(function() {
 				if(d3.select(this).attr('currentlySelected') == 'yes'){
-					currentlySelectedGroupInfo[buttonClass + "Value"] = d3.select(this).attr('id')
+
+					//if it's a group1 or group2 button, do regular.
+					//but if it's a group2Item button, gotta go into the eevvStuff
+					//data structure and get the actual name of the item, because we're
+					//using the key names as button IDs for group2Items
+					if(d3.select(this).attr('class') == 'group2ItemChoiceButton'){
+						currentlySelectedGroupInfo[buttonClass + "Value"] = 
+						eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue][d3.select(this).attr('id')];
+					}else{
+						currentlySelectedGroupInfo[buttonClass + "Value"] = d3.select(this).attr('id');
+					}
 				}
 			});
+			// console.log(currentlySelectedGroupInfo.group2ItemChoiceButtonValue);
 
-	    	//choose a random value from group 2 to graph
-	    	var group2ItemNames = Object.keys(statfiles[currentlySelectedGroupInfo.group2ChoiceButtonValue]);
-			var randomGroup2Item = group2ItemNames[Math.floor(Math.random() * group2ItemNames.length)];
-			currentlySelectedGroupInfo.group2SelectedItem = randomGroup2Item;
+	    	//if we select a group1 or group2 choice button, do these as needed:
+	    	//-setup a new list of group2Items
+	    	//-remove the current list
+			if(d3.select(this).attr('class') == 'group2ChoiceButton'
+				|| d3.select(this).attr('class') == 'group1ChoiceButton'){
+
+				var currGroup1 = currentlySelectedGroupInfo.group1ChoiceButtonValue;
+				var currGroup2 = currentlySelectedGroupInfo.group2ChoiceButtonValue;
+
+				//if a new group2 button was picked or we select the same group1 as group 2,
+				//remove current list of group 2 item choices
+				if(d3.select(this).attr('class') == 'group2ChoiceButton'
+					|| currGroup1 == currGroup2){
+					d3.selectAll('#group2ItemChoiceButton').remove();
+				}
+
+				//render the new ones, but only if the groups are different,
+				//and if no list already exists.
+				//if we selected context and context, for instance, don't render 
+				//a new list, because that wouldn't make sense
+				if(currGroup1 != currGroup2 && d3.selectAll('#group2ItemChoiceButton').empty()){
+					var eevvObject = eevv[currentlySelectedGroupInfo.group2ChoiceButtonValue];
+					var group2ItemList = Object.keys(eevvObject);
+					renderSingleGroupChoiceButtons('group2ItemChoiceButton', 21, group2ItemList);
+				}
+			}
 
 			//if check here to keep us from trying to graph context_context or whatever.
 			//need to replace with some other behavior
@@ -204,15 +254,16 @@ document.addEventListener('DOMContentLoaded', function () {
 				generateData(
 					currentlySelectedGroupInfo.group1ChoiceButtonValue, 
 					currentlySelectedGroupInfo.group2ChoiceButtonValue, 
-					currentlySelectedGroupInfo.group2SelectedItem
+					currentlySelectedGroupInfo.group2ItemChoiceButtonValue
 				);
-				console.log("rendering for item: " + currentlySelectedGroupInfo.group2SelectedItem);
 			}else{
-				console.log("selected " + currentlySelectedGroupInfo.group1ChoiceButtonValue + " and " + 
-				currentlySelectedGroupInfo.group2ChoiceButtonValue + " so we can't graph it")
+				// console.log("selected " + currentlySelectedGroupInfo.group1ChoiceButtonValue + " and " + 
+				// currentlySelectedGroupInfo.group2ChoiceButtonValue + " so we can't graph it")
 			}
 
+			//render graph for newly selected values
 			renderBarGraph();
+
 	    })
 	    .attr('id', function(d,i){return d})
 	    .attr('currentlySelected', 'no')
@@ -220,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	    var groupChoiceButtonsText = groupChoiceG
 	    .selectAll('text')
-	    .data(groupChoiceData)
+	    .data(dataToUse)
 	    .enter()
 	    .append('text')
 	    .attr('x', x + 5)
@@ -235,8 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .style("text-anchor", "middle")
 	    .attr('pointer-events', 'none')
 	    .attr('id', function(d,i){return d + "-text-" + buttonClass});
-
-
     }
 
 	function renderBarGraph(){
@@ -255,9 +304,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .data(data)
 	    .enter()
 	    .append('rect')
-	    .attr('stroke','#00ff00')
+	    .attr('stroke','black')
 	    .attr('stroke-width', 0.2)
-	    .style('fill', "black")
+	    .style('fill', "#00ff00")
 	    .attr('x', 0)
 	    .attr('y', function(d,i) {return i * (h / data.length)})
 	    .attr('height', h / data.length)
@@ -276,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	this.parentNode.appendChild(this); 
 	    })
 	    .on('mouseout', function(){
-	    	d3.select(this).attr('stroke','#00ff00');
+	    	d3.select(this).attr('stroke','black');
 	    	d3.select(this).attr('stroke-width', 0.2);
 	    });
 
@@ -287,9 +336,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			var barLength = d[1];
 
 			if(d[1] < 0){
-	    		d3.select(this).attr('transform', 'translate(0,0)');
+	    		d3.select(this).attr('transform', 'translate(-0.5,0)');
 	    		d3.select(this).attr('text-anchor','end');
 	    	}else{
+	    		d3.select(this).attr('transform', 'translate(0.5,0)');
 				d3.select(this).attr('text-anchor','start');
 	    	}
 
@@ -304,7 +354,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	function generateData(group1, group2, group2item){
 		var file = statfiles[group1 + "_" + group2];
-	    expected = statfiles[group2][group2item]['perc'];
+
+		//if we chose a new group2, the old group2item will still be in place,
+		//so group2item won't be in statfiles[group2]. in that case we just
+		//return, which will leave the old graph up.
+		if(statfiles[group2].hasOwnProperty(group2item)){
+	    	expected = statfiles[group2][group2item]['perc'];
+		}else{
+			return;
+		}
+
 	    data = [];
 
 	    for(i in statfiles[group1]){
@@ -365,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		var group2ItemNames = Object.keys(statfiles[currentlySelectedGroupInfo.group2ChoiceButtonValue]);
 		var randomGroup2Item = group2ItemNames[Math.floor(Math.random() * group2ItemNames.length)];
-		currentlySelectedGroupInfo.group2SelectedItem = randomGroup2Item;
+		currentlySelectedGroupInfo.group2ItemChoiceButtonValue = randomGroup2Item;
 	}
 
 });

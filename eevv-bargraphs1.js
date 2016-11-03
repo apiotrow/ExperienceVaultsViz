@@ -410,7 +410,7 @@ module.exports = {
 
 
         function barGraphHoriz(statObject, stat, thresh){
-        	d3.selectAll(".barGraphStuff").remove(); //remove current graph
+        	d3.selectAll(".barGraphStuff").selectAll("*").remove(); //remove current graph
         	var graphYOffset = 40;
 
             var rawOrPerc = "perc";
