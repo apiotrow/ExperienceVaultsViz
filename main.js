@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .attr('id', function(d,i){return d + "-text-" + buttonClass})
 	    .style("font-size", "2px")
 	    .attr('y', function(d,i){
-	    	return  y + 1.1;
+	    	return  y + 2.1;
 	    })
 	    .text(function(d){
 
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	return x;
 	    })
 	    .attr("font-family", "sans-serif")
-	    .attr("dominant-baseline", "mathematical")
+	    // .attr("dominant-baseline", "mathematical")
 	    .style('fill', textFillColor)
 	    .style("text-anchor", "start")
 	    .attr('pointer-events', 'none')
