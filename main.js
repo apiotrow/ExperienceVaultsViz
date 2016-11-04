@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var group2ItemListYPosition = 10;
 
     //min sample size for any stats we calculate
-    var sampleSizeRequirement = 200;
+    var sampleSizeRequirement = 135;
 
     //width of the left side of the vis with all the buttons
     var buttonAreaMaxWidth = 65;
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    .enter()
 	    .append('text')
 	    .attr('id', function(d,i){return d + "-text-" + buttonClass})
-	    .style("font-size", 2)
+	    .style("font-size", "2px")
 	    .attr('y', function(d,i){
 	    	return  y + 1.1;
 	    })
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		//container for graph
 	    var barGraphG = svg
 	    .append('svg:g')
-	    .attr('transform','translate(127,5)scale(1,0.9)')
+	    .attr('transform','translate(127,5)scale(1,0.945)')
 	    .attr('id','barGraph');
 
 	    var barScale = d3.scaleLinear().domain([0, dataMax]).range([0.5, 45]);
@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    	return barScale(barLength);
 	    })
 		.attr('y',  function(d,i) {return i * (h / data.length) + h / data.length / 2.1})
-	    .style("font-size", 2)
+	    .style("font-size", "2px")
 	    .attr("font-family", "sans-serif")
 	    .attr("dominant-baseline", "central")
 	    .style('fill', barTextFillColor);
@@ -680,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			.attr('id', 'graphTitleG')
 			.append('text')
 			.text(group1Text + " - [ " + group2Text + ": " + group2ItemText + " ]")
-			.style("font-size", 4)
+			.style("font-size", "3px")
 			.attr("font-family", "sans-serif")
 		    .attr("dominant-baseline", "mathematical")
 		    .style('fill', graphTitleFill)
