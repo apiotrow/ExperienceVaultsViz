@@ -818,6 +818,7 @@ namespace erowidJSON
 					}},
 				{"intensity", new List<string>{
 					"No Effect",
+                    "Light",
 					"Medium",
 					"Strong",
 					"Extreme",

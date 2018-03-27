@@ -497,6 +497,7 @@ module.exports = {
 
 	    this.intensity = {
 	        noEffect: "No Effect",
+	        light: "Light",
 	        medium: "Medium",
 	        strong: "Strong",
 	        extreme: "Extreme",

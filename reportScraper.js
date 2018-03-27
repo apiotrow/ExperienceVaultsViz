@@ -362,14 +362,14 @@ eevv.scrapeReports = function () {
             }
 
             //fills in drug ID table
-            // $(document).ready(function () {
-            //     $("#" + idnum).remove(); //if entry in table exists, replace it with new one
+            $(document).ready(function () {
+                $("#" + idnum).remove(); //if entry in table exists, replace it with new one
 
-            //     //put the ID in the table with all its info
-            //     $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + eevv.reportArrays[idnum].category + '</td><td>' + eevv.reportArrays[idnum].nonSubstance + '</td><td>' + eevv.reportArrays[idnum].context + '</td><td>' + eevv.reportArrays[idnum].doseMethod + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + eevv.reportArrays[idnum].gender + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
-            //     // $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
+                //put the ID in the table with all its info
+                $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + eevv.reportArrays[idnum].category + '</td><td>' + eevv.reportArrays[idnum].nonSubstance + '</td><td>' + eevv.reportArrays[idnum].context + '</td><td>' + eevv.reportArrays[idnum].doseMethod + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + eevv.reportArrays[idnum].gender + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
+                // $("#reportTable").append('<tr id="' + idnum + '"><td>' + idnum + '</td><td>' + eevv.reportArrays[idnum].drugs + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].intensity + '</td><td>' + "" + '</td><td>' + eevv.reportArrays[idnum].title + '</td><td>' + eevv.reportArrays[idnum].author + '</td><td>' + eevv.reportArrays[idnum].date + '</td><td>' + eevv.reportArrays[idnum].views + '</tr>');
 
-            // });
+            });
 
 
             // console.log(eevv.newComplete);

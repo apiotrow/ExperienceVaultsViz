@@ -3,3 +3,8 @@ D:\eevv\erowidJSON\erowidJSON\bin\Debug\erowidJSON.exe
 D:\eevv\erowidJSON\erowidJSON\bin\Debug\erowidJSON.pdb
 D:\eevv\erowidJSON\erowidJSON\obj\x86\Debug\erowidJSON.csprojResolveAssemblyReference.cache
 D:\eevv\erowidJSON\erowidJSON\obj\x86\Debug\erowidJSON.pdb
+D:\code\eevv\erowidJSON\erowidJSON\obj\x86\Debug\erowidJSON.exe
+D:\code\eevv\erowidJSON\erowidJSON\obj\x86\Debug\erowidJSON.pdb
+D:\code\eevv\erowidJSON\erowidJSON\bin\Debug\erowidJSON.exe
+D:\code\eevv\erowidJSON\erowidJSON\bin\Debug\erowidJSON.pdb
+D:\code\eevv\erowidJSON\erowidJSON\obj\x86\Debug\erowidJSON.csprojResolveAssemblyReference.cache
